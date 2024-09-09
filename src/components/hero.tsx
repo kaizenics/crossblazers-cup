@@ -26,11 +26,12 @@ export const Hero = () => {
     <div className="relative w-full h-screen flex flex-col justify-center items-center">
       <div className="absolute inset-0">
         <Image
-          className="w-full h-full object-cover opacity-70"
+          className="w-full h-full object-cover opacity-90"
           src={heroCover}
           alt="Hero Cover"
         />
-        <div className="absolute bottom-0 left-0 w-full h-screen bg-gradient-to-b from-transparent to-[#0a0a0a] opacity-100"></div>
+        <div className="absolute top-0 right-0 w-full h-3/6 bg-gradient-to-t from-transparent to-[#0a0a0a] opacity-100"></div>
+        <div className="absolute bottom-0 left-0 w-full h-5/6 bg-gradient-to-b from-transparent to-[#0a0a0a] opacity-100"></div>
       </div>
 
       <div className="z-10 text-white space-y-2 flex flex-col items-center">
