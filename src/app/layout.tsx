@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -19,7 +20,7 @@ const geistMono = localFont({
 const montserrat = Montserrat({
   weight: ["100", "400", "500", "600", "900"],
   variable: "--font-montserrat",
-  subsets: ["latin"], 
+  subsets: ["latin"],
 });
 
 const raceSport = localFont({
@@ -42,7 +43,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${raceSport.variable} antialiased`}
       >
-         <Navbar />
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          <Navbar />
+        </ThemeProvider>
         {children}
       </body>
     </html>
