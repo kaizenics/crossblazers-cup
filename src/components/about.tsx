@@ -23,7 +23,7 @@ export const About = () => {
               title={item.title}
               description={item.description}
               header={
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-40 sm:h-64 md:h-full">
                   <Image
                     src={item.imageSrc}
                     alt={item.imageAlt}
