@@ -3,28 +3,31 @@ import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 
 // Late 2023
-import ambassadress2023 from "@/assets/images/Late2023/ambassadress-2023.jpg"
-import cheerdance2023 from "@/assets/images/Late2023/cheerdance-2023.jpg"
-import dance2023 from "@/assets/images/Late2023/dance.jpg"
-import arise2023 from "@/assets/images/Late2023/arise-2023.jpg"
+import ambassadress2023 from "@/assets/images/Late2023/ambassadress-2023.jpg";
+import cheerdance2023 from "@/assets/images/Late2023/cheerdance-2023.jpg";
+import dance2023 from "@/assets/images/Late2023/dance.jpg";
+import arise2023 from "@/assets/images/Late2023/arise-2023.jpg";
 
 // Mid 2023
-import dance2023apr from "@/assets/images/Mid2023/dance-april2023.jpg"
-import dance2023apr2 from "@/assets/images/Mid2023/dance2-april2023.jpg"
-import bball2023apr from "@/assets/images/Mid2023/bball-april2023.jpg"
-import lol2023apr from "@/assets/images/Mid2023/lol-april2023.jpg"
+import dance2023apr from "@/assets/images/Mid2023/dance-april2023.jpg";
+import dance2023apr2 from "@/assets/images/Mid2023/dance2-april2023.jpg";
+import bball2023apr from "@/assets/images/Mid2023/bball-april2023.jpg";
+import lol2023apr from "@/assets/images/Mid2023/lol-april2023.jpg";
 
 // 2022
-import cnc2022 from "@/assets/images/2022/cnc2022.jpg"
-import digi2022 from "@/assets/images/2022/digi2022.png"
-import bball2022 from "@/assets/images/2022/bball2022.jpg"
-import sbme2022 from "@/assets/images/2022/sbme2022.jpg"
+import cnc2022 from "@/assets/images/2022/cnc2022.jpg";
+import digi2022 from "@/assets/images/2022/digi2022.png";
+import bball2022 from "@/assets/images/2022/bball2022.jpg";
+import sbme2022 from "@/assets/images/2022/sbme2022.jpg";
 
 // 2021
-import ambassadress2021 from "@/assets/images/2021/ambassadress2021.jpg"
-import cnc2o21 from "@/assets/images/2021/cnc2021.jpg"
-import live2o21 from "@/assets/images/2021/live2021.png"
-import sbme2021 from "@/assets/images/2021/sbme2021.jpg"
+import ambassadress2021 from "@/assets/images/2021/ambassadress2021.jpg";
+import cnc2o21 from "@/assets/images/2021/cnc2021.jpg";
+import live2o21 from "@/assets/images/2021/live2021.png";
+import sbme2021 from "@/assets/images/2021/sbme2021.jpg";
+
+// body
+import cnclogo from "@/assets/images/cnc.png";
 
 export function BlazersTimeline() {
   const data = [
@@ -221,7 +224,14 @@ export function BlazersTimeline() {
     },
   ];
   return (
-    <div className="w-full my-20">
+    <div className="w-full my-20 relative overflow-hidden">
+        <Image
+        src={cnclogo}
+        alt="cnc"
+        width={1000}
+        height={1000}
+        className="absolute top-1 -right-72 z-0 opacity-30"
+      />
       <Timeline data={data} />
     </div>
   );
