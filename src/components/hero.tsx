@@ -26,93 +26,93 @@ export const Hero = () => {
     <div className="relative w-full h-screen flex flex-col justify-center items-center">
       <div className="absolute inset-0">
         <Image
-          className="w-full h-full object-cover opacity-90"
+          className="w-full h-full object-cover opacity-100"
           src={heroCover}
           alt="Hero Cover"
         />
-        <div className="absolute top-0 right-0 w-full h-3/6 bg-gradient-to-t from-transparent to-[#0a0a0a] opacity-100"></div>
-        <div className="absolute bottom-0 left-0 w-full h-5/6 bg-gradient-to-b from-transparent to-[#0a0a0a] opacity-100"></div>
+        <div className="absolute -top-0.5 left-0 w-full h-3/6 bg-gradient-to-t from-transparent to-[#0a0a0a] opacity-100"></div>
+        <div className="absolute -bottom-0.5 left-0 w-full h-5/6 bg-gradient-to-b from-transparent to-[#0a0a0a] opacity-100"></div>
       </div>
 
-      <div className="z-10 text-white space-y-2 flex flex-col items-center">
-        <div className="flex flex-row space-x-4 mb-3">
+      <div className="z-10 text-white space-y-2 flex flex-col md:items-center">
+        <div className="flex flex-row flex-wrap justify-start items-start gap-2 px-3">
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={ccje}
             alt="ccje"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={cet}
-            alt="ccje"
+            alt="cet"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={chatme}
-            alt="ccje"
+            alt="chatme"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={come}
-            alt="ccje"
+            alt="come"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={husocom}
-            alt="ccje"
+            alt="husocom"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={sbme}
-            alt="ccje"
+            alt="sbme"
             width={60}
             height={60}
           />
           <Image
-            className="justify-center items-center"
+            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={ste}
-            alt="ccje"
+            alt="ste"
             width={60}
             height={60}
           />
         </div>
 
-        <div className="container space-y-2 pb-2">
-          <h1 className="text-8xl font-raceSport text-center">
+        <div className="container space-y-2 pb-2 px-3 md:px-0">
+          <h1 className="text-[9vw] md:text-8xl font-raceSport text-left md:text-center leading-tight md:leading-none">
             Cross Blazers Cup
           </h1>
-          <p className="text-xl font-montserrat text-center">
+          <p className="text-[3vw] md:text-xl font-montserrat text-left md:text-center">
             Join us for an unforgettable experience filled with excitement,
             sportsmanship, and community pride!
           </p>
         </div>
-        <div className="flex flex-row space-x-2 font-montserrat">
-          <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-5">
+        <div className="flex flex-col md:flex-row md:space-x-2 font-montserrat px-3">
+          <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5 mb-2 md:mb-0">
             <div className="flex space-x-2">
               <RiMapPin2Fill className="w-5 h-5" />
-              <p>HCDC Student Lounge</p>
+              <p className="text-sm md:text-md">HCDC Student Lounge, Davao City</p>
             </div>
           </div>
-          <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-5">
-          <div className="flex space-x-2">
+          <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5">
+            <div className="flex space-x-2">
               <RiCalendarFill className="w-5 h-6" />
-              <p>November 2024</p>
+              <p className="text-sm md:text-md">November 2024</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-row space-x-2">
+        <div className="flex flex-row space-x-2 px-3">
           <Button
-            className={`relative overflow-hidden font-montserrat text-lg font-semibold uppercase py-7 px-8 my-5 ${
+            className={`relative overflow-hidden font-montserrat text-md md:text-lg font-semibold uppercase py-6 px-8 md:py-7 md:px-8 my-5 ${
               isShimmering
                 ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
                 : ""
