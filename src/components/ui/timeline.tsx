@@ -34,9 +34,9 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
         className="w-full bg-neutral-950 font-sans md:px-10"
         ref={containerRef}
       >
-        <div className="w-2/3 space-y-2">
-          <h1 className="font-raceSport text-4xl">HCDC Intramurals Timeline</h1>
-          <p className="w-2/3 font-montserrat text-md leading-6">The Cross Blazers Cup Timeline showcases the key events and milestones of the prestigious Cross Blazers Cup, highlighting the journey and achievements in a visually engaging format.</p>
+         <div className="md:w-2/3 space-y-2">
+          <h1 className="font-raceSport text-2xl md:text-4xl text-center md:text-left ">HCDC Intramurals Timeline</h1>
+          <p className="md:w-2/3 text-center md:text-left font-montserrat text-xs md:text-lg md:leading-6">The Cross Blazers Cup Timeline showcases the key events and milestones of the prestigious Cross Blazers Cup, highlighting the journey and achievements in a visually engaging format.</p>
         </div>
 
         <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
