@@ -44,7 +44,7 @@ export const Navbar = () => {
           </div>
 
           <div className="flex flex-row md:hidden justify-between items-center pt-1">
-          <Image src={hcdcLogo} alt="" width={200} height={200} />
+          <Image src={hcdcLogo} alt="" width={170} height={170} />
             <div className="cursor-pointer" onClick={handleHamburgerClick}>
               {!showSidebar ? (
                 <>
