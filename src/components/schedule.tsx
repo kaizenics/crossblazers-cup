@@ -1,7 +1,5 @@
 import { cn } from "@/lib/utils";
-import {
-    IconCalendarEvent
-} from "@tabler/icons-react";
+import { IconCalendarEvent } from "@tabler/icons-react";
 import { Container } from "@/components/ui/container";
 
 export function Schedule() {
@@ -13,14 +11,12 @@ export function Schedule() {
     },
     {
       title: "November 15, 2024",
-      description:
-        "Ping Pong, Palarong Pinoy, Board Games, etc.",
+      description: "Ping Pong, Palarong Pinoy, Board Games, etc.",
       icon: <IconCalendarEvent />,
     },
     {
       title: "November 16, 2024",
-      description:
-        "Battle of the Bands, Badminton, Basketball, etc.",
+      description: "Battle of the Bands, Badminton, Basketball, etc.",
       icon: <IconCalendarEvent />,
     },
     {
@@ -35,30 +31,31 @@ export function Schedule() {
     },
     {
       title: "November 19, 2024",
-      description:
-        "Arise and Sing, Hip Hop, etc.",
+      description: "Arise and Sing, Hip Hop, etc.",
       icon: <IconCalendarEvent />,
     },
     {
       title: "November 20, 2024",
-      description:
-        "Spoken Poetry, Tula, Riddles, etc.",
+      description: "Spoken Poetry, Tula, Riddles, etc.",
       icon: <IconCalendarEvent />,
     },
     {
       title: "November 21, 2024",
-      description: "Closing Remarks, Awarding of the Participants, Hall of Fame, etc.",
+      description:
+        "Closing Remarks, Awarding of the Participants, Hall of Fame, etc.",
       icon: <IconCalendarEvent />,
     },
   ];
   return (
     <Container variant={"fullMobileBreakpointPadded"}>
-     <p className="font-raceSport text-center text-4xl">Upcoming Schedules</p>
+      <p className="font-raceSport text-center text-3xl md:text-4xl">Upcoming Schedules</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  relative z-10 py-10 max-w-8xl mx-auto">
         {schedules.map((schedule, index) => (
           <Feature key={schedule.title} {...schedule} index={index} />
         ))}
       </div>
+
+     
     </Container>
   );
 }
