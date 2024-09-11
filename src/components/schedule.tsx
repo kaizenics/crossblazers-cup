@@ -47,16 +47,18 @@ export function Schedule() {
     },
   ];
   return (
-    <Container variant={"fullMobileBreakpointPadded"}>
-      <p className="font-raceSport text-center text-3xl md:text-4xl">Upcoming Schedules</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  relativ z-0 py-10 max-w-8xl mx-auto">
-        {schedules.map((schedule, index) => (
-          <Feature key={schedule.title} {...schedule} index={index} />
-        ))}
-      </div>
-
-     
-    </Container>
+    <section id="schedules">
+      <Container variant={"fullMobileBreakpointPadded"}>
+        <p className="font-raceSport text-center text-3xl md:text-4xl">
+          Upcoming Schedules
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  relative z-0 py-10 max-w-8xl mx-auto">
+          {schedules.map((schedule, index) => (
+            <Feature key={schedule.title} {...schedule} index={index} />
+          ))}
+        </div>
+      </Container>
+    </section>
   );
 }
 

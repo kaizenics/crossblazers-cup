@@ -21,19 +21,31 @@ export const Navbar = () => {
             <Image src={hcdcLogo} alt="" width={200} height={200} />
             <div className="flex justify-between items-center space-x-10 ">
               <div className="flex items-center space-x-5">
-                <a href="#" className="font-montserrat font-semibold text-sm text-white hover:underline">
+                <a
+                  href="#"
+                  className="font-montserrat font-semibold text-sm text-white hover:underline"
+                >
                   Home
                 </a>
-                <a href="#" className="font-montserrat font-semibold text-sm text-white hover:underline">
+                <a
+                  href="#about"
+                  className="font-montserrat font-semibold text-sm text-white hover:underline"
+                >
                   About
                 </a>
-                <a href="#" className="font-montserrat font-semibold text-sm text-white hover:underline">
+                <a
+                  href="#schedules"
+                  className="font-montserrat font-semibold text-sm text-white hover:underline"
+                >
                   Schedules
                 </a>
-                <a href="#" className="font-montserrat font-semibold text-sm text-white hover:underline">
+                <a
+                  href="#faq"
+                  className="font-montserrat font-semibold text-sm text-white hover:underline"
+                >
                   FAQ
                 </a>
-                </div>
+              </div>
               <div className="flex items-center space-x-2">
                 <ShinyButton text="Play Trivia Game" className="" />
                 <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
@@ -44,7 +56,7 @@ export const Navbar = () => {
           </div>
 
           <div className="flex flex-row md:hidden justify-between items-center pt-1">
-          <Image src={hcdcLogo} alt="" width={170} height={170} />
+            <Image src={hcdcLogo} alt="" width={170} height={170} />
             <div className="cursor-pointer" onClick={handleHamburgerClick}>
               {!showSidebar ? (
                 <>

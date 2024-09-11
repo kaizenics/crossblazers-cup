@@ -23,7 +23,7 @@ export const Hero = () => {
   };
 
   return (
-    <div className="relative w-full h-screen flex flex-col justify-center items-center">
+    <div id="#" className="relative w-full h-screen flex flex-col justify-center items-center">
       <div className="absolute inset-0">
         <Image
           className="w-full h-full object-cover opacity-100"

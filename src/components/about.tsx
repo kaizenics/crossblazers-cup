@@ -2,10 +2,7 @@ import React from "react";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Container } from "@/components/ui/container";
 import Image from "next/image";
-import {
-  IconNews
-} from "@tabler/icons-react";
-
+import { IconNews } from "@tabler/icons-react";
 
 import pageant from "@/assets/images/hcdc-pageant.jpg";
 import bballWomen from "@/assets/images/basketball-women.jpg";
@@ -16,30 +13,30 @@ export const About = () => {
   return (
     <>
       <Container variant={"fullMobileBreakpointPadded"}>
-        <BentoGrid className="max-w-8xl mx-auto md:auto-rows-[20rem] my-10">
-          {items.map((item, i) => (
-            <BentoGridItem
-              key={i}
-              title={item.title}
-              description={item.description}
-              header={
-                <div className="relative w-full h-40 sm:h-64 md:h-full">
-                  <Image
-                    src={item.imageSrc}
-                    alt={item.imageAlt}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    className="rounded-t-xl"
-                  />
-                </div>
-              }
-              className={item.className}
-              icon={item.icon}
-            />
-          ))}
-        </BentoGrid>
-
-      
+        <section id="about">
+          <BentoGrid className="max-w-8xl mx-auto md:auto-rows-[20rem] my-10">
+            {items.map((item, i) => (
+              <BentoGridItem
+                key={i}
+                title={item.title}
+                description={item.description}
+                header={
+                  <div className="relative w-full h-40 sm:h-64 md:h-full">
+                    <Image
+                      src={item.imageSrc}
+                      alt={item.imageAlt}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="rounded-t-xl"
+                    />
+                  </div>
+                }
+                className={item.className}
+                icon={item.icon}
+              />
+            ))}
+          </BentoGrid>
+        </section>
       </Container>
     </>
   );
