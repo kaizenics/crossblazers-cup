@@ -36,7 +36,7 @@ export const Navbar = () => {
             <div className="flex justify-between items-center space-x-10">
               <div className="flex items-center space-x-5">
                 <a
-                  href="#"
+                  href="/"
                   className="font-montserrat font-semibold text-sm text-white hover:underline"
                 >
                   Home
