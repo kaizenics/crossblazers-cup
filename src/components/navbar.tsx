@@ -15,7 +15,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between md:px-12 py-5 sticky top-0 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-10">
+      <nav className="flex justify-between md:px-12 py-5 sticky top-0 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
         <Container variant={"fullMobileBreakpointPadded"}>
           <div className="hidden md:flex justify-between">
             <Image src={hcdcLogo} alt="" width={200} height={200} />
