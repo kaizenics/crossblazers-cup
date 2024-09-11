@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/navbar";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -44,9 +43,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${raceSport.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <Navbar />
+          {children}
         </ThemeProvider>
-        {children}
       </body>
     </html>
   );
