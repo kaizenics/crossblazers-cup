@@ -103,7 +103,7 @@ export const Navbar = () => {
         onClick={handleHamburgerClick}
       ></div>
       <div
-        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
+        className={`fixed top-19 right-0 w-full h-2/4 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
          z-50 transform transition-transform duration-300 ease-in-out ${
            showSidebar ? "translate-x-0" : "translate-x-full"
          }`}

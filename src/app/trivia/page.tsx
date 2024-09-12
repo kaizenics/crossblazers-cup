@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Card,
@@ -12,7 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, CheckCircle, XCircle, Play } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Play,
+  X,
+  ArrowLeft,
+} from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function LargerInteractiveTriviaGame() {
   const [gameState, setGameState] = useState<"intro" | "playing" | "result">(
@@ -22,7 +31,8 @@ export default function LargerInteractiveTriviaGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(15);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const questions = [
     {
       question: "What is the capital of France?",
@@ -62,6 +72,16 @@ export default function LargerInteractiveTriviaGame() {
   ];
 
   useEffect(() => {
+    const checkLoginStatus = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    checkLoginStatus();
+  }, []);
+
+  useEffect(() => {
     if (timeLeft > 0 && gameState === "playing") {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
@@ -88,8 +108,12 @@ export default function LargerInteractiveTriviaGame() {
   };
 
   const startGame = () => {
-    setGameState("playing");
-    setTimeLeft(15);
+    if (isLoggedIn) {
+      setGameState("playing");
+      setTimeLeft(15);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const resetGame = () => {
@@ -135,15 +159,27 @@ export default function LargerInteractiveTriviaGame() {
                   transition={{ duration: 0.3 }}
                   className="text-center"
                 >
-                  <h2 className="font-raceSport text-6xl mb-6">
+                  <h2 className="font-raceSport text-3xl md:text-5xl mb-6">
                     Trivia Challenge
                   </h2>
-                  <p className="text-2xl mb-8">
-                    Test your knowledge with 5 exciting questions and win exciting prizes.
+                  <p className="font-montserrat text-md md:text-2xl mb-8">
+                    Test your knowledge with 5 exciting questions and win
+                    exciting prizes.
                   </p>
                   <Button onClick={startGame} className="text-xl py-6 px-8">
                     <Play className="mr-2 h-6 w-6" /> Start Game
                   </Button>
+                  <CardFooter className="py-8">
+                    <Link href="/">
+                      <Button
+                        variant="ghost"
+                        className="font-montserrat text-white hover:text-gray-300 transition-colors"
+                      >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Home
+                      </Button>
+                    </Link>
+                  </CardFooter>
                 </motion.div>
               )}
               {gameState === "playing" && (
@@ -247,47 +283,56 @@ export default function LargerInteractiveTriviaGame() {
                       </div>
                     )}
                   </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-          <CardFooter className="justify-end p-8">
-            <AnimatePresence mode="wait">
-              {gameState === "playing" && (
-                <motion.div
-                  key="next"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Button
-                    onClick={handleNextQuestion}
-                    disabled={selectedAnswer === null}
-                    className="text-xl py-6 px-8"
-                  >
-                    {currentQuestion < questions.length - 1
-                      ? "Next Question"
-                      : "Finish Quiz"}
-                  </Button>
-                </motion.div>
-              )}
-              {gameState === "result" && (
-                <motion.div
-                  key="reset"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
                   <Button onClick={resetGame} className="text-xl py-6 px-8">
                     Play Again
                   </Button>
                 </motion.div>
               )}
             </AnimatePresence>
-          </CardFooter>
+          </CardContent>
         </Card>
       </motion.div>
+
+      {/* Modal for login warning */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-zinc-800 p-8 rounded-lg shadow-lg max-w-sm mx-4"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex justify-end items-center mb-4">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  <X size={24} />
+                </div>
+              </div>
+              <h2 className="font-montserrat text-xl font-bold mb-4">
+                Login Required
+              </h2>
+              <p className="font-montserrat mb-6">
+                You need to log in to start the game. Please log in to proceed.
+              </p>
+
+              <Link href="/login">
+                <Button variant={"default"} className="text-lg py-2 px-6">
+                  Login
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
