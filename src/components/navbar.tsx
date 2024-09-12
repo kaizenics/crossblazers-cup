@@ -52,8 +52,8 @@ export const Navbar = () => {
                 ))}
               </div>
               <div className="flex items-center space-x-2">
-              <Link href="/trivia">
-                <ShinyButton text="Play Trivia Game" className="" />
+                <Link href="/trivia">
+                  <ShinyButton text="Play Trivia Game" className="" />
                 </Link>
                 {user ? (
                   <Link href="/profile">
@@ -103,7 +103,7 @@ export const Navbar = () => {
         onClick={handleHamburgerClick}
       ></div>
       <div
-        className={`fixed top-19 right-0 w-full h-2/4 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
+        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
          z-50 transform transition-transform duration-300 ease-in-out ${
            showSidebar ? "translate-x-0" : "translate-x-full"
          }`}
@@ -122,7 +122,9 @@ export const Navbar = () => {
             ))}
           </div>
           <div className="space-y-4">
-            <ShinyButton text="Play Trivia Game" className="w-full" />
+            <Link href="/trivia">
+              <ShinyButton text="Play Trivia Game" className="w-full" />
+            </Link>
             {user ? (
               <Link href="/profile" className="block w-full">
                 <button
