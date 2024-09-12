@@ -7,7 +7,7 @@ import { User } from "@supabase/supabase-js";
 import { Container } from "@/components/ui/container";
 import ShinyButton from "@/components/ui/shiny-button";
 import hcdcLogo from "@/assets/logo/hcdclogo-white.png";
-import { supabase } from "@/lib/supabase"; 
+import { supabase } from "@/lib/supabase";
 
 export const Navbar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -17,15 +17,21 @@ export const Navbar = () => {
     setShowSidebar(!showSidebar);
   };
 
-
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data?.user || null); 
+      setUser(data?.user || null);
     };
 
     getUser();
   }, []);
+
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "#about", label: "About" },
+    { href: "#schedules", label: "Schedules" },
+    { href: "#faq", label: "FAQ" },
+  ];
 
   return (
     <>
@@ -35,35 +41,20 @@ export const Navbar = () => {
             <Image src={hcdcLogo} alt="" width={200} height={200} />
             <div className="flex justify-between items-center space-x-10">
               <div className="flex items-center space-x-5">
-                <a
-                  href="/"
-                  className="font-montserrat font-semibold text-sm text-white hover:underline"
-                >
-                  Home
-                </a>
-                <a
-                  href="#about"
-                  className="font-montserrat font-semibold text-sm text-white hover:underline"
-                >
-                  About
-                </a>
-                <a
-                  href="#schedules"
-                  className="font-montserrat font-semibold text-sm text-white hover:underline"
-                >
-                  Schedules
-                </a>
-                <a
-                  href="#faq"
-                  className="font-montserrat font-semibold text-sm text-white hover:underline"
-                >
-                  FAQ
-                </a>
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="font-montserrat font-semibold text-sm text-white hover:underline"
+                  >
+                    {item.label}
+                  </a>
+                ))}
               </div>
               <div className="flex items-center space-x-2">
+              <Link href="/trivia">
                 <ShinyButton text="Play Trivia Game" className="" />
-
-                {/* Conditionally render the Log In or Profile button */}
+                </Link>
                 {user ? (
                   <Link href="/profile">
                     <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
@@ -83,24 +74,77 @@ export const Navbar = () => {
 
           <div className="flex flex-row md:hidden justify-between items-center pt-1">
             <Image src={hcdcLogo} alt="" width={170} height={170} />
-            <div className="cursor-pointer" onClick={handleHamburgerClick}>
-              {!showSidebar ? (
-                <>
-                  <div className="w-[30px] h-[2px] my-[6px] bg-white -translate-y-0 duration-200"></div>
-                  <div className="w-[30px] h-[2px] my-[6px] bg-white duration-200"></div>
-                  <div className="w-[30px] h-[2px] my-[6px] bg-white translate-y-0 duration-200"></div>
-                </>
-              ) : (
-                <>
-                  <div className="w-[30px] h-[2px] my-[6px] opacity-0 translate-y-2 duration-300"></div>
-                  <div className="w-[30px] h-[2px] my-[6px] bg-white duration-400"></div>
-                  <div className="w-[30px] h-[2px] my-[6px] opacity-0 -translate-y-2 duration-300"></div>
-                </>
-              )}
+            <div className="cursor-pointer z-50" onClick={handleHamburgerClick}>
+              <div
+                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
+                  showSidebar ? "rotate-45 translate-y-2" : ""
+                }`}
+              ></div>
+              <div
+                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
+                  showSidebar ? "opacity-0" : ""
+                }`}
+              ></div>
+              <div
+                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
+                  showSidebar ? "-rotate-45 -translate-y-2" : ""
+                }`}
+              ></div>
             </div>
           </div>
         </Container>
       </nav>
+
+      {/* Mobile Sidebar */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ${
+          showSidebar ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={handleHamburgerClick}
+      ></div>
+      <div
+        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
+         z-50 transform transition-transform duration-300 ease-in-out ${
+           showSidebar ? "translate-x-0" : "translate-x-full"
+         }`}
+      >
+        <div className="flex flex-col h-full justify-between p-6">
+          <div className="space-y-6">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="block font-montserrat font-semibold text-lg text-center text-white hover:text-gray-300"
+                onClick={handleHamburgerClick}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <div className="space-y-4">
+            <ShinyButton text="Play Trivia Game" className="w-full" />
+            {user ? (
+              <Link href="/profile" className="block w-full">
+                <button
+                  className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
+                  onClick={handleHamburgerClick}
+                >
+                  Profile
+                </button>
+              </Link>
+            ) : (
+              <Link href="/login" className="block w-full">
+                <button
+                  className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
+                  onClick={handleHamburgerClick}
+                >
+                  Log In
+                </button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
