@@ -1,3 +1,5 @@
+"use client";
+
 import { Hero } from "@/components/hero";
 import { About } from "@/components/about";
 import { Schedule } from "@/components/schedule";
@@ -7,6 +9,7 @@ import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 
 export default function Home() {
+
   return (
     <main>
       <Navbar />

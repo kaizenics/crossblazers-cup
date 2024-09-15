@@ -100,7 +100,7 @@ export const Hero = () => {
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5 mb-2 md:mb-0">
             <div className="flex space-x-2">
               <RiMapPin2Fill className="w-5 h-5" />
-              <p className="text-sm md:text-md">HCDC Student Lounge, Davao City</p>
+              <p className="text-sm md:text-md">HCDC Student Lounge</p>
             </div>
           </div>
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5">
