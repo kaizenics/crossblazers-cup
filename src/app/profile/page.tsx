@@ -11,6 +11,8 @@ import { Timer, Ticket, Mail, TrendingUpIcon } from "lucide-react";
 export default function UserProfileDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [highestElapsedTime, setHighestElapsedTime] = useState<string>("Loading...");
+  const [highestScore, setHighestScore] = useState<number | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -19,14 +21,50 @@ export default function UserProfileDashboard() {
         router.push("/login");
       } else {
         setUser(data.user);
+        fetchUserStats(data.user.id); 
       }
     };
     getUser();
   }, [router]);
 
-  // Logout function
+  const fetchUserStats = async (userId: string) => {
+    // Fetch highest elapsed time
+    const { data: elapsedTimeData, error: elapsedTimeError } = await supabase
+      .from('trivia_scores')
+      .select('elapsed_time')
+      .eq('user_id', userId)
+      .order('elapsed_time', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (elapsedTimeError) {
+      console.error('Error fetching highest elapsed time:', elapsedTimeError.message);
+    } else {
+      if (elapsedTimeData) {
+        const seconds = Math.floor(elapsedTimeData.elapsed_time % 60);
+        const minutes = Math.floor(elapsedTimeData.elapsed_time / 60);
+        setHighestElapsedTime(`${minutes} min. ${seconds} sec.`);
+      }
+    }
+
+    const { data: scoreData, error: scoreError } = await supabase
+      .from('trivia_scores')
+      .select('score')
+      .eq('user_id', userId)
+      .order('score', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (scoreError) {
+      console.error('Error fetching highest score:', scoreError.message);
+    } else {
+      setHighestScore(scoreData?.score || 0);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    localStorage.setItem("logout", "true"); 
     router.push("/login"); 
   };
 
@@ -59,26 +97,26 @@ export default function UserProfileDashboard() {
           <Card className="bg-white/25 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Current Trivia Time
+                Highest Elapsed Time
               </CardTitle>
               <Timer className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1 min. 30 sec.</div>
+              <div className="text-2xl font-bold">{highestElapsedTime}</div>
               <p className="text-xs text-gray-400">
-                1 min. 30 sec. points this week
+                What a highest elapsed time!
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-white/25 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Tickets</CardTitle>
+              <CardTitle className="text-sm font-medium">Highest Score</CardTitle>
               <Ticket className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-gray-400">3 active raffles</p>
+              <div className="text-2xl font-bold">{highestScore}</div>
+              <p className="text-xs text-gray-400">Great job!</p>
             </CardContent>
           </Card>
 
