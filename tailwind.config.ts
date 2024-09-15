@@ -64,7 +64,8 @@ const config: Config = {
         shimmer: "shimmer 2s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-		shine: 'shine 0.85s ease',
+        shine: "shine 0.85s ease",
+        grid: "grid 15s linear infinite",
       },
       keyframes: {
         shimmer: {
@@ -78,7 +79,7 @@ const config: Config = {
         shine: {
           "100%": { transform: "translateX(100%)" },
         },
-     
+
         "accordion-down": {
           from: {
             height: "0",
@@ -94,6 +95,10 @@ const config: Config = {
           to: {
             height: "0",
           },
+        },
+        grid: {
+          "0%": { transform: "translateY(-50%)" },
+          "100%": { transform: "translateY(0)" },
         },
       },
     },
