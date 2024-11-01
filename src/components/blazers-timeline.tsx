@@ -26,9 +26,6 @@ import cnc2o21 from "@/assets/images/2021/cnc2021.jpg";
 import live2o21 from "@/assets/images/2021/live2021.png";
 import sbme2021 from "@/assets/images/2021/sbme2021.jpg";
 
-// body
-import cnclogo from "@/assets/images/cnc.png";
-
 export function BlazersTimeline() {
   const data = [
     {
@@ -224,14 +221,7 @@ export function BlazersTimeline() {
     },
   ];
   return (
-    <div className="w-full my-20 relative overflow-hidden">
-        <Image
-        src={cnclogo}
-        alt="cnc"
-        width={1000}
-        height={1000}
-        className="absolute top-1 -right-72 z-0 opacity-30"
-      />
+    <div className="w-full my-20 ">
       <Timeline data={data} />
     </div>
   );

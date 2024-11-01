@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { RiMapPin2Fill, RiCalendarFill } from "react-icons/ri";
-import heroCover from "@/assets/cover/hero.jpg";
+import heroCover from "@/assets/cover/hero1.jpeg";
 
 import ccje from "@/assets/logo/ccje.png";
 import cet from "@/assets/logo/cet.png";
@@ -23,7 +24,10 @@ export const Hero = () => {
   };
 
   return (
-    <div id="#" className="relative w-full h-screen flex flex-col justify-center items-center">
+    <div
+      id="#"
+      className="relative w-full h-screen flex flex-col justify-center items-center"
+    >
       <div className="absolute inset-0">
         <Image
           className="w-full h-full object-cover opacity-100"
@@ -91,7 +95,7 @@ export const Hero = () => {
           <h1 className="text-[9vw] md:text-8xl font-raceSport text-left md:text-center leading-tight md:leading-none">
             Cross Blazers Cup
           </h1>
-          <p className="text-[3vw] md:text-xl font-montserrat text-left md:text-center">
+          <p className="text-[3vw] md:text-xl font-sans text-left md:text-center">
             Join us for an unforgettable experience filled with excitement,
             sportsmanship, and community pride!
           </p>
@@ -100,27 +104,29 @@ export const Hero = () => {
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5 mb-2 md:mb-0">
             <div className="flex space-x-2">
               <RiMapPin2Fill className="w-5 h-5" />
-              <p className="text-sm md:text-md">HCDC Student Lounge</p>
+              <p className="text-sm md:text-md">Holy Cross of Davao College</p>
             </div>
           </div>
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5">
             <div className="flex space-x-2">
               <RiCalendarFill className="w-5 h-6" />
-              <p className="text-sm md:text-md">November 2024</p>
+              <p className="text-sm md:text-md">November 19, 2024</p>
             </div>
           </div>
         </div>
         <div className="flex flex-row space-x-2 px-3">
-          <Button
-            className={`relative overflow-hidden font-montserrat text-md md:text-lg font-semibold uppercase py-6 px-8 md:py-7 md:px-8 my-5 ${
-              isShimmering
-                ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
-                : ""
-            }`}
-            onClick={handleShimmerClick}
-          >
-            Event Details
-          </Button>
+          <Link href="/events">
+            <Button
+              className={`relative overflow-hidden font-montserrat text-md md:text-lg font-semibold uppercase py-6 px-8 md:py-7 md:px-8 my-5 ${
+                isShimmering
+                  ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
+                  : ""
+              }`}
+              onClick={handleShimmerClick}
+            >
+              List of Events
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

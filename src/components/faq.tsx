@@ -17,7 +17,7 @@ export const Faq = () => {
                 Frequently Asked Questions
               </h1>
               <p className="md:2/3 font-montserrat text-sm md:text-lg text-center md:text-left leading-5">
-                Have more questions? message us at itshcdc@gmail.com
+                Have more questions? message us at ssg-exed@hcdc.edu.ph
               </p>
             </div>
 
