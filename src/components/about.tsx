@@ -18,7 +18,6 @@ import pageant from "@/assets/images/hcdc-pageant.jpg";
 import bballWomen from "@/assets/images/basketball-women.jpg";
 import sing from "@/assets/images/sing-1.jpg";
 import esports from "@/assets/images/esports.jpg";
-
 import cnclogo from "@/assets/images/cnc-2024.png";
 
 export const About = () => {
@@ -35,23 +34,23 @@ export const About = () => {
 
   return (
     <Container variant={"fullMobileBreakpointPadded"}>
-      <section id="about" className="mt-10 relative">
-        <div>
-          <h1 className="font-raceSport text-2xl md:text-4xl text-center md:text-left ">
+      <section id="about" className="mt-4 sm:mt-6 md:mt-10 relative">
+        <div className="relative z-10">
+          <h1 className="font-raceSport text-2xl sm:text-3xl md:text-4xl text-center md:text-left mb-4 sm:mb-6">
             About
           </h1>
 
-          <div className="flex flex-col md:flex-row gap-2 mt-6">
-            <div className="md:w-2/3">
-              <p className="font-raceSport text-6xl">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8">
+            <div className="w-full md:w-2/3">
+              <p className="font-raceSport text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 sm:mb-3 md:mb-4">
                 <span className="text-emerald-500">Cross Blazers Cup</span>
               </p>
-              <p className="text-lg font-semibold font-montserrat mb-5">
+              <p className="text-base sm:text-lg font-semibold font-montserrat mb-3 sm:mb-4 md:mb-5">
                 HCDC Goes G.R.E.E.N.: Celebrating Music, Sports, and Arts with a
                 Commitment to the Integrity of Creation
               </p>
-              <p className="font-raceSport text-2xl mb-3">Sub Theme</p>
-              <ul className="space-y-2 text-xl font-montserrat">
+              <p className="font-raceSport text-xl sm:text-2xl mb-2 sm:mb-3">Sub Theme</p>
+              <ul className="space-y-1 sm:space-y-2 text-sm sm:text-base md:text-lg lg:text-xl font-montserrat">
                 <li>
                   <span className="font-bold">G - </span>
                   <span>Guardians of Mother Earth</span>
@@ -77,57 +76,62 @@ export const About = () => {
                   <span>Nurturing and Harmonizing Environmental Advocacy</span>
                 </li>
               </ul>
-             <button className="bg-transparent border border-emerald-500 text-emerald-500 py-3 px-4 rounded-md mt-5 font-montserrat font-semibold">Learn More</button>
+              <button className="bg-transparent border border-emerald-500 text-emerald-500 py-2 sm:py-3 px-3 sm:px-4 rounded-md mt-3 sm:mt-4 md:mt-5 font-montserrat font-semibold text-sm sm:text-base">
+                Learn More
+              </button>
             </div>
           </div>
         </div>
-        <Image
-          src={cnclogo}
-          alt="HCDC Pageant"
-          width={700}
-          height={700}
-          className="absolute top-0 right-0 -z-10 opacity-30"
-        />
-        <Carousel
-          plugins={[
-            Autoplay({
-              delay: 3000,
-            }),
-          ]}
-          className="w-full max-w-8xl mx-auto"
-        >
-          <CarouselContent>
-            {carouselItems.map((slideItems, slideIndex) => (
-              <CarouselItem key={slideIndex}>
-                <BentoGrid className="max-w-8xl mx-auto md:auto-rows-[20rem] my-10">
-                  {slideItems.map((item, itemIndex) => (
-                    <BentoGridItem
-                      key={itemIndex}
-                      title={item.title}
-                      description={item.description}
-                      header={
-                        <div className="relative w-full h-40 sm:h-64 md:h-full">
-                          <Image
-                            src={item.imageSrc}
-                            alt={item.imageAlt}
-                            fill
-                            style={{ objectFit: "cover" }}
-                            className="rounded-t-xl"
-                          />
-                        </div>
-                      }
-                      className={item.className}
-                      icon={item.icon}
-                    />
-                  ))}
-                </BentoGrid>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+        <div className="absolute top-0 right-0 -z-10 opacity-30 w-full md:w-1/2 h-full">
+          <Image
+            src={cnclogo}
+            alt="HCDC Pageant"
+            layout="fill"
+            objectFit="contain"
+            objectPosition="right top"
+          />
+        </div>
       </section>
+
+      <Carousel
+        plugins={[
+          Autoplay({
+            delay: 3000,
+          }),
+        ]}
+        className="w-full max-w-8xl mx-auto mt-6 sm:mt-8 md:mt-10"
+      >
+        <CarouselContent>
+          {carouselItems.map((slideItems, slideIndex) => (
+            <CarouselItem key={slideIndex}>
+              <BentoGrid className="max-w-8xl mx-auto md:auto-rows-[20rem] my-4 sm:my-6 md:my-10">
+                {slideItems.map((item, itemIndex) => (
+                  <BentoGridItem
+                    key={itemIndex}
+                    title={item.title}
+                    description={item.description}
+                    header={
+                      <div className="relative w-full h-40 sm:h-48 md:h-64 lg:h-full">
+                        <Image
+                          src={item.imageSrc}
+                          alt={item.imageAlt}
+                          fill
+                          style={{ objectFit: "cover" }}
+                          className="rounded-t-xl"
+                        />
+                      </div>
+                    }
+                    className={item.className}
+                    icon={item.icon}
+                  />
+                ))}
+              </BentoGrid>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </Container>
   );
 };
@@ -165,29 +169,9 @@ const items = [
     className: "md:col-span-2",
     icon: <IconNews className="h-4 w-4 text-gray-400" />,
   },
-  // Add more items here to test the carousel functionality
-  {
-    title: "Additional Event 1",
-    description: "Description for Additional Event 1",
-    imageSrc: pageant, // Using an existing image for demonstration
-    imageAlt: "Additional Event 1 image",
-    className: "md:col-span-2",
-    icon: <IconNews className="h-4 w-4 text-gray-400" />,
-  },
-  {
-    title: "Additional Event 2",
-    description: "Description for Additional Event 2",
-    imageSrc: sing, // Using an existing image for demonstration
-    imageAlt: "Additional Event 2 image",
-    className: "md:col-span-1",
-    icon: <IconNews className="h-4 w-4 text-gray-400" />,
-  },
-  {
-    title: "Additional Event 2",
-    description: "Description for Additional Event 2",
-    imageSrc: sing, // Using an existing image for demonstration
-    imageAlt: "Additional Event 2 image",
-    className: "md:col-span-2",
-    icon: <IconNews className="h-4 w-4 text-gray-400" />,
-  },
+  // Additional items remain unchanged
 ];
+
+export default function Component() {
+  return <About />;
+}

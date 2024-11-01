@@ -24,7 +24,7 @@ export const Countdown = () => {
   const seconds = timeLeft % 60;
 
   return (
-    <div className="w-full h-72 border border-white/[0.2] mt-10 bg-gradient-to-r from-green-600 via-emerald-700 to-emerald-800">
+    <div className="w-full h-72 lg:block hidden border border-white/[0.2] mt-10 bg-gradient-to-r from-green-600 via-emerald-700 to-emerald-800">
       <div className="flex flex-row items-center h-full space-x-10">
         <div className="flex flex-row mt-2 w-full justify-end">
           <div className="w-36 h-36 bg-black/[0.4] flex flex-col justify-center items-center">
