@@ -36,7 +36,7 @@ export default function LargerInteractiveTriviaGame() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  
+
   const questions = [
     {
       question: "What is the capital of France?",
@@ -101,29 +101,36 @@ export default function LargerInteractiveTriviaGame() {
     }
   };
 
-  const saveScoreToSupabase = async (score: number, finishedAt: Date, elapsedTime: number) => {
+  const saveScoreToSupabase = async (
+    score: number,
+    finishedAt: Date,
+    elapsedTime: number
+  ) => {
     if (!isLoggedIn) return;
-  
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
     if (userError) {
-      console.error('Error fetching user:', userError.message);
+      console.error("Error fetching user:", userError.message);
       return;
     }
     if (!user) return;
-  
-    const { data, error } = await supabase
-      .from('trivia_scores')
-      .insert([{
+
+    const { data, error } = await supabase.from("trivia_scores").insert([
+      {
         user_id: user.id,
         score: score,
         finished_at: finishedAt.toISOString(),
-        elapsed_time: elapsedTime
-      }]);
-  
+        elapsed_time: elapsedTime,
+      },
+    ]);
+
     if (error) {
-      console.error('Error saving score:', error.message);
+      console.error("Error saving score:", error.message);
     } else {
-      console.log('Score saved successfully:', data);
+      console.log("Score saved successfully:", data);
     }
   };
 
@@ -136,7 +143,7 @@ export default function LargerInteractiveTriviaGame() {
       setGameState("result");
       if (startTime) {
         const endTime = new Date().getTime();
-        const elapsedTime = (endTime - startTime) / 1000; 
+        const elapsedTime = (endTime - startTime) / 1000;
         saveScoreToSupabase(score, new Date(), elapsedTime);
       }
     }
@@ -204,8 +211,12 @@ export default function LargerInteractiveTriviaGame() {
                     Test your knowledge with 5 exciting questions and win
                     exciting prizes.
                   </p>
-                  <Button onClick={startGame} className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8">
-                    <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" /> Start Game
+                  <Button
+                    onClick={startGame}
+                    className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
+                  >
+                    <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />{" "}
+                    Start Game
                   </Button>
                   <CardFooter className="py-4 sm:py-6 lg:py-8">
                     <Link href="/">
@@ -291,7 +302,8 @@ export default function LargerInteractiveTriviaGame() {
                       disabled={selectedAnswer === null}
                       className="font-montserrat text-sm sm:text-base lg:text-lg py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6"
                     >
-                      Next Question <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                      Next Question{" "}
+                      <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -304,7 +316,9 @@ export default function LargerInteractiveTriviaGame() {
                   transition={{ duration: 0.5 }}
                   className="text-center"
                 >
-                  <h2 className="font-montserrat text-xl sm:text-2xl lg:text-3xl xl:text-4xl mb-4 sm:mb-6">Quiz Completed!</h2>
+                  <h2 className="font-montserrat text-xl sm:text-2xl lg:text-3xl xl:text-4xl mb-4 sm:mb-6">
+                    Quiz Completed!
+                  </h2>
                   <p className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-6 sm:mb-8">
                     Your score: {score} out of {questions.length}
                   </p>
@@ -321,21 +335,30 @@ export default function LargerInteractiveTriviaGame() {
                     {score === questions.length ? (
                       <div className="flex items-center justify-center text-green-500 mb-4 sm:mb-6">
                         <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-16 xl:w-16 mr-2 sm:mr-3 lg:mr-4" />
-                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">Perfect Score!</span>
+                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">
+                          Perfect Score!
+                        </span>
                       </div>
                     ) : score >= questions.length / 2 ? (
                       <div className="flex items-center justify-center text-yellow-500 mb-4 sm:mb-6">
                         <AlertCircle className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-16 xl:w-16 mr-2 sm:mr-3 lg:mr-4" />
-                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">Good Job!</span>
+                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">
+                          Good Job!
+                        </span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center text-red-500 mb-4 sm:mb-6">
                         <XCircle className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-16 xl:w-16 mr-2 sm:mr-3 lg:mr-4" />
-                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">Better Luck Next Time!</span>
+                        <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">
+                          Better Luck Next Time!
+                        </span>
                       </div>
                     )}
                   </motion.div>
-                  <Button onClick={resetGame} className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8">
+                  <Button
+                    onClick={resetGame}
+                    className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
+                  >
                     Play Again
                   </Button>
                 </motion.div>
@@ -378,7 +401,10 @@ export default function LargerInteractiveTriviaGame() {
               </p>
 
               <Link href="/login">
-                <Button variant={"default"} className="w-full text-sm sm:text-base lg:text-lg py-2 px-4 sm:py-3 sm:px-6">
+                <Button
+                  variant={"default"}
+                  className="w-full text-sm sm:text-base lg:text-lg py-2 px-4 sm:py-3 sm:px-6"
+                >
                   Login
                 </Button>
               </Link>
