@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/data/about/aboutData.mdx", "src/data/events/eventsData.mdx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/data/about/aboutData.mdx", "src/data/events/eventsData.tsx"],
   "exclude": ["node_modules"]
 }

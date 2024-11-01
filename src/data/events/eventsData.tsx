@@ -1,4 +1,4 @@
-// eventsData.tsx
+
 
 export const events = [
   {

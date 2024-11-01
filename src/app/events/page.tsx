@@ -5,7 +5,7 @@ import { format, addDays } from "date-fns";
 import { Navbar } from "@/components/navbar";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { events } from "@/data/events/eventsData.mdx";
+import { events } from "@/data/events/eventsData";
 
 const startDate = new Date(2024, 10, 19);
 
