@@ -114,11 +114,11 @@ export const Navbar = () => {
         onClick={handleHamburgerClick}
       ></div>
       <div
-        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-19 right-0 w-full h-full bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50 transform transition-transform duration-300 ease-in-out ${
           showSidebar ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full justify-between p-6">
+        <div className="flex flex-col h-full p-6 space-y-5">
           <div className="space-y-6">
             {navItems.map((item) => (
               <a

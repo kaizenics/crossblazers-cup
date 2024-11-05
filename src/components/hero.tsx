@@ -39,7 +39,7 @@ export const Hero = () => {
       </div>
 
       <div className="z-10 text-white space-y-2 flex flex-col md:items-center">
-        <div className="flex flex-row flex-wrap justify-start items-start gap-2 px-3">
+        <div className="flex flex-row flex-wrap justify-center items-start gap-2 px-3">
           <Image
             className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
             src={ccje}
@@ -91,30 +91,30 @@ export const Hero = () => {
           />
         </div>
 
-        <div className="container space-y-2 pb-2 px-3 md:px-0">
-          <h1 className="text-[9vw] md:text-8xl font-raceSport text-left md:text-center leading-tight md:leading-none">
+        <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0">
+          <h1 className="text-[9vw] md:text-8xl font-raceSport text-center leading-tight md:leading-none">
             Cross Blazers Cup
           </h1>
-          <p className="text-[3vw] md:text-xl font-sans text-left md:text-center">
+          <p className="font-montserrat text-[3vw] md:text-xl text-center md:text-center">
             Join us for an unforgettable experience filled with excitement,
             sportsmanship, and community pride!
           </p>
         </div>
         <div className="flex flex-col md:flex-row md:space-x-2 font-montserrat px-3">
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5 mb-2 md:mb-0">
-            <div className="flex space-x-2">
+            <div className="flex justify-center space-x-2">
               <RiMapPin2Fill className="w-5 h-5" />
               <p className="text-sm md:text-md">Holy Cross of Davao College</p>
             </div>
           </div>
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5">
-            <div className="flex space-x-2">
+            <div className="flex justify-center space-x-2">
               <RiCalendarFill className="w-5 h-6" />
               <p className="text-sm md:text-md">November 19, 2024</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-row space-x-2 px-3">
+        <div className="flex flex-row justify-center space-x-2 px-3">
           <Link href="/events">
             <Button
               className={`relative overflow-hidden font-montserrat text-md md:text-lg font-semibold uppercase py-6 px-8 md:py-7 md:px-8 my-5 ${
