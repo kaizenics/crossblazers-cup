@@ -32,10 +32,10 @@ export function BlazersTimeline() {
       title: "Late 2023",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
             Cross Blazers Cup - October 2023
           </p>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             The Cross Blazers Cup, held in October 2023, is a prestigious event
             that gathers top professionals from various industries to engage in
             a series of innovative and competitive challenges. This event
@@ -80,10 +80,10 @@ export function BlazersTimeline() {
       title: "Mid 2023",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
             Cross Blazers Cup - April 2023
           </p>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             The Cross Blazers Cup, held in April 2023, is a premier event that
             brings together top talent from various sectors to compete in a
             series of innovative challenges. This event fosters collaboration,
@@ -127,10 +127,10 @@ export function BlazersTimeline() {
       title: "2022",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
             Crusaders Cup - April 2022
           </p>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             The Crusaders Cup, held in April 2022, is a distinguished event that
             brings together elite participants from various fields to engage in
             a series of competitive and innovative challenges. This event
@@ -175,10 +175,10 @@ export function BlazersTimeline() {
       title: "2021",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm lg:text-lg font-semibold mb-8">
             Crusaders Cup - April 2021
           </p>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="font-montserrat text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             The Crusaders Cup, held in April 2021, is a prestigious event that
             unites top participants from various sectors to compete in a series
             of innovative and challenging activities. This event highlights
