@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from "react";
 
 export const Countdown = () => {
-  const [timeLeft, setTimeLeft] = useState(7 * 24 * 60 * 60); // 7 days in seconds
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  const targetEndTime = new Date("2024-11-19T00:00:00Z"); 
+
+  const calculateTimeLeft = (endTime: Date) => {
+    const currentTime = new Date().getTime(); 
+    const difference = endTime.getTime() - currentTime; 
+    return Math.max(0, Math.floor(difference / 1000)); 
+  };
 
   useEffect(() => {
+
+    setTimeLeft(calculateTimeLeft(targetEndTime));
+
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
+        if (prevTime <= 1) {
           clearInterval(interval);
-          return 0; // Stop at 0
+          return 0; 
         }
         return prevTime - 1;
       });
     }, 1000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
-  // Calculate days, hours, minutes, and seconds
   const days = Math.floor(timeLeft / (24 * 60 * 60));
   const hours = Math.floor((timeLeft % (24 * 60 * 60)) / (60 * 60));
   const minutes = Math.floor((timeLeft % (60 * 60)) / 60);
@@ -35,7 +45,7 @@ export const Countdown = () => {
             <p className="text-5xl font-montserrat font-black">{hours}</p>
             <p className="text-lg font-montserrat font-semibold">hours</p>
           </div>
-          <div className="w-36 h-36 bg-black/[0.3] flex flex-col justify-center items-center ">
+          <div className="w-36 h-36 bg-black/[0.3] flex flex-col justify-center items-center">
             <p className="text-5xl font-montserrat font-black">{minutes}</p>
             <p className="text-lg font-montserrat font-semibold">minutes</p>
           </div>
@@ -50,6 +60,10 @@ export const Countdown = () => {
             Cross Blazers Cup is on the way
           </p>
           <p className="font-montserrat font-semibold text-lg">Holy Cross of Davao College, Sta. Ana Avenue, Davao City</p>
+          
+          <p className="font-montserrat font-semibold text-md text-white mt-2">
+            Countdown ends on: {targetEndTime.toLocaleString()} {/* Format date */}
+          </p>
         </div>
       </div>
     </div>
