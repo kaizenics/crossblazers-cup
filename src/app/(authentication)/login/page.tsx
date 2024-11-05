@@ -20,7 +20,7 @@ export default function Login() {
     if (error) {
       console.error('Error during Google Sign-In:', error.message);
     } else {
-      router.push('/');
+      router.push('/login');
     }
   };
 
