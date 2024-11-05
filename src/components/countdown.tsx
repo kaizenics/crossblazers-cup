@@ -14,7 +14,6 @@ export const Countdown = () => {
   };
 
   useEffect(() => {
-
     setTimeLeft(calculateTimeLeft(targetEndTime));
 
     const interval = setInterval(() => {
@@ -36,35 +35,34 @@ export const Countdown = () => {
   const seconds = timeLeft % 60;
 
   return (
-    <div className="w-full h-72 lg:block hidden border border-white/[0.2] mt-10 bg-gradient-to-r from-green-600 via-emerald-700 to-emerald-800">
-      <div className="flex flex-row items-center h-full space-x-10">
-        <div className="flex flex-row mt-2 w-full justify-end">
-          <div className="w-36 h-36 bg-black/[0.4] flex flex-col justify-center items-center">
-            <p className="text-5xl font-montserrat font-black">{days}</p>
-            <p className="text-lg font-montserrat font-semibold">days</p>
-          </div>
-          <div className="w-36 h-36 bg-black/[0.3] flex flex-col justify-center items-center">
-            <p className="text-5xl font-montserrat font-black">{hours}</p>
-            <p className="text-lg font-montserrat font-semibold">hours</p>
-          </div>
-          <div className="w-36 h-36 bg-black/[0.3] flex flex-col justify-center items-center">
-            <p className="text-5xl font-montserrat font-black">{minutes}</p>
-            <p className="text-lg font-montserrat font-semibold">minutes</p>
-          </div>
-          <div className="w-36 h-36 bg-black/[0.3] flex flex-col justify-center items-center">
-            <p className="text-5xl font-montserrat font-black">{seconds}</p>
-            <p className="text-lg font-montserrat font-semibold">seconds</p>
-          </div>
+    <div className="w-full mb-14 sm:mb-0 mt-4 sm:mt-6 md:mt-8 lg:mt-10 bg-gradient-to-r from-green-600 via-emerald-700 to-emerald-800 p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-10">
+        <div className="flex flex-row justify-center lg:justify-end w-full">
+          {[
+            { value: days, label: "days" },
+            { value: hours, label: "hours" },
+            { value: minutes, label: "minutes" },
+            { value: seconds, label: "seconds" },
+          ].map((item) => (
+            <div key={item.label} className={`w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 ${
+  item.label === "days" ? "bg-black/[0.4]" : "bg-black/[0.3]"
+} flex flex-col justify-center items-center`}>
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-montserrat font-black">{item.value}</p>
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-montserrat font-semibold">{item.label}</p>
+            </div>
+          ))}
         </div>
-        <div className="w-full">
-          <p className="font-montserrat font-semibold text-xl">Are you ready?</p>
-          <p className="font-raceSport font-bold text-start text-5xl text-balance text-white uppercase">
+        <div className="w-full text-center lg:text-left">
+          <p className="font-montserrat font-semibold text-md sm:text-xl mb-2">Are you ready?</p>
+          <p className="font-raceSport font-bold text-2xl sm:text-4xl md:text-5xl text-balance text-white uppercase mb-2">
             Cross Blazers Cup is on the way
           </p>
-          <p className="font-montserrat font-semibold text-lg">Holy Cross of Davao College, Sta. Ana Avenue, Davao City</p>
-          
+          <p className="font-montserrat font-semibold text-xs sm:text-base md:text-lg">
+            Holy Cross of Davao College, Sta. Ana Avenue, Davao City
+          </p>
         </div>
       </div>
     </div>
   );
-};
+}
+export default Countdown;
