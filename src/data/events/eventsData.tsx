@@ -6,12 +6,12 @@ export const events = [
     events: [
       {
         title: "Parade",
-        time: "5:00 AM  – 7:00 AM",
+        time: "5:00 AM - 7:00 AM",
         details: ["People’s Park - Quirino - HCDC"],
       },
       {
         title: "Mass",
-        time: "9:00 AM – 10:30 PM",
+        time: "9:00 AM - 10:30 PM",
         details: [],
       },
       {
@@ -109,7 +109,7 @@ export const events = [
       },
       {
         title: "Blaze your Trail Live Performance",
-        time: "8:40p PM - 8:45 PM",
+        time: "8:40 PM - 8:45 PM",
         details: [],
       },
     ],
