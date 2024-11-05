@@ -11,8 +11,7 @@ import { supabase } from "@/lib/supabase";
 
 export const Navbar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [user] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState<User | null>(null); // Update state to hold user information
 
   const handleHamburgerClick = () => {
     setShowSidebar(!showSidebar);
@@ -29,25 +28,7 @@ export const Navbar = () => {
   
       if (user) {
         console.log("Logged in user:", user);
-  
-        // Fetch profile to check if the user is an admin
-        const { data: profile, error: profileError } = await supabase
-          .from('profile')
-          .select('is_admin')
-          .eq('id', user.id)
-          .single();
-  
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-          return;
-        }
-  
-        if (profile) {
-          console.log("User profile:", profile);
-          setIsAdmin(profile.is_admin);
-        } else {
-          console.warn("No profile found for user.");
-        }
+        setUser(user); // Set the user state
       } else {
         console.log("No user is logged in.");
       }
@@ -56,7 +37,6 @@ export const Navbar = () => {
     getUser();
   }, []);
   
-
   const navItems = [
     { href: "/", label: "Home" },
     { href: "#about", label: "About" },
@@ -87,20 +67,11 @@ export const Navbar = () => {
                   <ShinyButton text="Play Trivia Game" className="" />
                 </Link>
                 {user ? (
-                  <>
-                    <Link href="/profile">
-                      <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
-                        Profile
-                      </button>
-                    </Link>
-                    {isAdmin && (
-                      <Link href="/dashboard">
-                        <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
-                          Admin Dashboard
-                        </button>
-                      </Link>
-                    )}
-                  </>
+                  <Link href="/profile">
+                    <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
+                      Profile
+                    </button>
+                  </Link>
                 ) : (
                   <Link href="/login">
                     <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
@@ -165,26 +136,14 @@ export const Navbar = () => {
               <ShinyButton text="Play Trivia Game" className="w-full" />
             </Link>
             {user ? (
-              <>
-                <Link href="/profile" className="block w-full">
-                  <button
-                    className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
-                    onClick={handleHamburgerClick}
-                  >
-                    Profile
-                  </button>
-                </Link>
-                {isAdmin && (  // Conditionally render the Admin button in the mobile sidebar
-                  <Link href="/dashboard" className="block w-full">
-                    <button
-                      className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
-                      onClick={handleHamburgerClick}
-                    >
-                      Admin Dashboard
-                    </button>
-                  </Link>
-                )}
-              </>
+              <Link href="/profile" className="block w-full">
+                <button
+                  className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
+                  onClick={handleHamburgerClick}
+                >
+                  Profile
+                </button>
+              </Link>
             ) : (
               <Link href="/login" className="block w-full">
                 <button
