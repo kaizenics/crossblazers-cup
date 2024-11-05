@@ -11,7 +11,8 @@ import { supabase } from "@/lib/supabase";
 
 export const Navbar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleHamburgerClick = () => {
     setShowSidebar(!showSidebar);
@@ -19,12 +20,42 @@ export const Navbar = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data?.user || null);
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        console.error("Error fetching user:", userError);
+        return;
+      }
+  
+      if (user) {
+        console.log("Logged in user:", user);
+  
+        // Fetch profile to check if the user is an admin
+        const { data: profile, error: profileError } = await supabase
+          .from('profile')
+          .select('is_admin')
+          .eq('id', user.id)
+          .single();
+  
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+          return;
+        }
+  
+        if (profile) {
+          console.log("User profile:", profile);
+          setIsAdmin(profile.is_admin);
+        } else {
+          console.warn("No profile found for user.");
+        }
+      } else {
+        console.log("No user is logged in.");
+      }
     };
-
+  
     getUser();
   }, []);
+  
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -56,11 +87,20 @@ export const Navbar = () => {
                   <ShinyButton text="Play Trivia Game" className="" />
                 </Link>
                 {user ? (
-                  <Link href="/profile">
-                    <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
-                      Profile
-                    </button>
-                  </Link>
+                  <>
+                    <Link href="/profile">
+                      <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
+                        Profile
+                      </button>
+                    </Link>
+                    {isAdmin && (
+                      <Link href="/dashboard">
+                        <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
+                          Admin Dashboard
+                        </button>
+                      </Link>
+                    )}
+                  </>
                 ) : (
                   <Link href="/login">
                     <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
@@ -103,10 +143,9 @@ export const Navbar = () => {
         onClick={handleHamburgerClick}
       ></div>
       <div
-        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
-         z-50 transform transition-transform duration-300 ease-in-out ${
-           showSidebar ? "translate-x-0" : "translate-x-full"
-         }`}
+        className={`fixed top-19 right-0 w-full h-2/5 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50 transform transition-transform duration-300 ease-in-out ${
+          showSidebar ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex flex-col h-full justify-between p-6">
           <div className="space-y-6">
@@ -126,14 +165,26 @@ export const Navbar = () => {
               <ShinyButton text="Play Trivia Game" className="w-full" />
             </Link>
             {user ? (
-              <Link href="/profile" className="block w-full">
-                <button
-                  className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
-                  onClick={handleHamburgerClick}
-                >
-                  Profile
-                </button>
-              </Link>
+              <>
+                <Link href="/profile" className="block w-full">
+                  <button
+                    className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
+                    onClick={handleHamburgerClick}
+                  >
+                    Profile
+                  </button>
+                </Link>
+                {isAdmin && (  // Conditionally render the Admin button in the mobile sidebar
+                  <Link href="/dashboard" className="block w-full">
+                    <button
+                      className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
+                      onClick={handleHamburgerClick}
+                    >
+                      Admin Dashboard
+                    </button>
+                  </Link>
+                )}
+              </>
             ) : (
               <Link href="/login" className="block w-full">
                 <button
