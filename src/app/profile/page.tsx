@@ -85,8 +85,8 @@ export default function UserProfileDashboard() {
           </div>
 
           <Button
-            variant={"destructive"}
-            className="bg-primary hover:bg-primary/90"
+            variant="destructive"
+            className="font-montserrat"
             onClick={handleLogout}
           >
             Logout

@@ -20,7 +20,7 @@ export default function Login() {
     if (error) {
       console.error('Error during Google Sign-In:', error.message);
     } else {
-      router.push('/login');
+      router.push('/');
     }
   };
 
@@ -49,11 +49,11 @@ export default function Login() {
           </Button>
           <p className="mt-2 text-center text-xs text-gray-500">
             By signing in, you agree to our{' '}
-            <a href="#" className="font-medium text-red-400 hover:text-red-300 transition-colors duration-200">
+            <a href="#" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors duration-200">
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="#" className="font-medium text-red-400 hover:text-red-300 transition-colors duration-200">
+            <a href="#" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors duration-200">
               Privacy Policy
             </a>
           </p>

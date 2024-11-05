@@ -263,7 +263,7 @@ export default function LargerInteractiveTriviaGame() {
                           variant={
                             selectedAnswer === index ? "secondary" : "default"
                           }
-                          className="font-montserrat bg-black/40 w-full h-auto py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 text-left justify-start text-sm sm:text-base lg:text-lg"
+                          className="font-montserrat w-full h-auto py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 text-left justify-start text-sm sm:text-base lg:text-lg"
                           onClick={() => handleAnswerClick(index)}
                           disabled={selectedAnswer !== null}
                         >
