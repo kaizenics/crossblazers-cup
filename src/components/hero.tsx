@@ -117,7 +117,7 @@ export const Hero = () => {
         <div className="flex flex-row justify-center space-x-2 px-3">
           <Link href="/events">
             <Button
-              className={`relative overflow-hidden font-montserrat text-md md:text-lg font-semibold uppercase py-6 px-8 md:py-7 md:px-8 my-5 ${
+              className={`relative overflow-hidden font-montserrat text-sm md:text-lg font-semibold uppercase py-5 px-7 md:py-7 md:px-8 my-5 ${
                 isShimmering
                   ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
                   : ""
