@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { useState, useEffect, useMemo } from "react";
 
 export const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
-  const targetEndTime = new Date("2024-11-19T00:00:00Z"); 
+  const targetEndTime = useMemo(() => new Date("2024-11-19T00:00:00Z"), []); 
 
   const calculateTimeLeft = (endTime: Date) => {
     const currentTime = new Date().getTime(); 
@@ -26,7 +28,7 @@ export const Countdown = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [targetEndTime]);
 
   const days = Math.floor(timeLeft / (24 * 60 * 60));
   const hours = Math.floor((timeLeft % (24 * 60 * 60)) / (60 * 60));
@@ -61,9 +63,6 @@ export const Countdown = () => {
           </p>
           <p className="font-montserrat font-semibold text-lg">Holy Cross of Davao College, Sta. Ana Avenue, Davao City</p>
           
-          <p className="font-montserrat font-semibold text-md text-white mt-2">
-            Countdown ends on: {targetEndTime.toLocaleString()} {/* Format date */}
-          </p>
         </div>
       </div>
     </div>
