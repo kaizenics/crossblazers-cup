@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Container } from "@/components/ui/container";
 import Image from "next/image";
-
+import { IconNews } from "@tabler/icons-react";
 import {
   Carousel,
   CarouselContent,
@@ -14,8 +14,11 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { items } from "@/data/about/aboutData";
 
+import pageant from "@/assets/images/hcdc-pageant.jpg";
+import bballWomen from "@/assets/images/basketball-women.jpg";
+import sing from "@/assets/images/sing-1.jpg";
+import esports from "@/assets/images/esports.jpg";
 import cnclogo from "@/assets/images/cnc-2024.png";
 
 export const About = () => {
@@ -52,7 +55,7 @@ export const About = () => {
 
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8">
             <div className="w-full md:w-2/3">
-              <p className="font-raceSport text-3xl sm:text-4xl lg:text-5xl mb-2 sm:mb-3 md:mb-4">
+              <p className="font-raceSport text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 sm:mb-3 md:mb-4">
                 <span className="text-emerald-500">Cross Blazers Cup</span>
               </p>
               <p className="text-base sm:text-lg font-semibold font-montserrat mb-3 sm:mb-4 md:mb-5">
@@ -146,6 +149,107 @@ export const About = () => {
   );
 };
 
+const items = [
+  {
+    title: "Basketball Women Preliminaries",
+    description: "Catch the action",
+    imageSrc: bballWomen,
+    imageAlt: "Age of Enlightenment concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "The Newly Crowned Queen",
+    description: "Witness the crowning of the new queen of the night.",
+    imageSrc: pageant,
+    imageAlt: "Newly crowned queen image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Vocal Solo Competition",
+    description: "Listen to the sweet melodies of the night.",
+    imageSrc: sing,
+    imageAlt: "Art of Design concept image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Mobile Legends: Bang Bang - Esports",
+    description: "Experience the thrill of the game.",
+    imageSrc: esports,
+    imageAlt: "Power of Communication concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Basketball Women Preliminaries",
+    description: "Catch the action",
+    imageSrc: bballWomen,
+    imageAlt: "Age of Enlightenment concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "The Newly Crowned Queen",
+    description: "Witness the crowning of the new queen of the night.",
+    imageSrc: pageant,
+    imageAlt: "Newly crowned queen image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+
+  {
+    title: "Vocal Solo Competition",
+    description: "Listen to the sweet melodies of the night.",
+    imageSrc: sing,
+    imageAlt: "Art of Design concept image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Mobile Legends: Bang Bang - Esports",
+    description: "Experience the thrill of the game.",
+    imageSrc: esports,
+    imageAlt: "Power of Communication concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+
+  {
+    title: "Basketball Women Preliminaries",
+    description: "Catch the action",
+    imageSrc: bballWomen,
+    imageAlt: "Age of Enlightenment concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "The Newly Crowned Queen",
+    description: "Witness the crowning of the new queen of the night.",
+    imageSrc: pageant,
+    imageAlt: "Newly crowned queen image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Vocal Solo Competition",
+    description: "Listen to the sweet melodies of the night.",
+    imageSrc: sing,
+    imageAlt: "Art of Design concept image",
+    className: "md:col-span-1",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+  {
+    title: "Mobile Legends: Bang Bang - Esports",
+    description: "Experience the thrill of the game.",
+    imageSrc: esports,
+    imageAlt: "Power of Communication concept image",
+    className: "md:col-span-2",
+    icon: <IconNews className="h-4 w-4 text-gray-400" />,
+  },
+
+];
 
 export default function Component() {
   return <About />;
