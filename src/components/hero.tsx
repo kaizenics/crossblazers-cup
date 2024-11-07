@@ -26,7 +26,7 @@ export const Hero = () => {
   return (
     <div
       id="#"
-      className="relative w-full h-screen flex flex-col justify-center items-center"
+      className="relative w-full h-full py-36 sm:py-0 md:h-screen flex flex-col justify-center items-center"
     >
       <div className="absolute inset-0">
         <Image
