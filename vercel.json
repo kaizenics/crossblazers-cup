@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/trivia",
+        "destination": "/under-construction",
+        "permanent": true
+      }
+    ]
+  }
+  
