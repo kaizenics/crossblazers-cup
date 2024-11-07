@@ -1,56 +1,58 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { User } from "@supabase/supabase-js";
-import { Container } from "@/components/ui/container";
-import ShinyButton from "@/components/ui/shiny-button";
-import hcdcLogo from "@/assets/logo/hcdclogo-white.png";
-import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { User } from '@supabase/supabase-js'
+import { Container } from '@/components/ui/container'
+import ShinyButton from '@/components/ui/shiny-button'
+import hcdcLogo from '@/assets/logo/hcdclogo-white.png'
+import { supabase } from '@/lib/supabase'
 
 export const Navbar = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [user, setUser] = useState<User | null>(null); // Update state to hold user information
+  const [showSidebar, setShowSidebar] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
 
   const handleHamburgerClick = () => {
-    setShowSidebar(!showSidebar);
-  };
+    setShowSidebar(!showSidebar)
+  }
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError) {
-        console.error("Error fetching user:", userError);
-        return;
+        console.error('Error fetching user:', userError)
+        return
       }
   
       if (user) {
-        console.log("Logged in user:", user);
-        setUser(user); // Set the user state
+        console.log('Logged in user:', user)
+        setUser(user)
       } else {
-        console.log("No user is logged in.");
+        console.log('No user is logged in.')
       }
-    };
+    }
   
-    getUser();
-  }, []);
+    getUser()
+  }, [])
   
   const navItems = [
-    { href: "/", label: "Home" },
-    { href: "#about", label: "About" },
-    { href: "#schedules", label: "Schedules" },
-    { href: "#faq", label: "FAQ" },
-  ];
+    { href: '/', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#schedules', label: 'Schedules' },
+    { href: '#faq', label: 'FAQ' },
+  ]
 
   return (
     <>
-      <nav className="flex justify-between md:px-12 py-5 sticky top-0 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50">
-        <Container variant={"fullMobileBreakpointPadded"}>
-          <div className="hidden md:flex justify-between">
-            <Image src={hcdcLogo} alt="" width={200} height={200} />
-            <div className="flex justify-between items-center space-x-10">
+      <nav className="sticky top-0 z-50 bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg">
+        <Container variant="fullMobileBreakpointPadded">
+          <div className="flex items-center justify-between py-5">
+            <Link href="/">
+              <Image src={hcdcLogo} alt="HCDC Logo" width={170} height={170} className="w-auto h-8 md:h-12" />
+            </Link>
+            <div className="hidden md:flex items-center space-x-10">
               <div className="flex items-center space-x-5">
                 {navItems.map((item) => (
                   <a
@@ -63,8 +65,8 @@ export const Navbar = () => {
                 ))}
               </div>
               <div className="flex items-center space-x-2">
-                <Link href="/trivia">
-                  <ShinyButton text="Play Trivia Game" className="" />
+                <Link href="/under-construction">
+                  <ShinyButton text="Play Trivia Game" className="text-sm" />
                 </Link>
                 {user ? (
                   <Link href="/profile">
@@ -81,27 +83,15 @@ export const Navbar = () => {
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="flex flex-row md:hidden justify-between items-center pt-1">
-            <Image src={hcdcLogo} alt="" width={170} height={170} />
-            <div className="cursor-pointer z-50" onClick={handleHamburgerClick}>
-              <div
-                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
-                  showSidebar ? "rotate-45 translate-y-2" : ""
-                }`}
-              ></div>
-              <div
-                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
-                  showSidebar ? "opacity-0" : ""
-                }`}
-              ></div>
-              <div
-                className={`w-[30px] h-[2px] my-[6px] bg-white transition-all duration-300 ${
-                  showSidebar ? "-rotate-45 -translate-y-2" : ""
-                }`}
-              ></div>
-            </div>
+            <button
+              className="md:hidden w-8 h-8 flex flex-col justify-center items-center"
+              onClick={handleHamburgerClick}
+              aria-label="Toggle menu"
+            >
+              <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${showSidebar ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+              <span className={`w-6 h-0.5 bg-white my-1 transition-all duration-300 ${showSidebar ? 'opacity-0' : ''}`}></span>
+              <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${showSidebar ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+            </button>
           </div>
         </Container>
       </nav>
@@ -109,22 +99,33 @@ export const Navbar = () => {
       {/* Mobile Sidebar */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ${
-          showSidebar ? "opacity-100" : "opacity-0 pointer-events-none"
+          showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={handleHamburgerClick}
       ></div>
       <div
-        className={`fixed top-19 right-0 w-full h-full bg-transparent bg-opacity-10 backdrop-filter backdrop-blur-lg z-50 transform transition-transform duration-300 ease-in-out ${
-          showSidebar ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 w-64 h-full bg-emerald-950 bg-opacity-95 backdrop-filter backdrop-blur-lg z-50 transform transition-transform duration-300 ease-in-out ${
+          showSidebar ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex flex-col h-full p-6 space-y-5">
+        <div className="flex flex-col h-full p-6 space-y-8">
+          <div className="flex justify-end">
+            <button
+              className="text-white"
+              onClick={handleHamburgerClick}
+              aria-label="Close menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
           <div className="space-y-6">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="block font-montserrat font-semibold text-lg text-center text-white hover:text-gray-300"
+                className="block font-montserrat font-semibold text-lg text-white hover:text-gray-300"
                 onClick={handleHamburgerClick}
               >
                 {item.label}
@@ -132,7 +133,7 @@ export const Navbar = () => {
             ))}
           </div>
           <div className="space-y-4">
-            <Link href="/trivia">
+            <Link href="/trivia" className="block w-full">
               <ShinyButton text="Play Trivia Game" className="w-full" />
             </Link>
             {user ? (
@@ -158,5 +159,5 @@ export const Navbar = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}

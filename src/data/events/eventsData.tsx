@@ -119,12 +119,12 @@ export const events = [
     events: [
       {
         title: "Sports Event",
-        time: "8:00 AM – 2:00 PM",
+        time: "8:00 AM - 2:00 PM",
         details: [],
       },
       {
         title: "SL Fun Games",
-        time: "1:00 PM – 3:00 PM",
+        time: "1:00 PM - 3:00 PM",
         details: [],
       },
       {
@@ -145,17 +145,17 @@ export const events = [
     events: [
       {
         title: "Essay and Quiz Bowl",
-        time: "8:00 AM – 12:00 NN",
+        time: "8:00 AM - 12:00 NN",
         details: ["Introduction to Technologies", "Live Demonstrations"],
       },
       {
         title: "Sports Event",
-        time: "8:00 AM – 2:00 PM",
+        time: "8:00 AM - 2:00 PM",
         details: [],
       },
       {
         title: "SL Fun Games",
-        time: "1:00 PM – 3:00 PM",
+        time: "1:00 PM - 3:00 PM",
         details: [],
       },
       {
@@ -170,17 +170,17 @@ export const events = [
     events: [
       {
         title: "Sports Event",
-        time: "8:00 AM – 2:00 PM",
+        time: "8:00 AM - 2:00 PM",
         details: [],
       },
       {
         title: "Literary Events",
-        time: "8:00 AM – 12:00 NN",
+        time: "8:00 AM - 12:00 NN",
         details: [],
       },
       {
         title: "SL Fun Games",
-        time: "1:00 PM – 3:00 PM",
+        time: "1:00 PM - 3:00 PM",
         details: [],
       },
       {
@@ -200,12 +200,12 @@ export const events = [
     events: [
       {
         title: "Sports Events",
-        time: "8:00 AM – 2:00 PM",
+        time: "8:00 AM - 2:00 PM",
         details: [],
       },
       {
         title: "SL Fun Games",
-        time: "1:00 PM – 3:00 PM",
+        time: "1:00 PM - 3:00 PM",
         details: [],
       },
       {

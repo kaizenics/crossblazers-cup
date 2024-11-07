@@ -92,7 +92,7 @@ export const Hero = () => {
         </div>
 
         <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0">
-          <h1 className="text-[9vw] md:text-8xl font-raceSport text-center leading-tight md:leading-none">
+          <h1 className="text-[9vw] md:text-5xl lg:text-7xl font-raceSport text-center leading-tight md:leading-none">
             Cross Blazers Cup
           </h1>
           <p className="font-montserrat text-[3vw] md:text-xl text-center md:text-center">
