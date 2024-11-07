@@ -159,6 +159,7 @@ export default function LargerInteractiveTriviaGame() {
     }
   };
 
+
   const resetGame = () => {
     setGameState("intro");
     setCurrentQuestion(0);
@@ -167,6 +168,7 @@ export default function LargerInteractiveTriviaGame() {
     setSelectedAnswer(null);
     setStartTime(null);
   };
+
 
   return (
     <div className="min-h-screen text-white flex items-center justify-center p-4 sm:p-6 md:p-8">
