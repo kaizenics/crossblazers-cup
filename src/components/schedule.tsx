@@ -5,49 +5,49 @@ import { Container } from "@/components/ui/container";
 export function Schedule() {
   const schedules = [
     {
-      title: "Nomember 14, 2024",
+      title: "Nomember 19, 2024",
       description: "Opening Schedule, Basketball Womens, Tennis Womens, Etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 15, 2024",
+      title: "November 19, 2024",
       description: "Ping Pong, Palarong Pinoy, Board Games, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 16, 2024",
+      title: "November 20, 2024",
       description: "Battle of the Bands, Badminton, Basketball, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 17, 2024",
+      title: "November 21, 2024",
       description: "HCDC Ambassadress, MLBB and CODM Tournament, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 18, 2024",
+      title: "November 22, 2024",
       description: "Dota 2 Tournament, Sayaw Cinco, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 19, 2024",
+      title: "November 22, 2024",
       description: "Arise and Sing, Hip Hop, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 20, 2024",
+      title: "November 23, 2024",
       description: "Spoken Poetry, Tula, Riddles, etc.",
       icon: <IconCalendarEvent />,
     },
     {
-      title: "November 21, 2024",
+      title: "November 23, 2024",
       description:
         "Closing Remarks, Awarding of the Participants, Hall of Fame, etc.",
       icon: <IconCalendarEvent />,
     },
   ];
   return (
-    <section id="schedules">
+    <section id="schedules" className="pt-20">
       <Container variant={"fullMobileBreakpointPadded"}>
         <p className="font-raceSport text-center text-3xl md:text-4xl">
           Upcoming Schedules

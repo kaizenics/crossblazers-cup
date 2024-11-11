@@ -97,4 +97,5 @@ body {
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 100px; /* Adjust this value based on your navbar height */
 }

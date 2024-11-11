@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
 import { Container } from '@/components/ui/container'
 import ShinyButton from '@/components/ui/shiny-button'
@@ -12,6 +13,8 @@ import { supabase } from '@/lib/supabase'
 export const Navbar = () => {
   const [showSidebar, setShowSidebar] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const router = useRouter()
+  const pathname = usePathname()
 
   const handleHamburgerClick = () => {
     setShowSidebar(!showSidebar)
@@ -36,12 +39,48 @@ export const Navbar = () => {
   
     getUser()
   }, [])
+
+  const handleSectionClick = (sectionId: string | null) => {
+    setShowSidebar(false) // Close mobile menu if open
+    
+    if (pathname === '/') {
+      if (!sectionId) {
+        // If home button clicked, scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        // If other section buttons clicked, scroll to section
+        const element = document.getElementById(sectionId)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+    } else {
+      // If on another page, navigate to home page with section hash
+      router.push(sectionId ? `/?section=${sectionId}` : '/')
+    }
+  }
+
+  // Handle section scrolling when redirected from another page
+  useEffect(() => {
+    if (pathname === '/') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const section = urlParams.get('section')
+      if (section) {
+        const element = document.getElementById(section)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+          // Clean up the URL
+          window.history.replaceState({}, '', '/')
+        }
+      }
+    }
+  }, [pathname])
   
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '#about', label: 'About' },
-    { href: '#schedules', label: 'Schedules' },
-    { href: '#faq', label: 'FAQ' },
+    { id: null, href: '/', label: 'Home' },
+    { id: 'about', href: '#about', label: 'About' },
+    { id: 'schedules', href: '#schedules', label: 'Schedules' },
+    { id: 'faq', href: '#faq', label: 'FAQ' },
   ]
 
   return (
@@ -55,13 +94,13 @@ export const Navbar = () => {
             <div className="hidden md:flex items-center space-x-10">
               <div className="flex items-center space-x-5">
                 {navItems.map((item) => (
-                  <a
+                  <button
                     key={item.href}
-                    href={item.href}
+                    onClick={() => handleSectionClick(item.id)}
                     className="font-montserrat font-semibold text-sm text-white hover:underline"
                   >
                     {item.label}
-                  </a>
+                  </button>
                 ))}
               </div>
               <div className="flex items-center space-x-2">
@@ -115,21 +154,20 @@ export const Navbar = () => {
               onClick={handleHamburgerClick}
               aria-label="Close menu"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
           <div className="space-y-6">
             {navItems.map((item) => (
-              <a
+              <button
                 key={item.href}
-                href={item.href}
-                className="block font-montserrat font-semibold text-lg text-white hover:text-gray-300"
-                onClick={handleHamburgerClick}
+                onClick={() => handleSectionClick(item.id)}
+                className="block font-montserrat font-semibold text-lg text-white hover:text-gray-300 w-full text-left"
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
           <div className="space-y-4">
