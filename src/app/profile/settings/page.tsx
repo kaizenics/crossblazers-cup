@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +12,20 @@ import { toast } from "sonner";
 
 export default function ProfileSettings() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      setIsLoading(false);
+    };
+    
+    checkAuth();
+  }, [router]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -37,6 +51,25 @@ export default function ProfileSettings() {
       icon: HelpCircle,
     },
   ];
+
+  if (isLoading) {
+    return (
+      <Container variant={"fullMobileBreakpointPadded"}>
+        <div className="min-h-screen text-white p-4 sm:p-6 md:p-8">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 w-32 bg-white/10 rounded"></div>
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-20 bg-white/5 rounded-lg border border-white/10"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container variant={"fullMobileBreakpointPadded"}>

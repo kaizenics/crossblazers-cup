@@ -18,6 +18,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { isBefore, subHours } from "date-fns";
+import { useRouter } from 'next/navigation';
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
@@ -58,6 +59,7 @@ export default function Notes() {
   const [isLoading, setIsLoading] = useState(true);
   const [userNote, setUserNote] = useState<Note | null>(null);
   const MAX_CHARS = 250;
+  const router = useRouter();
 
   useEffect(() => {
     fetchNotes();
@@ -183,6 +185,32 @@ export default function Notes() {
     </Card>
   );
 
+  const LoginPrompt = () => {
+    const router = useRouter();
+    
+    return (
+      <Card className="bg-white/5 border-white/10 rounded-xl">
+        <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
+          <div className="p-3 bg-white/10 rounded-full">
+            <User className="w-6 h-6 text-white/60" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-medium text-lg">Login to Start Writing</h3>
+            <p className="text-sm text-gray-400">
+              Share your thoughts with the Cross Blazers Cup community
+            </p>
+          </div>
+          <Button 
+            onClick={() => router.push('/login')}
+            className="font-montserrat mt-2"
+          >
+            Login with Google
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <>
       <div className="min-h-screen text-white p-3 sm:p-6 md:p-8 pb-24 sm:pb-32">
@@ -192,43 +220,52 @@ export default function Notes() {
           </h1>
 
           <div className="space-y-3 sm:space-y-4">
-            <div className="relative">
-              <Textarea
-                placeholder="Write your note here..."
-                value={content}
-                onChange={handleTextChange}
-                className="min-h-[120px] sm:min-h-[150px] bg-white/5 border-white/10 text-white text-sm sm:text-base rounded-xl"
-                maxLength={MAX_CHARS}
-              />
-              <div className="absolute bottom-2 right-2 text-[10px] sm:text-xs text-gray-400">
-                {content.length}/{MAX_CHARS}
-              </div>
-            </div>
+            {user ? (
+              // Note creation section for logged in users
+              <>
+                <div className="relative">
+                  <Textarea
+                    placeholder="Write your note here..."
+                    value={content}
+                    onChange={handleTextChange}
+                    className="min-h-[120px] sm:min-h-[150px] bg-white/5 border-white/10 text-white text-sm sm:text-base rounded-xl"
+                    maxLength={MAX_CHARS}
+                  />
+                  <div className="absolute bottom-2 right-2 text-[10px] sm:text-xs text-gray-400">
+                    {content.length}/{MAX_CHARS}
+                  </div>
+                </div>
 
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  checked={isAnonymous}
-                  onCheckedChange={setIsAnonymous}
-                  id="anonymous-mode"
-                />
-                <label
-                  htmlFor="anonymous-mode"
-                  className="font-montserrat text-[10px] sm:text-xs text-gray-300"
-                >
-                  Anonymous
-                </label>
-              </div>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={isAnonymous}
+                      onCheckedChange={setIsAnonymous}
+                      id="anonymous-mode"
+                    />
+                    <label
+                      htmlFor="anonymous-mode"
+                      className="font-montserrat text-[10px] sm:text-xs text-gray-300"
+                    >
+                      Anonymous
+                    </label>
+                  </div>
 
-              <Button
-                onClick={handleSubmit}
-                className="font-montserrat text-xs sm:text-sm px-3 sm:px-4 h-8 sm:h-10"
-              >
-                {userNote ? "Update Note" : "Share Note"}
-              </Button>
-            </div>
+                  <Button
+                    onClick={handleSubmit}
+                    className="font-montserrat text-xs sm:text-sm px-3 sm:px-4 h-8 sm:h-10"
+                  >
+                    {userNote ? "Update Note" : "Share Note"}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              // Login prompt for non-authenticated users
+              <LoginPrompt />
+            )}
           </div>
 
+          {/* Notes feed - shown to all users */}
           <div className="space-y-3 sm:space-y-4 mt-6 sm:mt-8">
             {isLoading ? (
               <>
