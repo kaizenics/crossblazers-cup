@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import AnimatedLayout from "@/components/animated-layout";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -50,6 +51,7 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </AnimatedLayout>
+        <Toaster position="top-right" />
       </body>
     </html>
   );
