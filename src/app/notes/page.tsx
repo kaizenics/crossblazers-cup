@@ -160,7 +160,7 @@ export default function Notes() {
       <div className="min-h-screen text-white p-3 sm:p-6 md:p-8 pb-24 sm:pb-32">
         <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
           <h1 className="font-raceSport text-center text-xl sm:text-3xl font-bold">
-            CBC Notes
+            CBC Notes <span className="font-montserrat font-medium text-sm text-emerald-300">Beta</span>
           </h1>
 
           <div className="space-y-3 sm:space-y-4">
@@ -214,7 +214,7 @@ export default function Notes() {
                   key={note.id}
                   className={`bg-white/5 border-white/10 rounded-xl sm:rounded-2xl p-2 ${
                     user && user.id === note.user_id
-                      ? "bg-blue-500/5 border-blue-500/20"
+                      ? "bg-emerald-300/10 border-emerald-500/20"
                       : ""
                   }`}
                 >
