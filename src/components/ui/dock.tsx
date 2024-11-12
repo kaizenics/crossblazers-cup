@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Home, User, GamepadIcon, Settings, Trophy, LucideIcon } from "lucide-react";
+import { Home, User, GamepadIcon, Settings, Trophy, Newspaper, LucideIcon } from "lucide-react";
 
 interface DockItemProps {
   href: string;
@@ -37,12 +37,13 @@ export const Dock: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="bg-black/50 backdrop-blur-md rounded-2xl p-1 sm:p-2 border border-white/20"
       >
-        <div className="flex items-center justify-center gap-1 sm:gap-2">
+        <div className="font-montserrat flex items-center justify-center gap-1 sm:gap-2">
           <DockItem href="/" icon={Home} label="Home" />
           <DockItem href="/profile" icon={User} label="Profile" />
+          <DockItem href="/notes" icon={Newspaper} label="Notes" />
           <DockItem href="/trivia" icon={GamepadIcon} label="Play" />
           <DockItem href="/leaderboard" icon={Trophy} label="Ranks" />
-          <DockItem href="/settings" icon={Settings} label="Settings" />
+          <DockItem href="/profile/settings" icon={Settings} label="Settings" />
         </div>
       </motion.div>
     </div>

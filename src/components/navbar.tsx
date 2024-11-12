@@ -110,7 +110,7 @@ export const Navbar = () => {
                 {user ? (
                   <Link href="/profile">
                     <button className="font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5">
-                      Profile
+                      Explore
                     </button>
                   </Link>
                 ) : (
