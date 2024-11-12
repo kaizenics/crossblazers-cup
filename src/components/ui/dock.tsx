@@ -32,9 +32,6 @@ export const Dock: React.FC = () => {
   return (
     <div className="fixed inset-x-0 bottom-0 sm:bottom-8 flex justify-center items-center p-4 z-50">
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
         className="bg-black/50 backdrop-blur-md rounded-2xl p-1 sm:p-2 border border-white/20"
       >
         <div className="font-montserrat flex items-center justify-center gap-1 sm:gap-2">
