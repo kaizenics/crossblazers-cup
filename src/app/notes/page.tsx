@@ -59,7 +59,6 @@ export default function Notes() {
   const [isLoading, setIsLoading] = useState(true);
   const [userNote, setUserNote] = useState<Note | null>(null);
   const MAX_CHARS = 250;
-  const router = useRouter();
 
   useEffect(() => {
     fetchNotes();
