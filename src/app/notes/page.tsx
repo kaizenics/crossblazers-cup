@@ -1,6 +1,5 @@
 "use client";
 
-// Add Image to imports
 import Image from "next/image";
 import { User, MoreVertical, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -18,6 +17,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { differenceInHours, isBefore, subHours } from "date-fns";
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
@@ -56,6 +56,7 @@ export default function Notes() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [userNote, setUserNote] = useState<Note | null>(null);
   const MAX_CHARS = 250;
 
   useEffect(() => {
@@ -82,33 +83,60 @@ export default function Notes() {
       return;
     }
 
-    setNotes(data || []);
+    // Filter notes older than 24 hours
+    const twentyFourHoursAgo = subHours(new Date(), 24);
+    const validNotes = data?.filter(note => 
+      !isBefore(new Date(note.created_at), twentyFourHoursAgo)
+    ) || [];
+
+    setNotes(validNotes);
+    
+    if (user) {
+      const userNote = validNotes.find(note => note.user_id === user.id);
+      setUserNote(userNote || null);
+    }
+    
     setIsLoading(false);
   };
 
   const handleSubmit = async () => {
     if (!content.trim() || !user) return;
 
-    const { error } = await supabase.from("notes").insert([
-      {
-        content,
-        user_id: user.id,
-        user_name: user.user_metadata?.full_name || "Unknown User",
-        is_anonymous: isAnonymous,
-        avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
-      },
-    ]);
+    const noteData = {
+      content,
+      user_id: user.id,
+      user_name: user.user_metadata?.full_name || "Unknown User",
+      is_anonymous: isAnonymous,
+      avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
+    };
+
+    let error;
+
+    if (userNote) {
+      const { error: updateError } = await supabase
+        .from("notes")
+        .update(noteData)
+        .eq("id", userNote.id);
+      error = updateError;
+    } else {
+      const { error: insertError } = await supabase
+        .from("notes")
+        .insert([noteData]);
+      error = insertError;
+    }
 
     if (error) {
-      console.error("Error creating note:", error);
-      toast.error("Failed to share note. Please try again.");
+      console.error("Error saving note:", error);
+      toast.error("Failed to save note. Please try again.");
       return;
     }
 
     setContent("");
     fetchNotes();
-    toast.success("Note shared successfully!", {
-      description: "Your note has been posted to the feed.",
+    toast.success(userNote ? "Note updated successfully!" : "Note shared successfully!", {
+      description: userNote ? 
+        "Your previous note has been replaced." : 
+        "Your note has been posted to the feed.",
       duration: 3000,
     });
   };
@@ -196,7 +224,7 @@ export default function Notes() {
                 onClick={handleSubmit}
                 className="font-montserrat text-xs sm:text-sm px-3 sm:px-4 h-8 sm:h-10"
               >
-                Share Note
+                {userNote ? "Update Note" : "Share Note"}
               </Button>
             </div>
           </div>
