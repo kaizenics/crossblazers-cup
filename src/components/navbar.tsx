@@ -180,7 +180,7 @@ export const Navbar = () => {
                   className="w-full font-montserrat font-semibold text-sm text-black bg-white/90 rounded-sm py-2 px-5"
                   onClick={handleHamburgerClick}
                 >
-                  Profile
+                  Explore
                 </button>
               </Link>
             ) : (
