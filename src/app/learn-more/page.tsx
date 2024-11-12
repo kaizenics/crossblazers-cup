@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { Container } from "@/components/ui/container";
 
 import mtApo from "@/assets/cover/mt-apo.png";
@@ -75,6 +76,7 @@ export default function Details() {
           </section>
         </div>
       </Container>
+      <Footer />
     </>
   );
 }
