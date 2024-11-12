@@ -17,7 +17,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { differenceInHours, isBefore, subHours } from "date-fns";
+import { isBefore, subHours } from "date-fns";
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
