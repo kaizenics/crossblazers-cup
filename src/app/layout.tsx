@@ -30,9 +30,12 @@ const raceSport = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Cross Blazers Cup 2024",
+  title: {
+    default: "Cross Blazers Cup",
+    template: "%s | Cross Blazers Cup",
+  },
   description:
-    "oin us for an unforgettable experience filled with excitement, sportsmanship, and community pride!",
+    "Join us for an unforgettable experience filled with excitement, sportsmanship, and community pride!",
 };
 
 export default function RootLayout({

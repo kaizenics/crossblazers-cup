@@ -220,7 +220,6 @@ export default function Notes() {
 
           <div className="space-y-3 sm:space-y-4">
             {user ? (
-              // Note creation section for logged in users
               <>
                 <div className="relative">
                   <Textarea
