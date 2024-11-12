@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { format, addDays } from "date-fns";
+import { motion, AnimatePresence } from "framer-motion"; // Add this import
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { events } from "@/data/events/eventsData";
@@ -13,6 +15,13 @@ export default function Events() {
   const [selectedDay, setSelectedDay] = useState(1);
 
   const getDateForDay = (day: number) => addDays(startDate, day - 1);
+
+  // Add animation variants
+  const contentVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
 
   return (
     <>
@@ -49,37 +58,48 @@ export default function Events() {
                 </span>
               </p>
             </div>
-            <div className="p-2 sm:p-3">
-              <div className="pl-2 sm:pl-6 space-y-3">
-                {events
-                  .find((day) => day.day === selectedDay)
-                  ?.events.map((event, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-zinc-700"
-                    >
-                      <div className="mb-2 sm:mb-0">
-                        <p className="font-semibold font-montserrat text-lg sm:text-2xl">
-                          {event.title}
-                        </p>
-                        {event.details.length > 0 && (
-                          <ul className="list-disc mx-4 sm:mx-10 font-montserrat text-sm sm:text-base">
-                            {event.details.map((detail, detailIndex) => (
-                              <li key={detailIndex}>{detail}</li>
-                            ))}
-                          </ul>
-                        )}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedDay}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={contentVariants}
+                transition={{ duration: 0.3 }}
+                className="p-2 sm:p-3"
+              >
+                <div className="pl-2 sm:pl-6 space-y-3">
+                  {events
+                    .find((day) => day.day === selectedDay)
+                    ?.events.map((event, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-zinc-700"
+                      >
+                        <div className="mb-2 sm:mb-0">
+                          <p className="font-semibold font-montserrat text-lg sm:text-2xl">
+                            {event.title}
+                          </p>
+                          {event.details.length > 0 && (
+                            <ul className="list-disc mx-4 sm:mx-10 font-montserrat text-sm sm:text-base">
+                              {event.details.map((detail, detailIndex) => (
+                                <li key={detailIndex}>{detail}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                        <div className="border border-emerald-600 rounded-full py-1 px-3 sm:px-4 self-start sm:self-center">
+                          <p className="font-montserrat text-base sm:text-2xl">{event.time}</p>
+                        </div>
                       </div>
-                      <div className="border border-emerald-600 rounded-full py-1 px-3 sm:px-4 self-start sm:self-center">
-                        <p className="font-montserrat text-base sm:text-2xl">{event.time}</p>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
+                    ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </Container>
+      <Footer />
     </>
   );
 }
