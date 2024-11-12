@@ -1,7 +1,7 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Container } from "@/components/ui/container";
 import Image from "next/image";
@@ -37,7 +37,8 @@ export const About = () => {
   const [carouselItems, setCarouselItems] = useState<(typeof items)[]>([]);
 
   useEffect(() => {
-    const itemsPerSlide = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
+    const itemsPerSlide =
+      window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
     const newCarouselItems = [];
     for (let i = 0; i < items.length; i += itemsPerSlide) {
       newCarouselItems.push(items.slice(i, i + itemsPerSlide));
@@ -45,7 +46,8 @@ export const About = () => {
     setCarouselItems(newCarouselItems);
 
     const handleResize = () => {
-      const newItemsPerSlide = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
+      const newItemsPerSlide =
+        window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
       const newCarouselItems = [];
       for (let i = 0; i < items.length; i += newItemsPerSlide) {
         newCarouselItems.push(items.slice(i, i + newItemsPerSlide));
@@ -53,8 +55,8 @@ export const About = () => {
       setCarouselItems(newCarouselItems);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -74,36 +76,41 @@ export const About = () => {
                 HCDC Goes G.R.E.E.N.: Celebrating Music, Sports, and Arts with a
                 Commitment to the Integrity of Creation
               </p>
-              <p className="font-raceSport text-xl sm:text-2xl mb-2 sm:mb-3">Sub Theme</p>
+              <p className="font-raceSport text-xl sm:text-2xl mb-2 sm:mb-3">
+                Sub Theme
+              </p>
               <ul className="space-y-1 sm:space-y-2 text-sm sm:text-base md:text-lg lg:text-xl font-montserrat">
                 <li>
-                  <span className="font-bold">G - </span>
-                  <span>Guardians of Mother Earth</span>
+                  <span className="text-emerald-500 font-bold">G</span>
+                  <span> - Guardians of Mother Earth</span>
                 </li>
                 <li>
-                  <span className="font-bold">R - </span>
-                  <span>
-                    Reinforcing Values of Camaraderie and Sportsmanship
+                  <span className="text-emerald-500 font-bold">R</span>
+                  <span> - Reinforcing Values of Camaraderie and Sportsmanship
                   </span>
                 </li>
                 <li>
-                  <span className="font-bold">E - </span>
-                  <span>
-                    Environmental Education as Agents of Social Transformation
+                  <span className="text-emerald-500 font-bold">E</span>
+                  <span> - Environmental Education as Agents of Social Transformation
                   </span>
                 </li>
                 <li>
-                  <span className="font-bold">E - </span>
-                  <span>Embracing Sustainability through Creativity</span>
+                  <span className="text-emerald-500 font-bold">E</span>
+                  <span> - Embracing Sustainability through Creativity</span>
                 </li>
                 <li>
-                  <span className="font-bold">N - </span>
-                  <span>Nurturing and Harmonizing Environmental Advocacy</span>
+                  <span className="text-emerald-500 font-bold">N</span>
+                  <span>
+                    {" "}
+                    - Nurturing and Harmonizing Environmental Advocacy
+                  </span>
                 </li>
               </ul>
+              <Link href="/learn-more">
               <button className="bg-transparent border border-emerald-500 text-emerald-500 py-2 sm:py-3 px-3 sm:px-4 rounded-md mt-3 sm:mt-4 md:mt-5 font-montserrat font-semibold text-sm sm:text-base">
                 Learn More
               </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -294,9 +301,7 @@ const items = [
     className: "md:col-span-2",
     icon: <IconNews className="h-4 w-4 text-gray-400" />,
   },
-
 ];
-
 
 export default function Component() {
   return <About />;
