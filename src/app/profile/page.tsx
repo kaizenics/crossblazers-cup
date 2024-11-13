@@ -6,20 +6,41 @@ import { useRouter } from "next/navigation";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Timer, Ticket, Mail, TrendingUpIcon, User } from "lucide-react";
+import { Timer, Ticket, Mail, TrendingUpIcon, User, Trophy } from "lucide-react";
 import { Dock } from "@/components/ui/dock";
 import { format } from "date-fns";
 import { Container } from "@/components/ui/container";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+
+interface TriviaScore {
+  id: number;
+  user_id: string;
+  score: number;
+  finished_at: string;
+  elapsed_time: number;
+}
+
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  unlocked: boolean;
+  unlockedAt?: string;
+}
 
 export default function UserProfileDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [highestElapsedTime, setHighestElapsedTime] = useState<string>("Loading...");
-  const [highestScore, setHighestScore] = useState<number | null>(null);
+  const [highestElapsedTime, setHighestElapsedTime] = useState<string>("0 min. 0 sec.");
+  const [earliestElapsedTime, setEarliestElapsedTime] = useState<string>("0 min. 0 sec.");
+  const [highestScore, setHighestScore] = useState<number | null>(0);
   const [createdAt, setCreatedAt] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [gameHistory, setGameHistory] = useState<TriviaScore[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,6 +51,8 @@ export default function UserProfileDashboard() {
       } else {
         setUser(data.user);
         fetchUserStats(data.user.id);
+        fetchGameHistory(data.user.id);
+        fetchAchievements(data.user.id);
         if (data.user.created_at) {
           setCreatedAt(format(new Date(data.user.created_at), "MMMM dd, yyyy"));
         }
@@ -58,6 +81,24 @@ export default function UserProfileDashboard() {
       }
     }
 
+    const { data: earliestTimeData, error: earliestTimeError } = await supabase
+      .from('trivia_scores')
+      .select('elapsed_time')
+      .eq('user_id', userId)
+      .order('elapsed_time', { ascending: true })
+      .limit(1)
+      .single();
+
+    if (earliestTimeError) {
+      console.error('Error fetching earliest elapsed time:', earliestTimeError.message);
+    } else {
+      if (earliestTimeData) {
+        const seconds = Math.floor(earliestTimeData.elapsed_time % 60);
+        const minutes = Math.floor(earliestTimeData.elapsed_time / 60);
+        setEarliestElapsedTime(`${minutes} min. ${seconds} sec.`);
+      }
+    }
+
     const { data: scoreData, error: scoreError } = await supabase
       .from('trivia_scores')
       .select('score')
@@ -71,6 +112,72 @@ export default function UserProfileDashboard() {
     } else {
       setHighestScore(scoreData?.score || 0);
     }
+  };
+
+  const fetchGameHistory = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('trivia_scores')
+      .select('*')
+      .eq('user_id', userId)
+      .order('finished_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching game history:', error.message);
+    } else {
+      setGameHistory(data || []);
+    }
+  };
+
+  const fetchAchievements = async (userId: string) => {
+    // Fetch all trivia scores for the user
+    const { data: triviaGames, error: triviaError } = await supabase
+      .from('trivia_scores')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (triviaError) {
+      console.error('Error fetching trivia games:', triviaError.message);
+      return;
+    }
+
+    // Check various conditions
+    const hasPlayedTrivia = triviaGames && triviaGames.length > 0;
+    const firstGameDate = hasPlayedTrivia ? triviaGames[0].finished_at : undefined;
+    
+    const hasPerfectScore = triviaGames?.some(game => game.score === 10);
+    const perfectScoreGame = triviaGames?.find(game => game.score === 10);
+
+    const hasFastTime = triviaGames?.some(game => game.elapsed_time < 20);
+    const fastestGame = triviaGames?.find(game => game.elapsed_time < 20);
+
+    const userAchievements: Achievement[] = [
+      {
+        id: 'first-trivia',
+        title: 'Trivia Newcomer',
+        description: 'Completed your first trivia game',
+        icon: <Trophy className="h-6 w-6 text-yellow-500" />,
+        unlocked: hasPlayedTrivia,
+        unlockedAt: firstGameDate,
+      },
+      {
+        id: 'perfect-score',
+        title: 'Perfect Score',
+        description: 'Achieved a perfect 10/10 score in trivia',
+        icon: <Trophy className="h-6 w-6 text-yellow-500" />,
+        unlocked: hasPerfectScore,
+        unlockedAt: perfectScoreGame?.finished_at,
+      },
+      {
+        id: 'speed-thinkerer',
+        title: 'Speed Thinkerer',
+        description: 'Completed a trivia game in under 20 seconds',
+        icon: <Trophy className="h-6 w-6 text-yellow-500" />,
+        unlocked: hasFastTime,
+        unlockedAt: fastestGame?.finished_at,
+      },
+    ];
+
+    setAchievements(userAchievements);
   };
 
   const ProfileSkeleton = () => (
@@ -132,10 +239,9 @@ export default function UserProfileDashboard() {
             <ProfileSkeleton />
           ) : (
             <div className="space-y-4 sm:space-y-6">
-              {/* Header section */}
               <header className="flex flex-col items-center sm:flex-row sm:justify-between gap-4">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full">
-                  <div className="relative w-24 h-24 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-white/20">
+                <div className="flex flex-row items-center sm:items-start gap-4 sm:gap-6 w-full">
+                  <div className="relative w-20 h-20 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-white/20">
                     {user?.user_metadata?.avatar_url ? (
                       <Image
                         src={user.user_metadata.avatar_url}
@@ -149,11 +255,11 @@ export default function UserProfileDashboard() {
                       </div>
                     )}
                   </div>
-                  <div className="text-center sm:text-left">
-                    <h1 className="text-2xl sm:text-3xl font-bold">
+                  <div className="text-left">
+                    <h1 className="text-lg sm:text-3xl font-bold">
                       {user?.user_metadata?.full_name || "User"}
                     </h1>
-                    <p className="text-gray-400 flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base">
+                    <p className="text-gray-400 flex items-center justify-center sm:justify-start gap-1 sm:gap-2 text-xs sm:text-base">
                       <Mail className="w-4 h-4" />
                       {user?.email}
                     </p>
@@ -164,50 +270,62 @@ export default function UserProfileDashboard() {
                 </div>
               </header>
 
-              {/* Stats cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                {/* Elapsed Time Card */}
-                <Card className="bg-white/25 border border-white/20">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
-                    <CardTitle className="text-xs sm:text-sm font-medium">
-                      Highest Elapsed Time
-                    </CardTitle>
-                    <Timer className="h-4 w-4 text-red-500" />
-                  </CardHeader>
-                  <CardContent className="p-3 sm:p-4 pt-0">
-                    <div className="text-xl sm:text-2xl font-bold">{highestElapsedTime}</div>
-                    <p className="text-xs text-gray-400">
-                      What a highest elapsed time!
-                    </p>
-                  </CardContent>
-                </Card>
+              <div className="relative overflow-x-auto sm:overflow-x-visible -mx-4 sm:mx-0 px-4 sm:px-0">
+                <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pb-4 sm:pb-0">
+                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
+                      <CardTitle className="text-xs sm:text-sm font-medium">
+                        Highest Time
+                      </CardTitle>
+                      <Timer className="h-4 w-4 text-red-500" />
+                    </CardHeader>
+                    <CardContent className="p-3 sm:p-4 pt-0">
+                      <div className="text-xl sm:text-2xl font-bold">{highestElapsedTime}</div>
+                      <p className="text-xs text-gray-400">
+                        Longest completion time
+                      </p>
+                    </CardContent>
+                  </Card>
 
-                {/* Score Card */}
-                <Card className="bg-white/25 border border-white/20">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Highest Score</CardTitle>
-                    <Ticket className="h-4 w-4 text-blue-500" />
-                  </CardHeader>
-                  <CardContent className="p-3 sm:p-4 pt-0">
-                    <div className="text-xl sm:text-2xl font-bold">{highestScore}</div>
-                    <p className="text-xs text-gray-400">Great job!</p>
-                  </CardContent>
-                </Card>
+                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
+                      <CardTitle className="text-xs sm:text-sm font-medium">
+                        Fastest Time
+                      </CardTitle>
+                      <Timer className="h-4 w-4 text-green-500" />
+                    </CardHeader>
+                    <CardContent className="p-3 sm:p-4 pt-0">
+                      <div className="text-xl sm:text-2xl font-bold">{earliestElapsedTime}</div>
+                      <p className="text-xs text-gray-400">
+                        Quickest completion time
+                      </p>
+                    </CardContent>
+                  </Card>
 
-                {/* Rank Card */}
-                <Card className="bg-white/25 border border-white/20">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Trivia Rank</CardTitle>
-                    <TrendingUpIcon className="h-4 w-4 text-green-500" />
-                  </CardHeader>
-                  <CardContent className="p-3 sm:p-4 pt-0">
-                    <div className="text-xl sm:text-2xl font-bold">#42</div>
-                    <p className="text-xs text-gray-400">Top 5% of users</p>
-                  </CardContent>
-                </Card>
+                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Highest Score</CardTitle>
+                      <Ticket className="h-4 w-4 text-blue-500" />
+                    </CardHeader>
+                    <CardContent className="p-3 sm:p-4 pt-0">
+                      <div className="text-xl sm:text-2xl font-bold">{highestScore}</div>
+                      <p className="text-xs text-gray-400">Great job!</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Trivia Rank</CardTitle>
+                      <TrendingUpIcon className="h-4 w-4 text-green-500" />
+                    </CardHeader>
+                    <CardContent className="p-3 sm:p-4 pt-0">
+                      <div className="text-xl sm:text-2xl font-bold">#42</div>
+                      <p className="text-xs text-gray-400">Top 5% of users</p>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
 
-              {/* Tabs section */}
               <div>
                 <Tabs defaultValue="history" className="w-full">
                   <TabsList className="h-12 w-full grid grid-cols-2 bg-transparent border-b-2 rounded-lg">
@@ -233,18 +351,87 @@ export default function UserProfileDashboard() {
                   <TabsContent value="history" className="mt-4">
                     <Card className="bg-transparent border-2">
                       <CardContent className="p-4">
-                        <p className="font-montserrat text-xs text-gray-300">
-                          Your recent game history will appear here.
-                        </p>
+                        {gameHistory.length > 0 ? (
+                          <div className="space-y-4">
+                            {gameHistory.map((game) => (
+                              <div
+                                key={game.id}
+                                className="bg-white/10 p-4 rounded-lg flex justify-between items-center"
+                              >
+                                <div className="space-y-1">
+                                  <p className="font-montserrat text-sm text-white">
+                                    Score: {game.score}/10
+                                  </p>
+                                  <p className="font-montserrat text-xs text-gray-400">
+                                    {format(new Date(game.finished_at), "MMMM dd, yyyy - h:mm a")}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-montserrat text-xs text-white">
+                                    Time: {Math.floor(game.elapsed_time / 60)}m {Math.floor(game.elapsed_time % 60)}s
+                                  </p>
+                                
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="font-montserrat text-xs text-gray-300">
+                            No game history available. Start playing to see your results here!
+                          </p>
+                        )}
                       </CardContent>
                     </Card>
                   </TabsContent>
                   <TabsContent value="achievements" className="mt-4">
                     <Card className="bg-transparent border-2">
                       <CardContent className="p-4">
-                        <p className="font-montserrat text-xs text-gray-300">
-                          Your achievements will be displayed here.
-                        </p>
+                        {achievements.length > 0 ? (
+                          <div className="space-y-4">
+                            {achievements.map((achievement) => (
+                              <div
+                                key={achievement.id}
+                                className={`bg-white/10 p-4 rounded-lg flex items-center justify-between ${
+                                  achievement.unlocked ? 'opacity-100' : 'opacity-50'
+                                }`}
+                              >
+                                <div className="flex items-center space-x-4">
+                                  <div className="flex-shrink-0">
+                                    {achievement.icon}
+                                  </div>
+                                  <div>
+                                    <h3 className="font-montserrat text-sm font-semibold text-white">
+                                      {achievement.title}
+                                    </h3>
+                                    <p className="font-montserrat text-xs text-gray-400">
+                                      {achievement.description}
+                                    </p>
+                                    {achievement.unlocked && achievement.unlockedAt && (
+                                      <p className="font-montserrat text-xs text-gray-500 mt-1">
+                                        Unlocked on {format(new Date(achievement.unlockedAt), "MMMM dd, yyyy")}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                                <div>
+                                  {achievement.unlocked ? (
+                                    <Badge className="bg-green-500/20 text-green-300">
+                                      Unlocked
+                                    </Badge>
+                                  ) : (
+                                    <Badge className="bg-gray-500/20 text-gray-300">
+                                      Locked
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="font-montserrat text-xs text-gray-300">
+                            No achievements available yet.
+                          </p>
+                        )}
                       </CardContent>
                     </Card>
                   </TabsContent>
