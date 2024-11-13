@@ -6,14 +6,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { RiMapPin2Fill, RiCalendarFill } from "react-icons/ri";
 import heroCover from "@/assets/cover/hero1.jpeg";
-
-import ccje from "@/assets/logo/ccje.png";
-import cet from "@/assets/logo/cet.png";
-import chatme from "@/assets/logo/chatme.png";
-import come from "@/assets/logo/come.png";
-import husocom from "@/assets/logo/husocom.png";
-import sbme from "@/assets/logo/sbme.png";
-import ste from "@/assets/logo/ste.png";
+import cnchero from "@/assets/images/cnc-hero.png";
 
 export const Hero = () => {
   const [isShimmering, setIsShimmering] = useState(false);
@@ -38,67 +31,11 @@ export const Hero = () => {
         <div className="absolute -bottom-0.5 left-0 w-full h-5/6 bg-gradient-to-b from-transparent to-[#0a0a0a] opacity-100"></div>
       </div>
 
-      <div className="z-10 text-white space-y-2 flex flex-col md:items-center">
-        <div className="flex flex-row flex-wrap justify-center items-start gap-2 px-3">
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={ccje}
-            alt="ccje"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={cet}
-            alt="cet"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={chatme}
-            alt="chatme"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={come}
-            alt="come"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={husocom}
-            alt="husocom"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={sbme}
-            alt="sbme"
-            width={60}
-            height={60}
-          />
-          <Image
-            className="w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16"
-            src={ste}
-            alt="ste"
-            width={60}
-            height={60}
-          />
-        </div>
+      <div className="z-10 text-white space-y-2 flex flex-col md:items-center md:mb-14">
+       
 
-        <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0">
-          <h1 className="text-[9vw] md:text-5xl lg:text-7xl font-raceSport text-center leading-tight md:leading-none">
-            Cross Blazers Cup
-          </h1>
-          <p className="font-montserrat text-[3vw] md:text-xl text-center md:text-center">
-            Join us for an unforgettable experience filled with excitement,
-            sportsmanship, and community pride!
-          </p>
+        <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0 max-w-screen-lg mx-auto">
+          <Image src={cnchero} alt="CNC Hero" className="w-full h-auto" />
         </div>
         <div className="flex flex-col md:flex-row md:space-x-2 font-montserrat px-3">
           <div className="border border-white/20 bg-white/20 backdrop-blur-md rounded-lg py-2 px-3 md:px-5 mb-2 md:mb-0">
@@ -117,10 +54,10 @@ export const Hero = () => {
         <div className="flex flex-row justify-center space-x-2 px-3">
           <Link href="/events">
             <Button
-              className={`relative overflow-hidden font-montserrat text-sm md:text-lg font-semibold uppercase py-5 px-7 md:py-7 md:px-8 my-5 ${
-                isShimmering
-                  ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
-                  : ""
+              className={`relative overflow-hidden font-montserrat text-sm md:text-lg font-semibold uppercase py-5 px-12 md:py-7 md:px-8 my-5 w-full md:w-auto ${
+              isShimmering
+                ? "animate-shimmer bg-gradient-to-r from-primary via-primary-foreground to-primary bg-[length:400%_100%]"
+                : ""
               }`}
               onClick={handleShimmerClick}
             >

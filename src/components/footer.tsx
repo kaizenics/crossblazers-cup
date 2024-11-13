@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { Container } from "@/components/ui/container";
+import cnchero from "@/assets/images/cnc-hero.png";
 
 export const Footer = () => {
   return (
@@ -6,19 +8,21 @@ export const Footer = () => {
       <div className="w-full h-[1.5px] bg-white/20" />
       <Container variant="fullMobileBreakpointPadded">
         <footer className="py-8 sm:py-12">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between">
-            <div className="w-full sm:w-auto mt-8 sm:mt-0">
-              <p className="font-raceSport text-3xl sm:text-5xl md:text-5xl text-center sm:text-right">
-                Cross Blazers Cup
-              </p>
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between">
+            <div className="w-full sm:w-auto mb-8 sm:mb-0">
+              <Image 
+                src={cnchero} 
+                alt="CNC Hero" 
+                className="w-56 sm:w-80 h-auto mx-auto sm:mx-0" 
+              />
             </div>
 
-            <div className="flex flex-row space-x-28 sm:space-x-16 mb-8 sm:mb-0 justify-center pt-10 sm:pt-0">
+            <div className="flex flex-row justify-center space-x-12 sm:space-x-24">
               <div className="space-y-4">
                 <h2 className="font-montserrat font-semibold text-lg text-white">
                   Resources
                 </h2>
-                <ul className="font-montserrat text-sm sm:text-md text-[#afaeaedc] space-y-2">
+                <ul className="font-montserrat text-sm text-[#afaeaedc] space-y-3">
                   <li>
                     <a href="#" className="hover:text-white hover:underline">
                       Help
@@ -40,7 +44,7 @@ export const Footer = () => {
                 <h2 className="font-montserrat font-semibold text-lg text-white">
                   Socials
                 </h2>
-                <ul className="font-montserrat text-sm sm:text-md text-[#afaeaedc] space-y-2">
+                <ul className="font-montserrat text-sm text-[#afaeaedc] space-y-3">
                   <li>
                     <a
                       href="https://www.facebook.com/hcdcssgexed"
