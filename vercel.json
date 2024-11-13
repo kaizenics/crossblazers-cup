@@ -1,15 +1,6 @@
 {
     "redirects": [
-      {
-        "source": "/trivia",
-        "destination": "/under-construction",
-        "permanent": true
-      },
-      {
-        "source": "/leaderboard",
-        "destination": "/under-construction",
-        "permanent": true
-      }
+      
     ]
   }
   
