@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { isBefore, subHours } from "date-fns";
 import { useRouter } from 'next/navigation';
+import { badWords } from "@/lib/badwords"; // You'll need to create this file
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
@@ -31,6 +32,22 @@ const formatTimeAgo = (date: Date) => {
   if (hours > 0) return `${hours}h`;
   if (minutes > 0) return `${minutes}m`;
   return `${seconds}s`;
+};
+
+const containsProfanity = (text: string): boolean => {
+  const words = text.toLowerCase().split(/\s+/);
+  return words.some(word => badWords.includes(word));
+};
+
+const containsHarmfulContent = (text: string): boolean => {
+  // Add additional checks for harmful content patterns
+  const harmfulPatterns = [
+    /\b(hate|kill|death|stupid|idiot|fuck|shit)\b/i,
+    /\b(racist|sexist|discrimination)\b/i,
+    // Add more patterns as needed
+  ];
+
+  return harmfulPatterns.some(pattern => pattern.test(text));
 };
 
 interface Note {
@@ -112,6 +129,24 @@ export default function Notes() {
 
   const handleSubmit = async () => {
     if (!content.trim() || !user) return;
+
+    // Check for profanity and harmful content
+    if (containsProfanity(content) || containsHarmfulContent(content)) {
+      toast.error("Note contains inappropriate content", {
+        description: "Please keep the platform friendly and respectful. Avoid profanity and harmful language.",
+        duration: 5000,
+      });
+      return;
+    }
+
+    // Add content guidelines warning if content seems questionable
+    if (content.includes('!') || content.toUpperCase() === content) {
+      toast.warning("Content Guidelines Reminder", {
+        description: "Please ensure your note follows our community guidelines. Keep it friendly and constructive!",
+        duration: 4000,
+      });
+      return;
+    }
 
     const noteData = {
       content,
@@ -202,6 +237,14 @@ export default function Notes() {
     const newContent = e.target.value;
     if (newContent.length <= MAX_CHARS) {
       setContent(newContent);
+      
+      // Real-time content warning
+      if (containsProfanity(newContent) || containsHarmfulContent(newContent)) {
+        toast.warning("Content Warning", {
+          description: "Your note may contain inappropriate content. Please revise before submitting.",
+          duration: 3000,
+        });
+      }
     }
   };
 
