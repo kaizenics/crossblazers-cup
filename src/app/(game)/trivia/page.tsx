@@ -247,7 +247,7 @@ export default function LargerInteractiveTriviaGame() {
                   <h2 className="font-montserrat text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4">
                     {gameQuestions[currentQuestion].question}
                   </h2>
-                  <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                     {gameQuestions[currentQuestion].options.map(
                       (option, index) => (
                         <motion.div
