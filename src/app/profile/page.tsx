@@ -31,6 +31,12 @@ interface Achievement {
   unlockedAt?: string;
 }
 
+interface UserRankInfo {
+  rank: number;
+  totalPlayers: number;
+  percentile: number;
+}
+
 export default function UserProfileDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -41,6 +47,7 @@ export default function UserProfileDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [gameHistory, setGameHistory] = useState<TriviaScore[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [userRank, setUserRank] = useState<UserRankInfo | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -53,6 +60,7 @@ export default function UserProfileDashboard() {
         fetchUserStats(data.user.id);
         fetchGameHistory(data.user.id);
         fetchAchievements(data.user.id);
+        fetchUserRank(data.user.id);
         if (data.user.created_at) {
           setCreatedAt(format(new Date(data.user.created_at), "MMMM dd, yyyy"));
         }
@@ -178,6 +186,45 @@ export default function UserProfileDashboard() {
     ];
 
     setAchievements(userAchievements);
+  };
+
+  const fetchUserRank = async (userId: string) => {
+    try {
+      // First, get all users' best scores
+      const { data: allScores, error: scoresError } = await supabase
+        .from('trivia_scores')
+        .select('user_id, score, elapsed_time');
+
+      if (scoresError) throw scoresError;
+
+      // Get best score per user
+      const bestScoresMap = new Map();
+      allScores?.forEach((entry) => {
+        if (!bestScoresMap.has(entry.user_id) || 
+            bestScoresMap.get(entry.user_id).score < entry.score) {
+          bestScoresMap.set(entry.user_id, entry);
+        }
+      });
+
+      const rankedScores = Array.from(bestScoresMap.values())
+        .sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return a.elapsed_time - b.elapsed_time;
+        });
+
+      // Find user's position
+      const userPosition = rankedScores.findIndex(score => score.user_id === userId) + 1;
+      const totalPlayers = rankedScores.length;
+      const percentile = Math.round(((totalPlayers - userPosition) / totalPlayers) * 100);
+
+      setUserRank({
+        rank: userPosition,
+        totalPlayers,
+        percentile
+      });
+    } catch (error) {
+      console.error('Error fetching user rank:', error);
+    }
   };
 
   const ProfileSkeleton = () => (
@@ -319,8 +366,19 @@ export default function UserProfileDashboard() {
                       <TrendingUpIcon className="h-4 w-4 text-green-500" />
                     </CardHeader>
                     <CardContent className="p-3 sm:p-4 pt-0">
-                      <div className="text-xl sm:text-2xl font-bold">#42</div>
-                      <p className="text-xs text-gray-400">Top 5% of users</p>
+                      {userRank ? (
+                        <>
+                          <div className="text-xl sm:text-2xl font-bold">#{userRank.rank}</div>
+                          <p className="text-xs text-gray-400">
+                            Top {userRank.percentile}% of {userRank.totalPlayers} players
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <div className="text-xl sm:text-2xl font-bold">--</div>
+                          <p className="text-xs text-gray-400">Play to get ranked!</p>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
