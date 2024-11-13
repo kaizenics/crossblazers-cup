@@ -5,7 +5,11 @@ import React, { useState, useEffect, useMemo } from "react";
 export const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
-  const targetEndTime = useMemo(() => new Date("2024-11-19T00:00:00Z"), []); 
+  // Set target date to November 19, 2024 00:00:00 UTC+8
+  const targetEndTime = useMemo(() => {
+    const date = new Date('2024-11-19T00:00:00+08:00');
+    return date;
+  }, []); 
 
   const calculateTimeLeft = (endTime: Date) => {
     const currentTime = new Date().getTime(); 
