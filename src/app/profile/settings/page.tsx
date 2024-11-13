@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Dock } from "@/components/ui/dock";
 import { Container } from "@/components/ui/container";
-import { LogOut, ChevronRight, Bell, Shield, HelpCircle } from "lucide-react";
+import { LogOut, ChevronRight, HelpCircle } from "lucide-react";
 import { supabase } from '@/lib/supabase';
 import { toast } from "sonner";
 
@@ -36,20 +36,11 @@ export default function ProfileSettings() {
 
   const settingsItems = [
     {
-      title: "Notifications",
-      description: "Manage your notification preferences",
-      icon: Bell,
-    },
-    {
-      title: "Privacy",
-      description: "Control your privacy settings",
-      icon: Shield,
-    },
-    {
       title: "Help & Support",
       description: "Get help or contact support",
       icon: HelpCircle,
-    },
+      href: "https://www.facebook.com/hcdcssgexed"
+    }
   ];
 
   if (isLoading) {
@@ -84,7 +75,7 @@ export default function ProfileSettings() {
                 key={item.title} 
                 className="bg-white/5 border-white/10"
               >
-                <button className="w-full text-left">
+                <a href={item.href} target="_blank" rel="noopener noreferrer" className="w-full text-left">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="p-2 rounded-full bg-white/10">
@@ -97,7 +88,7 @@ export default function ProfileSettings() {
                     </div>
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </CardContent>
-                </button>
+                </a>
               </Card>
             ))}
           </div>
