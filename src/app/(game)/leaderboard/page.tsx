@@ -32,33 +32,63 @@ export default function TriviaLeaderboard() {
     setIsLoading(true);
 
     try {
+      // First, get the best score for each user
       const { data: scoreData, error: scoreError } = await supabase
         .from('trivia_scores')
         .select('*')
-        .order('score', { ascending: false })
-        .order('elapsed_time', { ascending: true });
+        .order('score', { ascending: false });
 
       if (scoreError) throw scoreError;
 
+      // Filter to keep only the highest score per user
+      const bestScoresMap = new Map();
+      scoreData?.forEach((entry) => {
+        if (!bestScoresMap.has(entry.user_id) || 
+            bestScoresMap.get(entry.user_id).score < entry.score) {
+          bestScoresMap.set(entry.user_id, entry);
+        }
+      });
+      
+      const bestScores = Array.from(bestScoresMap.values());
+      bestScores.sort((a, b) => {
+        // Sort by score first, then by time for tiebreaker
+        if (b.score !== a.score) return b.score - a.score;
+        return a.elapsed_time - b.elapsed_time;
+      });
+
+      // Get fastest times for users with high scores (≥7)
       const { data: timeData, error: timeError } = await supabase
         .from('trivia_scores')
         .select('*')
         .gte('score', 7)
-        .order('elapsed_time', { ascending: true })
-        .order('score', { ascending: false });
+        .order('elapsed_time', { ascending: true });
 
       if (timeError) throw timeError;
 
-      // Process score leaderboard
-      const processedScoreData = (scoreData || [])
+      // Filter to keep only the fastest time per user
+      const bestTimesMap = new Map();
+      timeData?.forEach((entry) => {
+        if (!bestTimesMap.has(entry.user_id) || 
+            bestTimesMap.get(entry.user_id).elapsed_time > entry.elapsed_time) {
+          bestTimesMap.set(entry.user_id, entry);
+        }
+      });
+
+      const bestTimes = Array.from(bestTimesMap.values());
+      bestTimes.sort((a, b) => {
+
+        if (a.elapsed_time !== b.elapsed_time) return a.elapsed_time - b.elapsed_time;
+        return b.score - a.score;
+      });
+
+      const processedScoreData = bestScores
         .slice(0, 10)
         .map((entry, index) => ({
           ...entry,
           rank: index + 1,
         }));
 
-      // Process time leaderboard
-      const processedTimeData = (timeData || [])
+      const processedTimeData = bestTimes
         .slice(0, 10)
         .map((entry, index) => ({
           ...entry,
@@ -139,7 +169,6 @@ export default function TriviaLeaderboard() {
                   <TabsTrigger value="time">Fastest Times</TabsTrigger>
                 </TabsList>
                 
-                {/* Desktop View */}
                 <div className="hidden sm:block">
                   <TabsContent value="score">
                     <Table>

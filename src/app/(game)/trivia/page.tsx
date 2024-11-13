@@ -24,7 +24,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { triviaQuestions } from '@/data/trivia/triviaData';
+import { triviaQuestions } from "@/data/trivia/triviaData";
 
 export default function LargerInteractiveTriviaGame() {
   const [gameState, setGameState] = useState<"intro" | "playing" | "result">(
@@ -37,7 +37,9 @@ export default function LargerInteractiveTriviaGame() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [gameQuestions, setGameQuestions] = useState<typeof triviaQuestions>([]);
+  const [gameQuestions, setGameQuestions] = useState<typeof triviaQuestions>(
+    []
+  );
 
   // Function to shuffle array using Fisher-Yates algorithm
   const shuffleArray = <T,>(array: T[]): T[] => {
@@ -98,7 +100,7 @@ export default function LargerInteractiveTriviaGame() {
     if (!user) return;
 
     // Get the user's name from metadata
-    const playerName = user.user_metadata?.full_name || 'Anonymous';
+    const playerName = user.user_metadata?.full_name || "Anonymous";
 
     const { data, error } = await supabase.from("trivia_scores").insert([
       {
@@ -143,7 +145,6 @@ export default function LargerInteractiveTriviaGame() {
     }
   };
 
-
   const resetGame = () => {
     setGameState("intro");
     setCurrentQuestion(0);
@@ -154,43 +155,32 @@ export default function LargerInteractiveTriviaGame() {
     setGameQuestions([]);
   };
 
-
   return (
-    <div className="min-h-screen text-white flex items-center justify-center p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen text-white flex items-center justify-center p-2 sm:p-4 md:p-6">
       <RetroGrid />
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[50vw] select-none"
-        
-        // Preventing Selection of Text and Right Click Function
-        style={{
-          WebkitUserSelect: 'none',
-          MozUserSelect: 'none',
-          msUserSelect: 'none',
-          userSelect: 'none',
-          WebkitTouchCallout: 'none',
-        }}
-        onContextMenu={(e) => e.preventDefault()} 
+        className="w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[65vw] xl:max-w-[55vw] select-none"
       >
-        <Card className="border border-white/30 bg-white/30 text-white">
-          <CardHeader className="p-4 sm:p-6">
+        <Card className="border border-white/30 bg-white/30 text-white overflow-hidden">
+          <CardHeader className="p-3 sm:p-4 md:p-6">
             {gameState !== "intro" && (
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <CardTitle className="font-raceSport text-2xl sm:text-3xl lg:text-4xl font-bold">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4">
+                <CardTitle className="font-raceSport text-xl sm:text-2xl lg:text-3xl font-bold">
                   Trivia Challenge
                 </CardTitle>
                 <Badge
                   variant="secondary"
-                  className="font-montserrat bg-white/10 text-lg sm:text-xl lg:text-2xl px-3 py-1 sm:px-4 sm:py-2"
+                  className="font-montserrat bg-white/10 text-base sm:text-lg lg:text-xl px-2 py-1 sm:px-3 sm:py-1"
                 >
                   Score: {score}/{gameQuestions.length}
                 </Badge>
               </div>
             )}
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
             <AnimatePresence mode="wait">
               {gameState === "intro" && (
                 <motion.div
@@ -215,13 +205,13 @@ export default function LargerInteractiveTriviaGame() {
                     <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />{" "}
                     Start Game
                   </Button>
-                  <CardFooter className="py-4 sm:py-6 lg:py-8">
+                  <CardFooter className="flex justify-center items-center py-4 sm:py-6 lg:py-8">
                     <Link href="/">
                       <Button
                         variant="ghost"
                         className="font-montserrat text-white hover:text-gray-300 transition-colors text-sm sm:text-base"
                       >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        <ArrowLeft className="mr-1 h-4 w-4" />
                         Back to Home
                       </Button>
                     </Link>
@@ -235,72 +225,74 @@ export default function LargerInteractiveTriviaGame() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
+                  className="space-y-3 sm:space-y-4"
                 >
-                  <div className="mb-4 sm:mb-6">
+                  <div className="mb-3 sm:mb-4">
                     <Progress
                       value={(timeLeft / 15) * 100}
-                      className="h-2 sm:h-3 bg-black/20"
+                      className="h-2 bg-black/20"
                     />
-                    <p className="font-montserrat text-right mt-2 text-sm sm:text-base text-gray-300">
+                    <p className="font-montserrat text-right mt-1 text-xs sm:text-sm text-gray-300">
                       Time left: {timeLeft}s
                     </p>
                   </div>
-                  <h2 className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6">
+                  <h2 className="font-montserrat text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4">
                     {gameQuestions[currentQuestion].question}
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {gameQuestions[currentQuestion].options.map((option, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                      >
-                        <Button
-                          variant={
-                            selectedAnswer === index ? "secondary" : "default"
-                          }
-                          className="font-montserrat w-full h-auto py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 text-left justify-start text-sm sm:text-base lg:text-lg"
-                          onClick={() => handleAnswerClick(index)}
-                          disabled={selectedAnswer !== null}
+                  <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                    {gameQuestions[currentQuestion].options.map(
+                      (option, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
                         >
-                          {option}
-                          {selectedAnswer === index && (
-                            <motion.span
-                              className="ml-auto"
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 500,
-                                damping: 30,
-                              }}
-                            >
-                              {index ===
-                              gameQuestions[currentQuestion].correctAnswer ? (
-                                <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-green-500" />
-                              ) : (
-                                <XCircle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-red-500" />
-                              )}
-                            </motion.span>
-                          )}
-                        </Button>
-                      </motion.div>
-                    ))}
+                          <Button
+                            variant={
+                              selectedAnswer === index ? "secondary" : "default"
+                            }
+                            className="font-montserrat w-full min-h-[44px] h-auto py-2 px-3 text-left justify-start text-sm sm:text-base break-words"
+                            onClick={() => handleAnswerClick(index)}
+                            disabled={selectedAnswer !== null}
+                          >
+                            <span className="flex-1 mr-2">{option}</span>
+                            {selectedAnswer === index && (
+                              <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 500,
+                                  damping: 30,
+                                }}
+                              >
+                                {index ===
+                                gameQuestions[currentQuestion].correctAnswer ? (
+                                  <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 flex-shrink-0" />
+                                ) : (
+                                  <XCircle className="h-5 w-5 sm:h-6 sm:w-6 text-red-500 flex-shrink-0" />
+                                )}
+                              </motion.span>
+                            )}
+                          </Button>
+                        </motion.div>
+                      )
+                    )}
                   </div>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.5 }}
-                    className="mt-6 sm:mt-8 flex justify-center"
+                    className="mt-4 sm:mt-6 flex justify-center"
                   >
                     <Button
                       onClick={handleNextQuestion}
                       disabled={selectedAnswer === null}
-                      className="font-montserrat text-sm sm:text-base lg:text-lg py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6"
+                      className="font-montserrat text-sm sm:text-base py-2 px-4"
                     >
-                      Next Question{" "}
-                      <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                      Next Question
+                      <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -352,12 +344,19 @@ export default function LargerInteractiveTriviaGame() {
                       </div>
                     )}
                   </motion.div>
-                  <Button
-                    onClick={resetGame}
-                    className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
-                  >
-                    Play Again
-                  </Button>
+                  <div className="flex flex-row justify-center items-center gap-2">
+                    <Button
+                      onClick={resetGame}
+                      className="font-montserrat text-sm sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
+                    >
+                      Play Again
+                    </Button>
+                    <Link href="leaderboard">
+                      <Button className="font-montserrat text-sm sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8">
+                        Leaderboards
+                      </Button>
+                    </Link>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -369,39 +368,34 @@ export default function LargerInteractiveTriviaGame() {
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-zinc-800 p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg w-full max-w-[80vw] sm:max-w-[60vw] md:max-w-[40vw] lg:max-w-[30vw]"
+              className="bg-zinc-800 p-4 rounded-lg shadow-lg w-full max-w-[90vw] sm:max-w-[400px]"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex justify-end items-center mb-4">
+              <div className="flex justify-end mb-2">
                 <button
                   className="text-gray-400 hover:text-white transition-colors"
                   onClick={() => setIsModalOpen(false)}
-                  aria-label="Close modal"
                 >
-                  <X size={24} />
+                  <X size={20} />
                 </button>
               </div>
-              <h2 className="font-montserrat text-base sm:text-lg lg:text-xl font-bold mb-4">
+              <h2 className="font-montserrat text-lg font-bold mb-2">
                 Login Required
               </h2>
-              <p className="font-montserrat text-sm sm:text-base lg:text-lg mb-6">
+              <p className="font-montserrat text-sm text-gray-300 mb-4">
                 You need to log in to start the game. Please log in to proceed.
               </p>
-
-              <Link href="/login">
-                <Button
-                  variant={"default"}
-                  className="w-full text-sm sm:text-base lg:text-lg py-2 px-4 sm:py-3 sm:px-6"
-                >
+              <Link href="/login" className="block">
+                <Button variant={"default"} className="w-full text-sm py-2">
                   Login
                 </Button>
               </Link>
