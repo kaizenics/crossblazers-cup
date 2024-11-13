@@ -198,13 +198,20 @@ export default function LargerInteractiveTriviaGame() {
                     Test your knowledge with 10 exciting questions and win
                     exciting prizes.
                   </p>
-                  <Button
-                    onClick={startGame}
-                    className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
-                  >
-                    <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />{" "}
-                    Start Game
-                  </Button>
+                  <div className="flex flex-row justify-center items-center gap-2">
+                    <Button
+                      onClick={startGame}
+                      className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8"
+                    >
+                      <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />{" "}
+                      Start Game
+                    </Button>
+                    <Link href="leaderboard">
+                      <Button className="text-base sm:text-lg lg:text-xl py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8">
+                        Leaderboards
+                      </Button>
+                    </Link>
+                  </div>
                   <CardFooter className="flex justify-center items-center py-4 sm:py-6 lg:py-8">
                     <Link href="/">
                       <Button
