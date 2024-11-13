@@ -104,7 +104,7 @@ export const Navbar = () => {
                 ))}
               </div>
               <div className="flex items-center space-x-2">
-                <Link href="/under-construction">
+                <Link href="/trivia">
                   <ShinyButton text="Play Trivia Game" className="text-sm" />
                 </Link>
                 {user ? (
