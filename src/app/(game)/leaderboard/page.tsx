@@ -7,7 +7,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Medal, Award } from 'lucide-react'
 import { supabase } from "@/lib/supabase"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface LeaderboardEntry {
   id: number;
@@ -17,11 +16,11 @@ interface LeaderboardEntry {
   elapsed_time: number;
   finished_at: string;
   user_id: string;
+  points?: number;
 }
 
 export default function TriviaLeaderboard() {
-  const [scoreLeaderboard, setScoreLeaderboard] = useState<LeaderboardEntry[]>([])
-  const [timeLeaderboard, setTimeLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [combinedLeaderboard, setCombinedLeaderboard] = useState<LeaderboardEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -32,71 +31,48 @@ export default function TriviaLeaderboard() {
     setIsLoading(true);
 
     try {
-      // First, get the best score for each user
-      const { data: scoreData, error: scoreError } = await supabase
+      const { data: allScores, error } = await supabase
         .from('trivia_scores')
-        .select('*')
-        .order('score', { ascending: false });
+        .select('*');
 
-      if (scoreError) throw scoreError;
+      if (error) throw error;
 
-      // Filter to keep only the highest score per user
-      const bestScoresMap = new Map();
-      scoreData?.forEach((entry) => {
-        if (!bestScoresMap.has(entry.user_id) || 
-            bestScoresMap.get(entry.user_id).score < entry.score) {
-          bestScoresMap.set(entry.user_id, entry);
-        }
-      });
-      
-      const bestScores = Array.from(bestScoresMap.values());
-      bestScores.sort((a, b) => {
-        // Sort by score first, then by time for tiebreaker
-        if (b.score !== a.score) return b.score - a.score;
-        return a.elapsed_time - b.elapsed_time;
-      });
+      // Group scores by user and find their best attempts
+      const userBestScores = new Map();
 
-      // Get fastest times for users with high scores (≥7)
-      const { data: timeData, error: timeError } = await supabase
-        .from('trivia_scores')
-        .select('*')
-        .gte('score', 7)
-        .order('elapsed_time', { ascending: true });
-
-      if (timeError) throw timeError;
-
-      // Filter to keep only the fastest time per user
-      const bestTimesMap = new Map();
-      timeData?.forEach((entry) => {
-        if (!bestTimesMap.has(entry.user_id) || 
-            bestTimesMap.get(entry.user_id).elapsed_time > entry.elapsed_time) {
-          bestTimesMap.set(entry.user_id, entry);
+      allScores?.forEach((entry) => {
+        if (!userBestScores.has(entry.user_id)) {
+          userBestScores.set(entry.user_id, entry);
+        } else {
+          const existing = userBestScores.get(entry.user_id);
+          
+          // Calculate points for existing and new entry
+          const existingPoints = (existing.score * 1000) - existing.elapsed_time;
+          const newPoints = (entry.score * 1000) - entry.elapsed_time;
+          
+          // Update if new entry has better points
+          if (newPoints > existingPoints) {
+            userBestScores.set(entry.user_id, entry);
+          }
         }
       });
 
-      const bestTimes = Array.from(bestTimesMap.values());
-      bestTimes.sort((a, b) => {
+      // Convert to array and add points
+      let leaderboard = Array.from(userBestScores.values()).map(entry => ({
+        ...entry,
+        points: (entry.score * 1000) - entry.elapsed_time // Higher scores and lower times = better points
+      }));
 
-        if (a.elapsed_time !== b.elapsed_time) return a.elapsed_time - b.elapsed_time;
-        return b.score - a.score;
-      });
+      // Sort by points (descending)
+      leaderboard.sort((a, b) => b.points! - a.points!);
 
-      const processedScoreData = bestScores
-        .slice(0, 10)
-        .map((entry, index) => ({
-          ...entry,
-          rank: index + 1,
-        }));
+      // Add ranks
+      leaderboard = leaderboard.map((entry, index) => ({
+        ...entry,
+        rank: index + 1
+      }));
 
-      const processedTimeData = bestTimes
-        .slice(0, 10)
-        .map((entry, index) => ({
-          ...entry,
-          rank: index + 1,
-        }));
-
-      setScoreLeaderboard(processedScoreData);
-      setTimeLeaderboard(processedTimeData);
+      setCombinedLeaderboard(leaderboard.slice(0, 10));
     } catch (error) {
       console.error('Error fetching leaderboard data:', error);
     } finally {
@@ -154,7 +130,7 @@ export default function TriviaLeaderboard() {
         <Card className="border border-white/30 bg-white/20 text-white">
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="font-raceSport text-2xl sm:text-3xl font-bold text-center">
-              Trivia Leaderboard
+              Trivia Champions
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
@@ -163,124 +139,63 @@ export default function TriviaLeaderboard() {
                 <p className="text-white/60">Loading leaderboard data...</p>
               </div>
             ) : (
-              <Tabs defaultValue="score" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="score">High Scores</TabsTrigger>
-                  <TabsTrigger value="time">Fastest Times</TabsTrigger>
-                </TabsList>
-                
+              <>
+                {/* Desktop View */}
                 <div className="hidden sm:block">
-                  <TabsContent value="score">
-                    <Table>
-                      <TableHeader>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-montserrat text-white">Rank</TableHead>
+                        <TableHead className="font-montserrat text-white">Player</TableHead>
+                        <TableHead className="font-montserrat text-white">Score</TableHead>
+                        <TableHead className="font-montserrat text-white">Time</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {combinedLeaderboard.length === 0 ? (
                         <TableRow>
-                          <TableHead className="font-montserrat text-white">Rank</TableHead>
-                          <TableHead className="font-montserrat text-white">Player</TableHead>
-                          <TableHead className="font-montserrat text-white">Score</TableHead>
-                          <TableHead className="font-montserrat text-white">Time</TableHead>
+                          <TableCell colSpan={4} className="text-center text-white/60">
+                            No scores available yet
+                          </TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {scoreLeaderboard.length === 0 ? (
-                          <TableRow>
-                            <TableCell colSpan={4} className="text-center text-white/60">
-                              No scores available yet
+                      ) : (
+                        combinedLeaderboard.map((entry) => (
+                          <TableRow key={entry.id}>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                {getRankIcon(entry.rank!)}
+                                <span>{entry.rank}</span>
+                              </div>
                             </TableCell>
-                          </TableRow>
-                        ) : (
-                          scoreLeaderboard.map((entry) => (
-                            <TableRow key={entry.id}>
-                              <TableCell className="font-medium">
-                                <div className="flex items-center gap-2">
-                                  {getRankIcon(entry.rank!)}
-                                  <span>{entry.rank}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell>{entry.player_name}</TableCell>
-                              <TableCell>
-                                <Badge variant="secondary" className="font-bold">
-                                  {entry.score}/10
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{formatTime(entry.elapsed_time)}</TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TabsContent>
-                  <TabsContent value="time">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="font-montserrat text-white">Rank</TableHead>
-                          <TableHead className="font-montserrat text-white">Player</TableHead>
-                          <TableHead className="font-montserrat text-white">Time</TableHead>
-                          <TableHead className="font-montserrat text-white">Score</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {timeLeaderboard.length === 0 ? (
-                          <TableRow>
-                            <TableCell colSpan={4} className="text-center text-white/60">
-                              No qualifying times available yet
+                            <TableCell>{entry.player_name}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary" className={`font-bold ${
+                                entry.rank === 1 ? 'bg-yellow-500/20 text-yellow-300' : ''
+                              }`}>
+                                {entry.score}/10
+                              </Badge>
                             </TableCell>
+                            <TableCell>{formatTime(entry.elapsed_time)}</TableCell>
                           </TableRow>
-                        ) : (
-                          timeLeaderboard.map((entry) => (
-                            <TableRow key={entry.id}>
-                              <TableCell className="font-medium">
-                                <div className="flex items-center gap-2">
-                                  {getRankIcon(entry.rank!)}
-                                  <span>{entry.rank}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell>{entry.player_name}</TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant="secondary" 
-                                  className={`font-bold ${
-                                    entry.rank === 1 ? 'bg-yellow-500/20 text-yellow-300' : ''
-                                  }`}
-                                >
-                                  {formatTime(entry.elapsed_time)}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{entry.score}/10</TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TabsContent>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
                 </div>
 
                 {/* Mobile View */}
                 <div className="sm:hidden">
-                  <TabsContent value="score">
-                    <div className="space-y-4">
-                      {scoreLeaderboard.length === 0 ? (
-                        <p className="text-center text-white/60">No scores available yet</p>
-                      ) : (
-                        scoreLeaderboard.map((entry) => (
-                          <LeaderboardCard key={entry.id} entry={entry} />
-                        ))
-                      )}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="time">
-                    <div className="space-y-4">
-                      {timeLeaderboard.length === 0 ? (
-                        <p className="text-center text-white/60">No qualifying times available yet</p>
-                      ) : (
-                        timeLeaderboard.map((entry) => (
-                          <LeaderboardCard key={entry.id} entry={entry} />
-                        ))
-                      )}
-                    </div>
-                  </TabsContent>
+                  <div className="space-y-4">
+                    {combinedLeaderboard.length === 0 ? (
+                      <p className="text-center text-white/60">No scores available yet</p>
+                    ) : (
+                      combinedLeaderboard.map((entry) => (
+                        <LeaderboardCard key={entry.id} entry={entry} />
+                      ))
+                    )}
+                  </div>
                 </div>
-              </Tabs>
+              </>
             )}
           </CardContent>
         </Card>
