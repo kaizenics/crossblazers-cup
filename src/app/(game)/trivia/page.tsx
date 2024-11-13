@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { triviaQuestions } from "@/data/trivia/triviaData";
+import { Dock } from "@/components/ui/dock";
 
 export default function LargerInteractiveTriviaGame() {
   const [gameState, setGameState] = useState<"intro" | "playing" | "result">(
@@ -370,6 +371,9 @@ export default function LargerInteractiveTriviaGame() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Add Dock component */}
+      <Dock />
 
       {/* Modal for login warning */}
       <AnimatePresence>

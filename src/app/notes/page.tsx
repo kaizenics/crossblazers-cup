@@ -61,8 +61,11 @@ export default function Notes() {
   const MAX_CHARS = 250;
 
   useEffect(() => {
-    fetchNotes();
-    getUser();
+    const initialize = async () => {
+      await getUser();
+      await fetchNotes();
+    };
+    initialize();
   }, []);
 
   const getUser = async () => {
@@ -70,6 +73,7 @@ export default function Notes() {
       data: { user },
     } = await supabase.auth.getUser();
     setUser(user);
+    return user;
   };
 
   const fetchNotes = async () => {
@@ -77,6 +81,7 @@ export default function Notes() {
     const { data, error } = await supabase
       .from("notes")
       .select("*")
+      .eq('archived', false)  // Only fetch non-archived notes
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -90,13 +95,18 @@ export default function Notes() {
       !isBefore(new Date(note.created_at), twentyFourHoursAgo)
     ) || [];
 
-    setNotes(validNotes);
-    
-    if (user) {
-      const userNote = validNotes.find(note => note.user_id === user.id);
-      setUserNote(userNote || null);
+    // Find user's note and set states
+    const currentUser = await getUser();
+    if (currentUser) {
+      const userNote = validNotes.find(note => note.user_id === currentUser.id);
+      if (userNote) {
+        setContent(userNote.content);
+        setIsAnonymous(userNote.is_anonymous);
+        setUserNote(userNote);
+      }
     }
-    
+
+    setNotes(validNotes);
     setIsLoading(false);
   };
 
@@ -109,17 +119,37 @@ export default function Notes() {
       user_name: user.user_metadata?.full_name || "Unknown User",
       is_anonymous: isAnonymous,
       avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
+      archived: false,  // Add archived field
     };
 
     let error;
 
     if (userNote) {
+      // Save the current version to history before updating
+      const { error: historyError } = await supabase
+        .from("note_history")
+        .insert([{
+          original_note_id: userNote.id,
+          content: userNote.content,
+          is_anonymous: userNote.is_anonymous,
+          user_id: userNote.user_id,
+          user_name: userNote.user_name,
+          avatar_url: userNote.avatar_url,
+          archived_at: new Date().toISOString()
+        }]);
+
+      if (historyError) {
+        console.error("Error saving note history:", historyError);
+      }
+
+      // Update the current note
       const { error: updateError } = await supabase
         .from("notes")
         .update(noteData)
         .eq("id", userNote.id);
       error = updateError;
     } else {
+      // Insert new note
       const { error: insertError } = await supabase
         .from("notes")
         .insert([noteData]);
@@ -132,11 +162,11 @@ export default function Notes() {
       return;
     }
 
-    setContent("");
+    // Don't reset the states after submission, just refresh the notes
     fetchNotes();
     toast.success(userNote ? "Note updated successfully!" : "Note shared successfully!", {
       description: userNote ? 
-        "Your previous note has been replaced." : 
+        "Your note has been updated." : 
         "Your note has been posted to the feed.",
       duration: 3000,
     });
@@ -145,14 +175,25 @@ export default function Notes() {
   const handleDeleteNote = async (noteId: string, noteUserId: string) => {
     if (!user || user.id !== noteUserId) return;
 
-    const { error } = await supabase.from("notes").delete().eq("id", noteId);
+    // Instead of deleting, archive the note
+    const { error: archiveError } = await supabase
+      .from("notes")
+      .update({ 
+        archived: true,
+        archived_at: new Date().toISOString()
+      })
+      .eq("id", noteId);
 
-    if (error) {
-      console.error("Error deleting note:", error);
-      toast.error("Failed to delete note");
+    if (archiveError) {
+      console.error("Error archiving note:", archiveError);
+      toast.error("Failed to archive note");
       return;
     }
 
+    // Reset states after successful archiving
+    setContent("");
+    setIsAnonymous(false);
+    setUserNote(null);
     toast.success("Note deleted successfully");
     fetchNotes();
   };

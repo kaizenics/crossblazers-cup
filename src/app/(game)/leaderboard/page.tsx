@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Medal, Award } from 'lucide-react'
 import { supabase } from "@/lib/supabase"
+import { Dock } from "@/components/ui/dock";
 
 interface LeaderboardEntry {
   id: number;
@@ -200,6 +201,7 @@ export default function TriviaLeaderboard() {
           </CardContent>
         </Card>
       </motion.div>
+      <Dock />
     </div>
   );
 }
