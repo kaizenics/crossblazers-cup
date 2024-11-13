@@ -421,7 +421,7 @@ export default function UserProfileDashboard() {
                                     Score: {game.score}/10
                                   </p>
                                   <p className="font-montserrat text-xs text-gray-400">
-                                    {format(new Date(game.finished_at), "MMMM dd, yyyy - h:mm a")}
+                                    {format(new Date(new Date(game.finished_at).getTime() + (8 * 60 * 60 * 1000)), "MMMM dd, yyyy - h:mm a")}
                                   </p>
                                 </div>
                                 <div className="text-right">
