@@ -24,6 +24,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { triviaQuestions } from '@/data/trivia/triviaData';
 
 export default function LargerInteractiveTriviaGame() {
   const [gameState, setGameState] = useState<"intro" | "playing" | "result">(
@@ -36,44 +37,22 @@ export default function LargerInteractiveTriviaGame() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [gameQuestions, setGameQuestions] = useState<typeof triviaQuestions>([]);
 
-  const questions = [
-    {
-      question: "What is the capital of France?",
-      options: ["London", "Berlin", "Paris", "Madrid"],
-      correctAnswer: 2,
-    },
-    {
-      question: "Which planet is known as the Red Planet?",
-      options: ["Venus", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 1,
-    },
-    {
-      question: "Who painted the Mona Lisa?",
-      options: [
-        "Vincent van Gogh",
-        "Pablo Picasso",
-        "Leonardo da Vinci",
-        "Michelangelo",
-      ],
-      correctAnswer: 2,
-    },
-    {
-      question: "What is the largest ocean on Earth?",
-      options: [
-        "Atlantic Ocean",
-        "Indian Ocean",
-        "Arctic Ocean",
-        "Pacific Ocean",
-      ],
-      correctAnswer: 3,
-    },
-    {
-      question: "Which element has the chemical symbol 'O'?",
-      options: ["Gold", "Oxygen", "Silver", "Iron"],
-      correctAnswer: 1,
-    },
-  ];
+  // Function to shuffle array using Fisher-Yates algorithm
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const getRandomQuestions = () => {
+    const shuffledQuestions = shuffleArray(triviaQuestions);
+    return shuffledQuestions.slice(0, 10);
+  };
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -96,7 +75,7 @@ export default function LargerInteractiveTriviaGame() {
 
   const handleAnswerClick = (selectedIndex: number) => {
     setSelectedAnswer(selectedIndex);
-    if (selectedIndex === questions[currentQuestion].correctAnswer) {
+    if (selectedIndex === gameQuestions[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
   };
@@ -118,9 +97,13 @@ export default function LargerInteractiveTriviaGame() {
     }
     if (!user) return;
 
+    // Get the user's name from metadata
+    const playerName = user.user_metadata?.full_name || 'Anonymous';
+
     const { data, error } = await supabase.from("trivia_scores").insert([
       {
         user_id: user.id,
+        player_name: playerName, // Add player name to the record
         score: score,
         finished_at: finishedAt.toISOString(),
         elapsed_time: elapsedTime,
@@ -136,7 +119,7 @@ export default function LargerInteractiveTriviaGame() {
 
   const handleNextQuestion = () => {
     setSelectedAnswer(null);
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < gameQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setTimeLeft(15);
     } else {
@@ -151,6 +134,7 @@ export default function LargerInteractiveTriviaGame() {
 
   const startGame = () => {
     if (isLoggedIn) {
+      setGameQuestions(getRandomQuestions());
       setGameState("playing");
       setStartTime(new Date().getTime());
       setTimeLeft(15);
@@ -167,6 +151,7 @@ export default function LargerInteractiveTriviaGame() {
     setTimeLeft(15);
     setSelectedAnswer(null);
     setStartTime(null);
+    setGameQuestions([]);
   };
 
 
@@ -177,7 +162,17 @@ export default function LargerInteractiveTriviaGame() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[50vw]"
+        className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[50vw] select-none"
+        
+        // Preventing Selection of Text and Right Click Function
+        style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+          userSelect: 'none',
+          WebkitTouchCallout: 'none',
+        }}
+        onContextMenu={(e) => e.preventDefault()} 
       >
         <Card className="border border-white/30 bg-white/30 text-white">
           <CardHeader className="p-4 sm:p-6">
@@ -190,7 +185,7 @@ export default function LargerInteractiveTriviaGame() {
                   variant="secondary"
                   className="font-montserrat bg-white/10 text-lg sm:text-xl lg:text-2xl px-3 py-1 sm:px-4 sm:py-2"
                 >
-                  Score: {score}/{questions.length}
+                  Score: {score}/{gameQuestions.length}
                 </Badge>
               </div>
             )}
@@ -210,7 +205,7 @@ export default function LargerInteractiveTriviaGame() {
                     Trivia Challenge
                   </h2>
                   <p className="font-montserrat text-sm sm:text-base lg:text-lg xl:text-xl mb-6 sm:mb-8">
-                    Test your knowledge with 5 exciting questions and win
+                    Test your knowledge with 10 exciting questions and win
                     exciting prizes.
                   </p>
                   <Button
@@ -251,10 +246,10 @@ export default function LargerInteractiveTriviaGame() {
                     </p>
                   </div>
                   <h2 className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6">
-                    {questions[currentQuestion].question}
+                    {gameQuestions[currentQuestion].question}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {questions[currentQuestion].options.map((option, index) => (
+                    {gameQuestions[currentQuestion].options.map((option, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
@@ -282,7 +277,7 @@ export default function LargerInteractiveTriviaGame() {
                               }}
                             >
                               {index ===
-                              questions[currentQuestion].correctAnswer ? (
+                              gameQuestions[currentQuestion].correctAnswer ? (
                                 <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-green-500" />
                               ) : (
                                 <XCircle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-red-500" />
@@ -322,7 +317,7 @@ export default function LargerInteractiveTriviaGame() {
                     Quiz Completed!
                   </h2>
                   <p className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-6 sm:mb-8">
-                    Your score: {score} out of {questions.length}
+                    Your score: {score} out of {gameQuestions.length}
                   </p>
                   <motion.div
                     initial={{ scale: 0 }}
@@ -334,14 +329,14 @@ export default function LargerInteractiveTriviaGame() {
                       delay: 0.2,
                     }}
                   >
-                    {score === questions.length ? (
+                    {score === gameQuestions.length ? (
                       <div className="flex items-center justify-center text-green-500 mb-4 sm:mb-6">
                         <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-16 xl:w-16 mr-2 sm:mr-3 lg:mr-4" />
                         <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">
                           Perfect Score!
                         </span>
                       </div>
-                    ) : score >= questions.length / 2 ? (
+                    ) : score >= gameQuestions.length / 2 ? (
                       <div className="flex items-center justify-center text-yellow-500 mb-4 sm:mb-6">
                         <AlertCircle className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-16 xl:w-16 mr-2 sm:mr-3 lg:mr-4" />
                         <span className="font-montserrat text-lg sm:text-xl lg:text-2xl xl:text-3xl">
