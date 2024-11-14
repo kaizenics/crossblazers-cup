@@ -18,7 +18,7 @@ export default function Maintainers() {
       github: "github.com/kaizenics",
     },
     {
-      name: "Art Dela Cruz III",
+      name: "Art Dela Cruz",
       role: "Back-end Developer",
       description: "In-charge on maintaining of seamless integration through Microsoft Excel and Real-time Tabulation.",
       github: "github.com/artace23",
