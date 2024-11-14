@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import AnimatedLayout from "@/components/animated-layout";
 import { Toaster } from "sonner";
+import { ReactLenis } from 'lenis/react'
 import "./globals.css";
 
 const geistSans = localFont({
@@ -43,6 +44,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lenisOptions = {
+    lerp: 0.1,
+    duration: 1.3,
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+    infinite: false,
+  }
+
   return (
     <html lang="en">
       <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -51,7 +61,9 @@ export default function RootLayout({
       >
         <AnimatedLayout>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            {children}
+            <ReactLenis root options={lenisOptions}>
+              {children}
+            </ReactLenis>
           </ThemeProvider>
         </AnimatedLayout>
         <Toaster position="top-right" />
