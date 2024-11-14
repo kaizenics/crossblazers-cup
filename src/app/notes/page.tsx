@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { isBefore, subHours } from "date-fns";
 import { useRouter } from 'next/navigation';
-import { badWords, normalizeText } from "@/lib/badwords"; // Updated import
+import { badWords, normalizeText } from "@/lib/profanity"; 
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
