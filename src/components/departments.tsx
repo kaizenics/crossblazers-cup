@@ -11,7 +11,11 @@ import sbme from "@/assets/logo/dept/sbme.png";
 import ste from "@/assets/logo/dept/ste.png";
 
 export function Departments() {
-  return <HeroParallax products={products} />;
+  return (
+    <section id="departments">
+      <HeroParallax products={products} />
+    </section>
+  );
 }
 export const products = [
   {

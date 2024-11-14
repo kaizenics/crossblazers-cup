@@ -40,10 +40,12 @@ export const Navbar = () => {
     getUser()
   }, [])
 
-  const handleSectionClick = (sectionId: string | null) => {
+  const handleSectionClick = (sectionId: string | null, href: string) => {
     setShowSidebar(false)
-    
-    if (pathname === '/') {
+  
+    if (href.startsWith('/')) {
+      router.push(href)
+    } else if (pathname === '/') {
       if (!sectionId) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
@@ -74,7 +76,8 @@ export const Navbar = () => {
   const navItems = [
     { id: null, href: '/', label: 'Home' },
     { id: 'about', href: '#about', label: 'About' },
-    { id: 'null', href: '/events', label: 'Schedules' },
+    { id: 'departments', href: '#departments', label: 'Departments' },
+    { id: null, href: '/events', label: 'Schedules' },
     { id: 'faq', href: '#faq', label: 'FAQ' },
   ]
 
@@ -91,7 +94,7 @@ export const Navbar = () => {
                 {navItems.map((item) => (
                   <button
                     key={item.href}
-                    onClick={() => handleSectionClick(item.id)}
+                    onClick={() => handleSectionClick(item.id, item.href)}
                     className="font-montserrat font-semibold text-sm text-white hover:underline"
                   >
                     {item.label}
@@ -158,7 +161,7 @@ export const Navbar = () => {
             {navItems.map((item) => (
               <button
                 key={item.href}
-                onClick={() => handleSectionClick(item.id)}
+                onClick={() => handleSectionClick(item.id, item.href)}
                 className="block font-montserrat font-semibold text-lg text-white hover:text-gray-300 w-full text-left"
               >
                 {item.label}
