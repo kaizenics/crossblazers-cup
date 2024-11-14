@@ -1,4 +1,3 @@
-
 export const badWords = [
   "hate",
   "stupid",
@@ -11,6 +10,7 @@ export const badWords = [
   "ulol",
   "bobo",
   "tang ina",
+  "tangina",
   "bugo",
   "bogo",
   "ulol",
@@ -31,4 +31,8 @@ export const contentGuidelines = {
     "Keep discussions constructive",
     "No spamming or excessive caps",
   ],
+};
+
+export const normalizeText = (text: string): string => {
+  return text.replace(/(\w)\1{2,}/g, '$1');
 };

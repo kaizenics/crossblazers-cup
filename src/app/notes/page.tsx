@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { isBefore, subHours } from "date-fns";
 import { useRouter } from 'next/navigation';
-import { badWords } from "@/lib/badwords"; // You'll need to create this file
+import { badWords, normalizeText } from "@/lib/badwords"; // Updated import
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
@@ -35,11 +35,13 @@ const formatTimeAgo = (date: Date) => {
 };
 
 const containsProfanity = (text: string): boolean => {
-  const words = text.toLowerCase().split(/\s+/);
+  const normalizedText = normalizeText(text.toLowerCase());
+  const words = normalizedText.split(/\s+/);
   return words.some(word => badWords.includes(word));
 };
 
 const containsHarmfulContent = (text: string): boolean => {
+  const normalizedText = normalizeText(text);
   // Add additional checks for harmful content patterns
   const harmfulPatterns = [
     /\b(hate|kill|death|stupid|idiot|fuck|shit)\b/i,
@@ -47,7 +49,7 @@ const containsHarmfulContent = (text: string): boolean => {
     // Add more patterns as needed
   ];
 
-  return harmfulPatterns.some(pattern => pattern.test(text));
+  return harmfulPatterns.some(pattern => pattern.test(normalizedText));
 };
 
 interface Note {
