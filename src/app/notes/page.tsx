@@ -140,10 +140,10 @@ export default function Notes() {
     }
 
     // Add content guidelines warning if content seems questionable
-    if (content.includes('!') || content.toUpperCase() === content) {
+    if (containsProfanity(content) || containsHarmfulContent(content)) {
       toast.warning("Content Guidelines Reminder", {
-        description: "Please ensure your note follows our community guidelines. Keep it friendly and constructive!",
-        duration: 4000,
+      description: "Please ensure your note follows our community guidelines. Keep it friendly and constructive!",
+      duration: 4000,
       });
       return;
     }
