@@ -221,7 +221,7 @@ export function BlazersTimeline() {
     },
   ];
   return (
-    <div className="w-full my-20 ">
+    <div className="w-full my-8">
       <Timeline data={data} />
     </div>
   );

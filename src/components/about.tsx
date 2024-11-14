@@ -60,7 +60,7 @@ export const About = () => {
   }, []);
 
   return (
-    <Container variant={"fullMobileBreakpointPadded"}>
+    <Container variant={"fullMobileBreakpointPadded"} className="mb-4 sm:mb-6 md:mb-10">
       <section id="about" className="mt-4 sm:mt-6 md:mt-10 relative">
         <div className="relative z-10">
           <h1 className="font-raceSport text-2xl sm:text-3xl md:text-4xl text-left mb-4 sm:mb-6">
