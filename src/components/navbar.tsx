@@ -41,26 +41,22 @@ export const Navbar = () => {
   }, [])
 
   const handleSectionClick = (sectionId: string | null) => {
-    setShowSidebar(false) // Close mobile menu if open
+    setShowSidebar(false)
     
     if (pathname === '/') {
       if (!sectionId) {
-        // If home button clicked, scroll to top smoothly
         window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
-        // If other section buttons clicked, scroll to section
         const element = document.getElementById(sectionId)
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' })
         }
       }
     } else {
-      // If on another page, navigate to home page with section hash
       router.push(sectionId ? `/?section=${sectionId}` : '/')
     }
   }
 
-  // Handle section scrolling when redirected from another page
   useEffect(() => {
     if (pathname === '/') {
       const urlParams = new URLSearchParams(window.location.search)
@@ -69,7 +65,6 @@ export const Navbar = () => {
         const element = document.getElementById(section)
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' })
-          // Clean up the URL
           window.history.replaceState({}, '', '/')
         }
       }
@@ -79,7 +74,7 @@ export const Navbar = () => {
   const navItems = [
     { id: null, href: '/', label: 'Home' },
     { id: 'about', href: '#about', label: 'About' },
-    { id: 'schedules', href: '#schedules', label: 'Schedules' },
+    { id: 'null', href: '/events', label: 'Schedules' },
     { id: 'faq', href: '#faq', label: 'FAQ' },
   ]
 
