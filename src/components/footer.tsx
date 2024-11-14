@@ -8,8 +8,8 @@ export const Footer = () => {
       <div className="w-full h-[1.5px] bg-white/20" />
       <Container variant="fullMobileBreakpointPadded">
         <footer className="py-8 sm:py-12">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between">
-            <div className="w-full sm:w-auto mb-8 sm:mb-0">
+          <div className="flex flex-col sm:flex-row items-start sm:justify-between">
+            <div className="hidden sm:block w-full sm:w-auto mb-8 sm:mb-0">
               <Image 
                 src={cnchero} 
                 alt="CNC Hero" 
@@ -17,7 +17,7 @@ export const Footer = () => {
               />
             </div>
 
-            <div className="flex flex-row justify-center space-x-12 sm:space-x-24">
+            <div className="flex flex-col sm:flex-row sm:justify-center space-y-7 sm:space-y-0 sm:space-x-24">
               <div className="space-y-4">
                 <h2 className="font-montserrat font-semibold text-lg text-white">
                   Socials

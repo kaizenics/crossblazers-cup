@@ -72,7 +72,7 @@ export const About = () => {
               <p className="font-raceSport text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 sm:mb-3 md:mb-4">
                 <span className="text-emerald-500">Cross Blazers Cup</span>
               </p>
-              <p className="text-base sm:text-lg font-semibold font-montserrat mb-3 sm:mb-4 md:mb-5">
+              <p className="text-sm sm:text-lg font-semibold font-montserrat mb-3 sm:mb-4 md:mb-5">
                 HCDC Goes G.R.E.E.N.: Celebrating Music, Sports, and Arts with a
                 Commitment to the Integrity of Creation
               </p>

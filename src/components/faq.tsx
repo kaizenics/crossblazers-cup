@@ -21,7 +21,7 @@ export const Faq = () => {
               </p>
             </div>
 
-            <Accordion type="multiple">
+            <Accordion type="multiple" className="text-sm">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   Is it really need to attend the Cross Blazers Cup?
