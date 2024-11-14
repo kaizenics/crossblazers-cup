@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "View and manage your notes, drafts, and ideas.",
 }
 
-export default function ProfileLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "",
 }
 
-export default function ProfileLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode

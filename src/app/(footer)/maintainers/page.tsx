@@ -13,15 +13,15 @@ export default function Maintainers() {
   const maintainers = [
     {
       name: "Niko Soriano",
-      role: "Lead Developer",
-      description: "Full-stack developer and project maintainer",
+      role: "Lead Full-stack Developer",
+      description: "Full-stack developer and project maintainer. Developed the front-end and back-end of the project.",
       github: "github.com/kaizenics",
     },
     {
       name: "Art Dela Cruz III",
       role: "Back-end Developer",
-      description: "In-charge in maintaining of seamless integration through excel",
-      github: "github.com/janesmith",
+      description: "In-charge on maintaining of seamless integration through Microsoft Excel and Real-time Tabulation.",
+      github: "github.com/artace23",
     },
   ];
 

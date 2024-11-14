@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "View and manage your profile, achievements, and game history.",
 }
 
-export default function ProfileLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode

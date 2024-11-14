@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import AnimatedLayout from "@/components/animated-layout";
 import { Toaster } from "sonner";
-import { ReactLenis } from 'lenis/react'
+import { ReactLenis } from "lenis/react";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -51,7 +51,7 @@ export default function RootLayout({
     wheelMultiplier: 1,
     touchMultiplier: 2,
     infinite: false,
-  }
+  };
 
   return (
     <html lang="en">
@@ -59,13 +59,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${raceSport.variable} antialiased`}
       >
-        <AnimatedLayout>
-          <ThemeProvider attribute="class" defaultTheme="dark">
-            <ReactLenis root options={lenisOptions}>
+        <ReactLenis root options={lenisOptions}>
+          <AnimatedLayout>
+            <ThemeProvider attribute="class" defaultTheme="dark">
               {children}
-            </ReactLenis>
-          </ThemeProvider>
-        </AnimatedLayout>
+            </ThemeProvider>
+          </AnimatedLayout>
+        </ReactLenis>
         <Toaster position="top-right" />
       </body>
     </html>
