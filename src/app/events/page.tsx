@@ -25,6 +25,7 @@ export default function Events() {
 
   return (
     <>
+    <section id="events">
       <Navbar />
       <Container variant="fullMobileBreakpointPadded">
         <div className="py-4 sm:py-8">
@@ -100,6 +101,7 @@ export default function Events() {
         </div>
       </Container>
       <Footer />
+      </section>
     </>
   );
 }

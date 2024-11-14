@@ -6,7 +6,7 @@ export const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   const targetEndTime = useMemo(() => {
-    const date = new Date('2024-11-19T00:00:00+08:00');
+    const date = new Date('2024-11-19T05:00:00+08:00');
     return date;
   }, []); 
 

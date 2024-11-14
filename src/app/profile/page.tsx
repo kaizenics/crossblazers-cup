@@ -426,7 +426,7 @@ export default function UserProfileDashboard() {
                                 </div>
                                 <div className="text-right">
                                   <p className="font-montserrat text-xs text-white">
-                                    Time: {Math.floor(game.elapsed_time / 60)}m {Math.floor(game.elapsed_time % 60)}s
+                                   {Math.floor(game.elapsed_time / 60)}m {Math.floor(game.elapsed_time % 60)}s
                                   </p>
                                 
                                 </div>
