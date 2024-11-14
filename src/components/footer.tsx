@@ -18,29 +18,6 @@ export const Footer = () => {
             </div>
 
             <div className="flex flex-row justify-center space-x-12 sm:space-x-24">
-              
-              <div className="space-y-4">
-                <h2 className="font-montserrat font-semibold text-lg text-white">
-                  Resources
-                </h2>
-                <ul className="font-montserrat text-sm text-[#afaeaedc] space-y-3">
-                  <li>
-                    <a href="#" className="hover:text-white hover:underline">
-                      Help
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-white hover:underline">
-                      Privacy
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-white hover:underline">
-                      FAQ
-                    </a>
-                  </li>
-                </ul>
-              </div>
               <div className="space-y-4">
                 <h2 className="font-montserrat font-semibold text-lg text-white">
                   Socials
