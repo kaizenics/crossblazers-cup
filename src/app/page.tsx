@@ -17,8 +17,8 @@ export default function Home() {
       <Hero />
       <Countdown />
       <About />
-      <BlazersTimeline />
       <Departments />
+      <BlazersTimeline />
       <Faq />
       <Footer />
     </main>
