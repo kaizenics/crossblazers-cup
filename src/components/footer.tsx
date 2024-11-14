@@ -42,12 +42,12 @@ export const Footer = () => {
               </div>
               <div className="space-y-4">
                 <h2 className="font-montserrat font-semibold text-lg text-white">
-                  Developers
+                  Source
                 </h2>
                 <ul className="font-montserrat text-sm text-[#afaeaedc] space-y-3">
                   <li>
-                    <a href="/maintainers" className="hover:text-white hover:underline">
-                      Maintainers
+                    <a href="/developers" className="hover:text-white hover:underline">
+                      Developers
                     </a>
                   </li>
                   <li>
