@@ -14,13 +14,13 @@ export default function Maintainers() {
     {
       name: "Niko Soriano",
       role: "Lead Full-stack Developer",
-      description: "Full-stack developer and project maintainer. Developed the front-end and back-end of the project.",
+      description: "In-charge of the overall project development.",
       github: "github.com/kaizenics",
     },
     {
       name: "Art Dela Cruz",
       role: "Back-end Developer",
-      description: "In-charge on maintaining of seamless integration through Microsoft Excel and Real-time Tabulation.",
+      description: "In-charge on maintaining seamless integration of the real-time tabulation.",
       github: "github.com/artace23",
     },
   ];
