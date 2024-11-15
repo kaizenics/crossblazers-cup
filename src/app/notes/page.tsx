@@ -455,7 +455,7 @@ export default function Notes() {
                   </Card>
                   
                   {user && user.id === note.user_id && (
-                    <div className="w-full h-[2px] border-b-2 border-white/20 border-dashed pt-4" />
+                    <div className="w-full h-[2px] border-b-2 border-muted border-dashed mt-3" />
                   )}
                 </div>
               ))
