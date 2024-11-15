@@ -20,76 +20,76 @@ export function Departments() {
 export const products = [
   {
     title: "College of Criminal Justice Education",
-    link: "",
+    link: "#departments",
     thumbnail: ccje.src,
   },
   {
     title: "College of Engineering and Technology",
-    link: "",
+    link: "#departments",
     thumbnail: cet.src,
   },
   {
     title: "College of Hospitality and Tourism Management Education",
-    link: "",
+    link: "#departments",
     thumbnail: chatme.src,
   },
 
   {
     title: "College of Maritime Education",
-    link: "",
+    link: "#departments",
     thumbnail: come.src,
   },
   {
     title: "College of Humanities, Social Sciences, and Communication",
-    link: "",
+    link: "#departments",
     thumbnail: husocom.src,
   },
   {
     title: "School of Business Management Education",
-    link: "",
+    link: "#departments",
     thumbnail: sbme.src,
   },
 
   {
     title: "School of Teachers Education",
-    link: "",
+    link: "#departments",
     thumbnail: ste.src,
   },
   {
     title: "College of Criminal Justice Education",
-    link: "",
+    link: "#departments",
     thumbnail: ccje.src,
   },
   {
     title: "College of Engineering and Technology",
-    link: "",
+    link: "#departments",
     thumbnail: cet.src,
   },
   {
     title: "College of Hospitality and Tourism Management Education",
-    link: "",
+    link: "#departments",
     thumbnail: chatme.src,
   },
 
   {
     title: "College of Maritime Education",
-    link: "",
+    link: "#departments",
     thumbnail: come.src,
   },
   {
     title: "College of Humanities, Social Sciences, and Communication",
-    link: "",
+    link: "#departments",
     thumbnail: husocom.src,
   },
   {
     title: "School of Business Management Education",
-    link: "",
+    link: "#departments",
     thumbnail: sbme.src,
   },
 
   {
     title: "School of Teachers Education",
-    link: "",
+    link: "#departments",
     thumbnail: ste.src,
   },
 ];
