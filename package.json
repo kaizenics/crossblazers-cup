@@ -57,6 +57,7 @@
     "eslint-config-next": "14.2.8",
     "framer-motion": "^11.11.15",
     "postcss": "^8",
+    "supabase": "^1.219.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss": "^3.4.10",
     "typescript": "^5"

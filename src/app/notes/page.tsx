@@ -114,10 +114,19 @@ export default function Notes() {
       !isBefore(new Date(note.created_at), twentyFourHoursAgo)
     ) || [];
 
-    // Find user's note and set states
+    // Get current user
     const currentUser = await getUser();
+    
+    // Sort notes to put user's note first
+    const sortedNotes = validNotes.sort((a, b) => {
+      if (currentUser && a.user_id === currentUser.id) return -1;
+      if (currentUser && b.user_id === currentUser.id) return 1;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+
+    // Find and set user's note
     if (currentUser) {
-      const userNote = validNotes.find(note => note.user_id === currentUser.id);
+      const userNote = sortedNotes.find(note => note.user_id === currentUser.id);
       if (userNote) {
         setContent(userNote.content);
         setIsAnonymous(userNote.is_anonymous);
@@ -125,7 +134,7 @@ export default function Notes() {
       }
     }
 
-    setNotes(validNotes);
+    setNotes(sortedNotes);
     setIsLoading(false);
   };
 
@@ -359,91 +368,96 @@ export default function Notes() {
               </>
             ) : (
               notes.map((note) => (
-                <Card
-                  key={note.id}
-                  className={`bg-white/5 border-white/10 rounded-xl sm:rounded-2xl p-2 ${
-                    user && user.id === note.user_id
-                      ? "bg-emerald-300/10 border-emerald-500/20"
-                      : ""
-                  }`}
-                >
-                  <CardHeader className="p-3 sm:p-4">
-                    <div className="flex items-start gap-2 sm:gap-3">
-                      <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
-                        {note.is_anonymous ? (
-                          <div className="w-full h-full bg-white/10 flex items-center justify-center">
-                            <User className="w-4 h-4 text-white/60" />
-                          </div>
-                        ) : note.avatar_url ? (
-                          <Image
-                            src={note.avatar_url}
-                            alt="Profile"
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-white/10 flex items-center justify-center">
-                            <User className="w-4 h-4 text-white/60" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col gap-1">
-                          {user && user.id === note.user_id && (
-                            <span className="text-[10px] font-medium text-blue-400">
-                              Your note
-                            </span>
+                <div key={note.id}>
+                  <Card
+                    className={`bg-white/5 border-white/10 rounded-xl sm:rounded-2xl p-2 ${
+                      user && user.id === note.user_id
+                        ? "bg-emerald-400/15 border-emerald-500/20"
+                        : ""
+                    }`}
+                  >                 
+                    <CardHeader className="p-3 sm:p-4">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
+                          {note.is_anonymous ? (
+                            <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                              <User className="w-4 h-4 text-white/60" />
+                            </div>
+                          ) : note.avatar_url ? (
+                            <Image
+                              src={note.avatar_url}
+                              alt="Profile"
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                              <User className="w-4 h-4 text-white/60" />
+                            </div>
                           )}
-                          <div className="flex justify-between items-center">
-                            <div className="flex justify-between items-center text-sm sm:text-md text-gray-400 w-full">
-                              <span className="mt-2 sm:mt-3 font-bold truncate">
-                                {note.is_anonymous
-                                  ? "Anonymous"
-                                  : note.user_name}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col gap-1">
+                            {user && user.id === note.user_id && (
+                              <span className="text-[10px] font-medium text-blue-400">
+                                Your note
                               </span>
-                              <div className="flex items-center gap-1 sm:gap-2 ml-2">
-                                <span className="text-[10px] sm:text-sm whitespace-nowrap">
-                                  {formatTimeAgo(new Date(note.created_at))}
+                            )}
+                            <div className="flex justify-between items-center">
+                              <div className="flex justify-between items-center text-sm sm:text-md text-gray-400 w-full">
+                                <span className="mt-2 sm:mt-3 font-bold truncate">
+                                  {note.is_anonymous
+                                    ? "Anonymous"
+                                    : note.user_name}
                                 </span>
-                                {user && user.id === note.user_id && (
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                      <button className="p-1 hover:bg-white/10 transition-colors">
-                                        <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
-                                      </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                      align="end"
-                                      className="w-28 sm:w-32 bg-white/5 border-white/10 rounded-xl"
-                                    >
-                                      <DropdownMenuItem
-                                        className="text-red-500 text-xs sm:text-sm focus:bg-red-400/10 cursor-pointer"
-                                        onClick={() =>
-                                          handleDeleteNote(
-                                            note.id,
-                                            note.user_id
-                                          )
-                                        }
+                                <div className="flex items-center gap-1 sm:gap-2 ml-2">
+                                  <span className="text-[10px] sm:text-sm whitespace-nowrap">
+                                    {formatTimeAgo(new Date(note.created_at))}
+                                  </span>
+                                  {user && user.id === note.user_id && (
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <button className="p-1 hover:bg-white/10 transition-colors">
+                                          <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                                        </button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent
+                                        align="end"
+                                        className="w-28 sm:w-32 bg-white/5 border-white/10 rounded-xl"
                                       >
-                                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                                        Delete
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                )}
+                                        <DropdownMenuItem
+                                          className="text-red-500 text-xs sm:text-sm focus:bg-red-400/10 cursor-pointer"
+                                          onClick={() =>
+                                            handleDeleteNote(
+                                              note.id,
+                                              note.user_id
+                                            )
+                                          }
+                                        >
+                                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                                          Delete
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4 pt-0">
-                    <p className="text-white/90 font-montserrat text-sm sm:text-base break-words">
-                      {note.content}
-                    </p>
-                  </CardContent>
-                </Card>
+                    </CardHeader>
+                    <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4 pt-0">
+                      <p className="text-white/90 font-montserrat text-sm sm:text-base break-words">
+                        {note.content}
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  {user && user.id === note.user_id && (
+                    <div className="w-full h-[2px] border-b-2 border-white/20 border-dashed pt-4" />
+                  )}
+                </div>
               ))
             )}
           </div>
