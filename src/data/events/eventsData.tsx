@@ -81,7 +81,7 @@ export const events = [
       },
       {
         titles: ["Sociocultural Events"],
-        time: "1:00 PM - 3:00 PM",
+        time: "5:00 PM - 9:00 PM",
         details: [
           "Danza en Cuatro",
           "Folkdance",
