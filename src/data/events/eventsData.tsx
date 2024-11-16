@@ -80,6 +80,11 @@ export const events = [
         ],
       },
       {
+        titles: ["Esports"],
+        time: "9:00 AM - 4:00 PM",
+        details: [],
+      },
+      {
         titles: ["Sociocultural Events"],
         time: "5:00 PM - 9:00 PM",
         details: [
@@ -141,7 +146,17 @@ export const events = [
         details: [],
       },
       {
-        titles: ["NIGHT OF THE CHAMPIONS", "Songwriting Composition", "Arise and Sing Solo", "Arise and Sing Duet", "Dance Sports American and Latin", "Danza en Cuatro", "Mega Crew", "Cheerdance", "Battle of the Bands"],
+        titles: [
+          "NIGHT OF THE CHAMPIONS",
+          "Songwriting Composition",
+          "Arise and Sing Solo",
+          "Arise and Sing Duet",
+          "Dance Sports American and Latin",
+          "Danza en Cuatro",
+          "Mega Crew",
+          "Cheerdance",
+          "Battle of the Bands",
+        ],
         time: "5:00 PM - 9:00 PM",
         details: [],
       },
