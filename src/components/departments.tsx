@@ -92,4 +92,41 @@ export const products = [
     link: "#departments",
     thumbnail: ste.src,
   },
+  {
+    title: "College of Criminal Justice Education",
+    link: "#departments",
+    thumbnail: ccje.src,
+  },
+  {
+    title: "College of Engineering and Technology",
+    link: "#departments",
+    thumbnail: cet.src,
+  },
+  {
+    title: "College of Hospitality and Tourism Management Education",
+    link: "#departments",
+    thumbnail: chatme.src,
+  },
+
+  {
+    title: "College of Maritime Education",
+    link: "#departments",
+    thumbnail: come.src,
+  },
+  {
+    title: "College of Humanities, Social Sciences, and Communication",
+    link: "#departments",
+    thumbnail: husocom.src,
+  },
+  {
+    title: "School of Business Management Education",
+    link: "#departments",
+    thumbnail: sbme.src,
+  },
+
+  {
+    title: "School of Teachers Education",
+    link: "#departments",
+    thumbnail: ste.src,
+  },
 ];
