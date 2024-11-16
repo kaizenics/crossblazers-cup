@@ -78,9 +78,14 @@ export default function Events() {
                         className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-zinc-700"
                       >
                         <div className="mb-2 sm:mb-0">
-                          <p className="font-semibold font-montserrat text-lg sm:text-2xl">
-                            {event.title}
-                          </p>
+                          {event.titles.map((title, titleIndex) => (
+                            <p 
+                              key={titleIndex} 
+                              className="font-semibold font-montserrat text-lg sm:text-2xl"
+                            >
+                              {title}{titleIndex < event.titles.length - 1 ? ' ' : ''}
+                            </p>
+                          ))}
                           {event.details.length > 0 && (
                             <ul className="list-disc mx-4 sm:mx-10 font-montserrat text-sm sm:text-base">
                               {event.details.map((detail, detailIndex) => (
@@ -90,7 +95,7 @@ export default function Events() {
                           )}
                         </div>
                         <div className="border border-emerald-600 rounded-full py-1 px-3 sm:px-4 self-start sm:self-center">
-                          <p className="font-montserrat text-base sm:text-2xl">{event.time}</p>
+                          <p className="font-montserrat text-base sm:text-2xl uppercase">{event.time}</p>
                         </div>
                       </div>
                     ))}

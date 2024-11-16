@@ -100,7 +100,7 @@ export default function Notes() {
     const { data, error } = await supabase
       .from("notes")
       .select("*")
-      .eq('archived', false)  // Only fetch non-archived notes
+      .eq('archived', false)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -108,23 +108,19 @@ export default function Notes() {
       return;
     }
 
-    // Filter notes older than 24 hours
     const twentyFourHoursAgo = subHours(new Date(), 24);
     const validNotes = data?.filter(note => 
       !isBefore(new Date(note.created_at), twentyFourHoursAgo)
     ) || [];
 
-    // Get current user
     const currentUser = await getUser();
-    
-    // Sort notes to put user's note first
+
     const sortedNotes = validNotes.sort((a, b) => {
       if (currentUser && a.user_id === currentUser.id) return -1;
       if (currentUser && b.user_id === currentUser.id) return 1;
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
-    // Find and set user's note
     if (currentUser) {
       const userNote = sortedNotes.find(note => note.user_id === currentUser.id);
       if (userNote) {
@@ -141,7 +137,6 @@ export default function Notes() {
   const handleSubmit = async () => {
     if (!content.trim() || !user) return;
 
-    // Check for profanity and harmful content
     if (containsProfanity(content) || containsHarmfulContent(content)) {
       toast.error("Note contains inappropriate content", {
         description: "Please keep the platform friendly and respectful. Avoid profanity and harmful language.",
@@ -150,7 +145,6 @@ export default function Notes() {
       return;
     }
 
-    // Add content guidelines warning if content seems questionable
     if (containsProfanity(content) || containsHarmfulContent(content)) {
       toast.warning("Content Guidelines Reminder", {
       description: "Please ensure your note follows our community guidelines. Keep it friendly and constructive!",
@@ -165,13 +159,12 @@ export default function Notes() {
       user_name: user.user_metadata?.full_name || "Unknown User",
       is_anonymous: isAnonymous,
       avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
-      archived: false,  // Add archived field
+      archived: false,
     };
 
     let error;
 
     if (userNote) {
-      // Save the current version to history before updating
       const { error: historyError } = await supabase
         .from("note_history")
         .insert([{
@@ -188,7 +181,6 @@ export default function Notes() {
         console.error("Error saving note history:", historyError);
       }
 
-      // Update the current note
       const { error: updateError } = await supabase
         .from("notes")
         .update(noteData)
@@ -208,7 +200,6 @@ export default function Notes() {
       return;
     }
 
-    // Don't reset the states after submission, just refresh the notes
     fetchNotes();
     toast.success(userNote ? "Note updated successfully!" : "Note shared successfully!", {
       description: userNote ? 
@@ -221,7 +212,6 @@ export default function Notes() {
   const handleDeleteNote = async (noteId: string, noteUserId: string) => {
     if (!user || user.id !== noteUserId) return;
 
-    // Instead of deleting, archive the note
     const { error: archiveError } = await supabase
       .from("notes")
       .update({ 
@@ -236,7 +226,6 @@ export default function Notes() {
       return;
     }
 
-    // Reset states after successful archiving
     setContent("");
     setIsAnonymous(false);
     setUserNote(null);
@@ -249,7 +238,6 @@ export default function Notes() {
     if (newContent.length <= MAX_CHARS) {
       setContent(newContent);
       
-      // Real-time content warning
       if (containsProfanity(newContent) || containsHarmfulContent(newContent)) {
         toast.warning("Content Warning", {
           description: "Your note may contain inappropriate content. Please revise before submitting.",
