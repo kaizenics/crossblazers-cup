@@ -42,6 +42,33 @@ export default function LargerInteractiveTriviaGame() {
     []
   );
 
+  // Add this useEffect at the top with other useEffects
+  useEffect(() => {
+    const preventRightClick = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const preventInspect = (e: KeyboardEvent) => {
+      // Prevent Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, F12
+      if (
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        e.key === 'F12'
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', preventRightClick);
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', preventInspect);
+
+    return () => {
+      document.removeEventListener('contextmenu', preventRightClick);
+      document.removeEventListener('keydown', preventInspect);
+    };
+  }, []);
+
   // Function to shuffle array using Fisher-Yates algorithm
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffled = [...array];
@@ -106,7 +133,7 @@ export default function LargerInteractiveTriviaGame() {
     const { data, error } = await supabase.from("trivia_scores").insert([
       {
         user_id: user.id,
-        player_name: playerName, // Add player name to the record
+        player_name: playerName, 
         score: score,
         finished_at: finishedAt.toISOString(),
         elapsed_time: elapsedTime,
