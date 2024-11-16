@@ -178,30 +178,41 @@ export default function Notes() {
   };
 
   const handleUpdateNote = async (noteData: Omit<Note, 'id' | 'created_at'>, noteId: string) => {
-    const { error: historyError } = await supabase
-      .from("note_history")
-      .insert([{
-        original_note_id: noteId,
-        content: userNote?.content,
-        is_anonymous: userNote?.is_anonymous,
-        user_id: userNote?.user_id,
-        user_name: userNote?.user_name,
-        avatar_url: userNote?.avatar_url,
-        archived_at: new Date().toISOString()
-      }]);
-
-    if (historyError) throw historyError;
-
-    const { error: updateError } = await supabase
-      .from("notes")
-      .update(noteData)
-      .eq("id", noteId);
-
-    if (updateError) throw updateError;
-
-    await fetchNotes();
-    toast.success("Note updated successfully!");
+    try {
+      // First save the current note to history
+      const { error: historyError } = await supabase
+        .from("note_history")
+        .insert([{
+          original_note_id: noteId,
+          content: userNote?.content,
+          is_anonymous: userNote?.is_anonymous,
+          user_id: userNote?.user_id,
+          user_name: userNote?.user_name,
+          avatar_url: userNote?.avatar_url,
+          archived_at: new Date().toISOString()
+        }]);
+  
+      if (historyError) throw historyError;
+  
+      // Update the note with new content and updated timestamp
+      const { error: updateError } = await supabase
+        .from("notes")
+        .update({
+          ...noteData,
+          created_at: new Date().toISOString() // Add this line to update the timestamp
+        })
+        .eq("id", noteId);
+  
+      if (updateError) throw updateError;
+  
+      await fetchNotes();
+      toast.success("Note updated successfully!");
+    } catch (error) {
+      console.error("Error updating note:", error);
+      toast.error("Failed to update note. Please try again.");
+    }
   };
+  
 
   const handleCreateNote = async (noteData: Omit<Note, 'id' | 'created_at'>) => {
     const { error: insertError } = await supabase
