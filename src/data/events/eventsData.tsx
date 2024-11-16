@@ -111,7 +111,7 @@ export const events = [
         details: [],
       },
       {
-        titles: ["Acadenic Events"],
+        titles: ["Academic Events"],
         time: "8:00 PM - 12:00 NN",
         details: ["Scrabble", "Word Factory"],
       },
