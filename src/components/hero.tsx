@@ -34,7 +34,7 @@ export const Hero = () => {
       <div className="z-10 text-white space-y-2 flex flex-col md:items-center md:mb-14">
        
 
-        <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0 max-w-screen-lg mx-auto">
+        <div className="container space-y-2 pb-2 pt-2 px-3 md:px-0 lg:max-w-screen-md 2xl:max-w-screen-lg mx-auto">
           <Image src={cnchero} alt="CNC Hero" className="w-full h-auto" />
         </div>
         <div className="flex flex-col md:flex-row md:space-x-2 font-montserrat px-3">
