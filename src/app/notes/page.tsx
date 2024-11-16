@@ -16,14 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
-import { isBefore, subHours } from "date-fns";
 import { useRouter } from 'next/navigation';
 import { badWords, normalizeText } from "@/lib/profanity"; 
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const diff = now.getTime() - date.getTime();
+  const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
@@ -31,7 +31,7 @@ const formatTimeAgo = (date: Date) => {
   if (days > 0) return `${days}d`;
   if (hours > 0) return `${hours}h`;
   if (minutes > 0) return `${minutes}m`;
-  return `${seconds}s`;
+  return seconds <= 0 ? 'now' : `${seconds}s`;
 };
 
 const containsProfanity = (text: string): boolean => {
@@ -64,11 +64,16 @@ interface Note {
 
 interface User {
   id: string;
-  user_metadata?: {
+  user_metadata: {
     full_name?: string;
     avatar_url?: string;
-  };
+  } | null;
 }
+
+// Add this helper function
+const getUserName = (user: User | null): string => {
+  return user?.user_metadata?.full_name || "Unknown User";
+};
 
 export default function Notes() {
   const [content, setContent] = useState("");
@@ -88,11 +93,21 @@ export default function Notes() {
   }, []);
 
   const getUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    setUser(user);
-    return user;
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      
+      if (error) {
+        throw error;
+      }
+      
+      const user = data.user as User | null;
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      toast.error("Failed to fetch user data");
+      return null;
+    }
   };
 
   const fetchNotes = async () => {
@@ -108,18 +123,13 @@ export default function Notes() {
       return;
     }
 
-    const twentyFourHoursAgo = subHours(new Date(), 24);
-    const validNotes = data?.filter(note => 
-      !isBefore(new Date(note.created_at), twentyFourHoursAgo)
-    ) || [];
-
     const currentUser = await getUser();
 
-    const sortedNotes = validNotes.sort((a, b) => {
+    const sortedNotes = data?.sort((a, b) => {
       if (currentUser && a.user_id === currentUser.id) return -1;
       if (currentUser && b.user_id === currentUser.id) return 1;
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    });
+    }) || [];
 
     if (currentUser) {
       const userNote = sortedNotes.find(note => note.user_id === currentUser.id);
@@ -135,78 +145,73 @@ export default function Notes() {
   };
 
   const handleSubmit = async () => {
-    if (!content.trim() || !user) return;
+    try {
+      if (!content.trim() || !user) return;
 
-    if (containsProfanity(content) || containsHarmfulContent(content)) {
-      toast.error("Note contains inappropriate content", {
-        description: "Please keep the platform friendly and respectful. Avoid profanity and harmful language.",
-        duration: 5000,
-      });
-      return;
-    }
-
-    if (containsProfanity(content) || containsHarmfulContent(content)) {
-      toast.warning("Content Guidelines Reminder", {
-      description: "Please ensure your note follows our community guidelines. Keep it friendly and constructive!",
-      duration: 4000,
-      });
-      return;
-    }
-
-    const noteData = {
-      content,
-      user_id: user.id,
-      user_name: user.user_metadata?.full_name || "Unknown User",
-      is_anonymous: isAnonymous,
-      avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
-      archived: false,
-    };
-
-    let error;
-
-    if (userNote) {
-      const { error: historyError } = await supabase
-        .from("note_history")
-        .insert([{
-          original_note_id: userNote.id,
-          content: userNote.content,
-          is_anonymous: userNote.is_anonymous,
-          user_id: userNote.user_id,
-          user_name: userNote.user_name,
-          avatar_url: userNote.avatar_url,
-          archived_at: new Date().toISOString()
-        }]);
-
-      if (historyError) {
-        console.error("Error saving note history:", historyError);
+      if (containsProfanity(content) || containsHarmfulContent(content)) {
+        toast.error("Note contains inappropriate content", {
+          description: "Please keep the platform friendly and respectful. Avoid profanity and harmful language.",
+          duration: 5000,
+        });
+        return;
       }
 
-      const { error: updateError } = await supabase
-        .from("notes")
-        .update(noteData)
-        .eq("id", userNote.id);
-      error = updateError;
-    } else {
-      // Insert new note
-      const { error: insertError } = await supabase
-        .from("notes")
-        .insert([noteData]);
-      error = insertError;
-    }
+      const noteData = {
+        content: content.trim(),
+        user_id: user.id,
+        user_name: getUserName(user),
+        is_anonymous: isAnonymous,
+        avatar_url: isAnonymous ? null : user.user_metadata?.avatar_url || null,
+        archived: false,
+      };
 
-    if (error) {
-      console.error("Error saving note:", error);
+      if (userNote) {
+        await handleUpdateNote(noteData, userNote.id);
+      } else {
+        await handleCreateNote(noteData);
+      }
+
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
       toast.error("Failed to save note. Please try again.");
-      return;
     }
+  };
 
-    fetchNotes();
-    toast.success(userNote ? "Note updated successfully!" : "Note shared successfully!", {
-      description: userNote ? 
-        "Your note has been updated." : 
-        "Your note has been posted to the feed.",
-      duration: 3000,
-    });
+  const handleUpdateNote = async (noteData: Omit<Note, 'id' | 'created_at'>, noteId: string) => {
+    const { error: historyError } = await supabase
+      .from("note_history")
+      .insert([{
+        original_note_id: noteId,
+        content: userNote?.content,
+        is_anonymous: userNote?.is_anonymous,
+        user_id: userNote?.user_id,
+        user_name: userNote?.user_name,
+        avatar_url: userNote?.avatar_url,
+        archived_at: new Date().toISOString()
+      }]);
+
+    if (historyError) throw historyError;
+
+    const { error: updateError } = await supabase
+      .from("notes")
+      .update(noteData)
+      .eq("id", noteId);
+
+    if (updateError) throw updateError;
+
+    await fetchNotes();
+    toast.success("Note updated successfully!");
+  };
+
+  const handleCreateNote = async (noteData: Omit<Note, 'id' | 'created_at'>) => {
+    const { error: insertError } = await supabase
+      .from("notes")
+      .insert([noteData]);
+
+    if (insertError) throw insertError;
+
+    await fetchNotes();
+    toast.success("Note shared successfully!");
   };
 
   const handleDeleteNote = async (noteId: string, noteUserId: string) => {
