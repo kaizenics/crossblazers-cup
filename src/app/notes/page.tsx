@@ -194,12 +194,11 @@ export default function Notes() {
   
       if (historyError) throw historyError;
   
-      // Update the note with new content and updated timestamp
       const { error: updateError } = await supabase
         .from("notes")
         .update({
           ...noteData,
-          created_at: new Date().toISOString() // Add this line to update the timestamp
+          created_at: new Date().toISOString()
         })
         .eq("id", noteId);
   

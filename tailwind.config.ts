@@ -75,7 +75,7 @@ const config: Config = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			shine: 'shine 0.85s ease',
-  			grid: 'grid 15s linear infinite'
+  			grid: 'grid 15s linear infinite',
   		},
   		keyframes: {
   			shimmer: {
