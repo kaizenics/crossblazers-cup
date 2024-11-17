@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "cobe": "^0.6.3",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.4.5",
     "embla-carousel-autoplay": "^8.3.1",
     "embla-carousel-react": "^8.3.1",
     "gsap": "^3.12.5",
