@@ -161,6 +161,51 @@ const CollegesAndEventsList: React.FC = () => {
     }
   };
 
+  const handleEventDelete = async (eventName: string) => {
+    if (!confirm(`Are you sure you want to delete the event "${eventName}"? This action cannot be undone.`)) {
+      return;
+    }
+  
+    try {
+      // First, delete from eventScores table
+      const { error: scoresError } = await supabase
+        .from("eventScores")
+        .delete()
+        .match({ event_name: eventName });
+  
+      if (scoresError) {
+        console.error("Error deleting scores:", scoresError);
+        throw new Error(`Failed to delete scores: ${scoresError.message}`);
+      }
+  
+      // Then, delete from tabulationEvents table
+      const { error: eventError } = await supabase
+        .from("tabulationEvents")
+        .delete()
+        .match({ event_name: eventName });
+  
+      if (eventError) {
+        console.error("Error deleting event:", eventError);
+        throw new Error(`Failed to delete event: ${eventError.message}`);
+      }
+  
+      // Update local state only after successful deletion
+      setEvents(events.filter(e => e !== eventName));
+      setScores(prevScores => {
+        const newScores = { ...prevScores };
+        delete newScores[eventName];
+        return newScores;
+      });
+  
+      console.log(`Successfully deleted event: ${eventName}`); // Add logging
+  
+    } catch (error) {
+      console.error("Error in deletion process:", error);
+      alert(error instanceof Error ? error.message : "Failed to delete event. Please try again.");
+    }
+  };
+  
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -201,7 +246,18 @@ const CollegesAndEventsList: React.FC = () => {
             <tbody>
               {events.map((event) => (
                 <tr key={event} className="border-b hover:bg-zinc-800">
-                  <td className="border p-2">{event}</td>
+                  <td className="border p-2">
+                    <div className="flex justify-between items-center">
+                      <span>{event}</span>
+                      <button
+                        onClick={() => handleEventDelete(event)}
+                        className="text-red-500 hover:text-red-700 px-2 py-1 rounded"
+                        title="Delete event"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </td>
                   {Object.keys(collegeScores).map((college) => (
                     <td key={`${event}-${college}`} className="border p-2">
                       <input
