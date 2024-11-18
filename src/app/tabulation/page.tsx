@@ -19,11 +19,27 @@ interface CollegeData {
   logo: StaticImageData;
 }
 
+const collegeLogos: { [key: string]: StaticImageData } = {
+  SBME: sbme,
+  STE: ste,
+  CET: cet,
+  HUSOCOM: husocom,
+  CHATME: chatme,
+  CCJE: ccje,
+  COME: come,
+};
+
 // Define table-specific data
 interface TableData {
   college: string;
   color: string; 
   logo: StaticImageData;
+}
+
+interface EventScore {
+  event_name: string;
+  college_name: string;
+  score: number;
 }
 
 const collegeConfig: Omit<CollegeData, 'score'>[] = [
@@ -48,9 +64,10 @@ const tableData: TableData[] = [
 
 const TabulationBarChart: React.FC = () => {
   const [data, setData] = useState<CollegeData[]>([]);
-  const [eventScoreData, setEventScoreData] = useState([]);
+  const [eventNames, setEventNames] = useState<string[]>([]);
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [tableData, setTableData] = useState<Record<string, Record<string, number>>>({});
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -91,6 +108,43 @@ const TabulationBarChart: React.FC = () => {
 
     fetchScores();
   }, []);
+
+  useEffect(() => {
+    const fetchEventScores = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('eventScores')
+          .select('event_name, college_name, score');
+
+        if (error) throw error;
+
+        // Pivot data: Group by college and organize by event
+        const tempData: Record<string, Record<string, number>> = {};
+        const uniqueEventNames: Set<string> = new Set();
+
+        data?.forEach((entry) => {
+          const { event_name, college_name, score } = entry;
+
+          if (!tempData[college_name]) {
+            tempData[college_name] = {};
+          }
+
+          tempData[college_name][event_name] = score;
+          uniqueEventNames.add(event_name);
+        });
+
+        setTableData(tempData);
+        setEventNames(Array.from(uniqueEventNames));
+      } catch (error) {
+        console.error('Error fetching event scores:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEventScores();
+  }, []);
+
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -178,37 +232,46 @@ const TabulationBarChart: React.FC = () => {
         })}
       </div>
         <br /><br /><br />
-      <div className="bg-muted p-6 rounded-lg text-center">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="text-left p-2 bg-accent text-background">College</th>
-              <th className="p-2 bg-accent text-background"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index} className="odd:bg-muted even:bg-muted/50">
-                <td className="p-2 font-semibold" style={{ backgroundColor: row.color }}>
-                  <div className="w-16 h-16 relative">
-                    <Image
-                      src={row.logo}
-                      alt={`${row.college} logo`}
-                      fill
-                      className="object-contain"
-                      priority={index < 3}
-                    />
+        <div className="bg-muted p-6 rounded-lg text-center">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="p-2 bg-accent text-background">College</th>
+                {eventNames.map((event, index) => (
+                  <th key={index} className="p-2 bg-accent text-background">
+                    {event}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(tableData).map(([collegeName, scores], index) => (
+                <tr key={index} className="odd:bg-muted even:bg-muted/50">
+                  <td className="p-2">
+
+                  <div className="flex justify-center space-x-2">
+                    <div className="w-16 h-16 relative">
+                        <Image
+                          src={collegeLogos[collegeName]}
+                          alt={`${collegeName} logo`}
+                          fill
+                          className="object-contain"
+                          priority={index < 3}
+                        />
+                    </div>
                   </div>
                 </td>
-                <td className="p-2">0</td>
-                <td className="p-2">0</td>
-                <td className="p-2">0</td>
-                <td className="p-2">0</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  {eventNames.map((event, i) => (
+                    <td key={i} className="p-2">
+                      {scores[event] || 0}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
     </div>
   );
 };
