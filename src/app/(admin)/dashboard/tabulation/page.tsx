@@ -40,7 +40,7 @@ const CollegesAndEventsList: React.FC = () => {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        router.push("/login"); // Redirect to your login page
+        router.push("/login");
         return;
       }
     };
@@ -115,7 +115,6 @@ const CollegesAndEventsList: React.FC = () => {
         throw error;
       }
 
-      // Update local state
       setScores((prev) => ({
         ...prev,
         [event]: {

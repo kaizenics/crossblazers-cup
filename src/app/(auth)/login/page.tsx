@@ -3,11 +3,11 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from 'lucide-react';
 import heroCover from "@/assets/cover/hero.jpg";
 import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function Login() {
     if (error) {
       console.error('Error during Google Sign-In:', error.message);
     } else {
-      router.push('/login');
+      router.push('/');
     }
   };
 

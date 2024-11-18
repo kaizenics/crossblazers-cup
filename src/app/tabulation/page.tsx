@@ -30,16 +30,14 @@ const collegeLogos: { [key: string]: StaticImageData } = {
 };
 
 // Define table-specific data
-interface TableData {
-  college: string;
-  color: string; 
-  logo: StaticImageData;
-}
+
 
 interface EventScore {
+  id: number;  // Add id field
   event_name: string;
   college_name: string;
   score: number;
+  created_at?: string;
 }
 
 const collegeConfig: Omit<CollegeData, 'score'>[] = [
@@ -52,41 +50,39 @@ const collegeConfig: Omit<CollegeData, 'score'>[] = [
   { name: "COME", color: "bg-blue-300", logo: come },
 ];
 
-const tableData: TableData[] = [
-  { college: "SBME", color: "bg-yellow-400", logo: sbme },
-  { college: "STE", color: "bg-blue-500", logo: ste },
-  { college: "CET", color: "bg-orange-500", logo: cet },
-  { college: "HUSOCOM", color: "bg-red-800", logo: husocom },
-  { college: "CHATME", color: "bg-gray-500", logo: chatme },
-  { college: "CCJE", color: "bg-blue-900", logo: ccje },
-  { college: "COME", color: "bg-blue-300", logo: come },
-];
 
 const TabulationBarChart: React.FC = () => {
   const [data, setData] = useState<CollegeData[]>([]);
   const [eventNames, setEventNames] = useState<string[]>([]);
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
-  const [tableData, setTableData] = useState<Record<string, Record<string, number>>>({});
+  const [scoresData, setScoresData] = useState<Record<string, Record<string, number>>>({});
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session) return;
-
-        const { data: scores, error } = await supabase
+        setIsLoading(true);
+        const { data: scores, error: scoresError } = await supabase
           .from("eventScores")
-          .select("college_name, score");
+          .select("*");
 
-        if (error) throw error;
+        if (scoresError) {
+          throw scoresError;
+        }
+
+        if (!scores) {
+          setData([]);
+          return;
+        }
+
+        // Type assert scores as EventScore[]
+        const typedScores = scores as EventScore[];
 
         const collegeTotals = collegeConfig.map((college) => {
-          const collegeScores =
-            scores?.filter((score) => score.college_name === college.name) || [];
-
+          const collegeScores = typedScores.filter(
+            (score) => score.college_name === college.name
+          );
           const totalScore = collegeScores.reduce(
             (sum, score) => sum + (score.score || 0),
             0
@@ -99,8 +95,8 @@ const TabulationBarChart: React.FC = () => {
         });
 
         setData(collegeTotals);
-      } catch (error) {
-        console.error("Error fetching scores:", error);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch scores");
       } finally {
         setIsLoading(false);
       }
@@ -112,39 +108,37 @@ const TabulationBarChart: React.FC = () => {
   useEffect(() => {
     const fetchEventScores = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: eventScores, error: eventError } = await supabase
           .from('eventScores')
-          .select('event_name, college_name, score');
+          .select('*')
+          .order('event_name', { ascending: true });
 
-        if (error) throw error;
+        if (eventError) throw eventError;
 
-        // Pivot data: Group by college and organize by event
+        if (!eventScores) return;
+
+        // Type assertion and data processing
+        const typedEventScores = eventScores as EventScore[];
         const tempData: Record<string, Record<string, number>> = {};
-        const uniqueEventNames: Set<string> = new Set();
+        const uniqueEventNames = new Set<string>();
 
-        data?.forEach((entry) => {
-          const { event_name, college_name, score } = entry;
-
-          if (!tempData[college_name]) {
-            tempData[college_name] = {};
+        typedEventScores.forEach((entry) => {
+          if (!tempData[entry.college_name]) {
+            tempData[entry.college_name] = {};
           }
-
-          tempData[college_name][event_name] = score;
-          uniqueEventNames.add(event_name);
+          tempData[entry.college_name][entry.event_name] = entry.score;
+          uniqueEventNames.add(entry.event_name);
         });
 
-        setTableData(tempData);
-        setEventNames(Array.from(uniqueEventNames));
-      } catch (error) {
-        console.error('Error fetching event scores:', error);
-      } finally {
-        setIsLoading(false);
+        setScoresData(tempData);
+        setEventNames(Array.from(uniqueEventNames).sort());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch event scores");
       }
     };
 
     fetchEventScores();
   }, []);
-
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -167,7 +161,21 @@ const TabulationBarChart: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-red-500 bg-red-100 p-4 rounded-md">
+          Error: {error}
+        </div>
+      </div>
+    );
   }
 
   const sortedData = [...data].sort((a, b) => b.score - a.score);
@@ -178,7 +186,8 @@ const TabulationBarChart: React.FC = () => {
       <h2 className="text-4xl font-semibold text-foreground mb-3 text-center">
         Intramural 2023 Tabulation
       </h2>
-    <style>
+      
+      <style>
         {`
           @keyframes grow {
             0% {
@@ -190,6 +199,7 @@ const TabulationBarChart: React.FC = () => {
           }
         `}
       </style>
+
       <div className="text-center text-lg text-foreground mb-6">
         {currentDateTime}
       </div>
@@ -232,25 +242,24 @@ const TabulationBarChart: React.FC = () => {
         })}
       </div>
         <br /><br /><br />
-        <div className="bg-muted p-6 rounded-lg text-center">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto bg-muted p-6 rounded-lg">
+          <table className="w-full border-collapse table-auto">
             <thead>
               <tr>
-                <th className="p-2 bg-accent text-background">College</th>
+                <th className="p-3 bg-accent text-background font-semibold">College</th>
                 {eventNames.map((event, index) => (
-                  <th key={index} className="p-2 bg-accent text-background">
+                  <th key={index} className="p-3 bg-accent text-background font-semibold">
                     {event}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {Object.entries(tableData).map(([collegeName, scores], index) => (
-                <tr key={index} className="odd:bg-muted even:bg-muted/50">
-                  <td className="p-2">
-
-                  <div className="flex justify-center space-x-2">
-                    <div className="w-16 h-16 relative">
+              {Object.entries(scoresData).map(([collegeName, scores], index) => (
+                <tr key={index} className="border-b border-muted-foreground/20">
+                  <td className="p-3">
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-12 h-12 relative">
                         <Image
                           src={collegeLogos[collegeName]}
                           alt={`${collegeName} logo`}
@@ -258,11 +267,12 @@ const TabulationBarChart: React.FC = () => {
                           className="object-contain"
                           priority={index < 3}
                         />
+                      </div>
+                      <span className="font-medium">{collegeName}</span>
                     </div>
-                  </div>
-                </td>
+                  </td>
                   {eventNames.map((event, i) => (
-                    <td key={i} className="p-2">
+                    <td key={i} className="p-3 text-center">
                       {scores[event] || 0}
                     </td>
                   ))}
