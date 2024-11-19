@@ -2,14 +2,14 @@
 import {
     IconBrandTabler,
     IconChartBar,
-    IconList,
     IconSettings,
     IconTable,
+    IconLogout, // Add this import
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Add this import
+import React, { useState, useEffect } from "react"; // Add useEffect import
 import { Sidebar, SidebarBody, SidebarLink, SidebarDropdown } from "./ui/sidebar";
 
 interface LinkItem {
@@ -20,6 +20,19 @@ interface LinkItem {
 }
 
 export function AppSidebar({ children }: { children: React.ReactNode }) {
+    const router = useRouter(); // Add this
+    const [open, setOpen] = useState(false);
+    const [adminUsername, setAdminUsername] = useState<string>("");
+
+    // Add this useEffect to get admin username
+    useEffect(() => {
+        const adminData = localStorage.getItem("adminUser");
+        if (adminData) {
+            const admin = JSON.parse(adminData);
+            setAdminUsername(admin.username);
+        }
+    }, []);
+
     const links: LinkItem[] = [
         {
             label: "Dashboard",
@@ -36,16 +49,6 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                     href: "/dashboard/tabulation",
                     icon: <IconTable className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
                 },
-                {
-                    label: "Updates",
-                    href: "/dashboard/updates",
-                    icon: <IconList className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
-                },
-                {
-                    label: "Activities",
-                    href: "/dashboard/activities",
-                    icon: <IconList className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
-                }
             ]
         },
         {
@@ -53,11 +56,6 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             href: "#",
             icon: <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
             children: [
-                {
-                    label: "User",
-                    href: "/dashboard",
-                    icon: <IconChartBar className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
-                },
                 {
                     label: "Change Password",
                     href: "/dashboard/tabulation",
@@ -68,7 +66,11 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
         },
     ];
 
-    const [open, setOpen] = useState(false);
+    const handleSignOut = () => {
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("adminUser");
+        router.push("/admin-login");
+    };
 
     return (
         <div className="h-screen w-screen flex overflow-hidden bg-gray-100 dark:bg-neutral-900">
@@ -86,19 +88,21 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                             ))}
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center gap-2 px-4 py-2 border-t border-neutral-200 dark:border-neutral-700">
-                        <Image
-                            src="/images/me.png"
-                            className="h-8 w-8 rounded-full"
-                            width={32}
-                            height={32}
-                            alt="Avatar"
-                        />
-                        {open && (
-                            <div className="text-sm text-neutral-700 dark:text-neutral-300">
-                               User
+                    <div className="mt-4 flex flex-col gap-2 px-4 py-2 border-t border-neutral-200 dark:border-neutral-700">
+                        {open ? (
+                            <div className="flex items-center justify-between">
+                                <div className="text-sm text-neutral-700 dark:text-neutral-300">
+                                    {adminUsername}
+                                </div>
+                                <button
+                                    onClick={handleSignOut}
+                                    className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full transition-colors"
+                                    title="Sign out"
+                                >
+                                    <IconLogout className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+                                </button>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </SidebarBody>
             </Sidebar>
