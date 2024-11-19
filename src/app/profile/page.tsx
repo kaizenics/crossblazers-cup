@@ -319,7 +319,7 @@ export default function UserProfileDashboard() {
 
               <div className="relative overflow-x-auto sm:overflow-x-visible -mx-4 sm:mx-0 px-4 sm:px-0">
                 <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pb-4 sm:pb-0">
-                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                  <Card className="bg-emerald-500/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
                       <CardTitle className="text-xs sm:text-sm font-medium">
                         Highest Time
@@ -334,7 +334,7 @@ export default function UserProfileDashboard() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                  <Card className="bg-emerald-500/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
                       <CardTitle className="text-xs sm:text-sm font-medium">
                         Fastest Time
@@ -349,7 +349,7 @@ export default function UserProfileDashboard() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                  <Card className="bg-emerald-500/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
                       <CardTitle className="text-xs sm:text-sm font-medium">Highest Score</CardTitle>
                       <Ticket className="h-4 w-4 text-blue-500" />
@@ -360,7 +360,7 @@ export default function UserProfileDashboard() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
+                  <Card className="bg-emerald-500/25 border border-white/20 flex-shrink-0 w-[280px] sm:w-auto">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4">
                       <CardTitle className="text-xs sm:text-sm font-medium">Trivia Rank</CardTitle>
                       <TrendingUpIcon className="h-4 w-4 text-green-500" />

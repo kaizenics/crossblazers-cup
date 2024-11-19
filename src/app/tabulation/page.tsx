@@ -204,14 +204,14 @@ const TabulationBarChart: React.FC = () => {
   return (
     <>
       <Navbar />
-      <Container variant={"fullMobileBreakpointPadded"}>
-        <div className="p-4 md:p-8 bg-card rounded-lg shadow-md mt-5 md:mt-10">
-          <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
-            CBC 2024 Tabulation
-          </h2>
 
-          <style>
-            {`
+      <div className="p-4 md:p-8 bg-card rounded-lg shadow-md mt-5 md:mt-10">
+        <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
+          CBC 2024 Tabulation
+        </h2>
+
+        <style>
+          {`
           @keyframes growHorizontal {
             0% {
               width: 0%;
@@ -230,48 +230,48 @@ const TabulationBarChart: React.FC = () => {
             }
           }
         `}
-          </style>
+        </style>
 
-          <div className="font-montserrat text-center text-base md:text-lg text-foreground mb-6">
-            {currentDateTime}
-          </div>
+        <div className="font-montserrat text-center text-base md:text-lg text-foreground mb-6">
+          {currentDateTime}
+        </div>
 
-          <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center items-stretch h-[500px] md:h-[400px]">
-            {sortedData.map((college, index) => {
-              const targetPercent = (college.score / maxScore) * 100;
+        <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center items-stretch h-[500px] md:h-[400px]">
+          {sortedData.map((college, index) => {
+            const targetPercent = (college.score / maxScore) * 100;
 
-              return (
-                <div
-                  key={index}
-                  className="flex md:flex-col items-center gap-2 md:justify-end"
-                >
-                  <div className="w-12 h-12 md:w-16 md:h-16 relative order-1">
-                    <Image
-                      src={college.logo}
-                      alt={`${college.name} logo`}
-                      fill
-                      className="object-contain"
-                      priority={index < 3}
-                    />
-                  </div>
+            return (
+              <div
+                key={index}
+                className="flex md:flex-col items-center gap-2 md:justify-end"
+              >
+                <div className="w-12 h-12 md:w-16 md:h-16 relative order-1">
+                  <Image
+                    src={college.logo}
+                    alt={`${college.name} logo`}
+                    fill
+                    className="object-contain"
+                    priority={index < 3}
+                  />
+                </div>
 
-                  <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-left md:text-center">
-                    {college.name}
-                  </div>
+                <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-left md:text-center">
+                  {college.name}
+                </div>
 
-                  <div className="font-montserrat font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
-                    {college.score}
-                  </div>
+                <div className="font-montserrat font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
+                  {college.score}
+                </div>
 
-                  <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
-                    <div
-                      className={`${
-                        college.color
-                      } absolute md:bottom-0 rounded-md ${"md:w-full md:left-0 h-full md:h-0"}`}
-                      style={{
-                        ["--target-width" as string]: `${targetPercent}%`,
-                        ["--target-height" as string]: `${targetPercent}%`,
-                        animation: `
+                <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
+                  <div
+                    className={`${
+                      college.color
+                    } absolute md:bottom-0 rounded-md ${"md:w-full md:left-0 h-full md:h-0"}`}
+                    style={{
+                      ["--target-width" as string]: `${targetPercent}%`,
+                      ["--target-height" as string]: `${targetPercent}%`,
+                      animation: `
                       ${
                         window.innerWidth < 768
                           ? "growHorizontal"
@@ -279,27 +279,27 @@ const TabulationBarChart: React.FC = () => {
                       } 
                       1.5s ease-out ${index * 0.2}s forwards
                     `,
-                      }}
-                    ></div>
-                  </div>
+                    }}
+                  ></div>
                 </div>
-              );
-            })}
-          </div>
-          <br />
-
+              </div>
+            );
+          })}
+        </div>
+        <br />
+        <Container variant={"fullMobileBreakpointPadded"}>
           <div className="mt-3 md:mt-8 -mx-4 md:mx-0">
-            <div className="overflow-x-auto bg-muted p-3 md:p-6 rounded-lg">
+            <div className="overflow-x-auto bg-emerald-500/10 border border-emerald-400/10 p-3 md:p-6 rounded-md">
               <table className="w-full border-collapse table-auto min-w-[640px]">
                 <thead>
                   <tr>
-                    <th className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
+                    <th className="font-montserrat p-2 md:p-3 bg-emerald-500/20 text-background font-semibold text-sm md:text-base">
                       College
                     </th>
                     {eventNames.map((event, index) => (
                       <th
                         key={index}
-                        className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base"
+                        className="font-montserrat p-2 md:p-3 bg-emerald-500/20 text-background font-semibold text-sm md:text-base"
                       >
                         {event}
                       </th>
@@ -344,8 +344,8 @@ const TabulationBarChart: React.FC = () => {
               </table>
             </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
       <Footer />
     </>
   );

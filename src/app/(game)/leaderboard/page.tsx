@@ -128,7 +128,7 @@ export default function TriviaLeaderboard() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl mx-auto"
       >
-        <Card className="border border-white/30 bg-white/20 text-white">
+        <Card className="border border-emerald-400/30 bg-emerald-400/30 text-white">
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="font-raceSport text-2xl sm:text-3xl font-bold text-center">
               Trivia Champions

@@ -192,7 +192,7 @@ export default function LargerInteractiveTriviaGame() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[65vw] xl:max-w-[55vw] select-none"
       >
-        <Card className="border border-white/30 bg-white/30 text-white overflow-hidden">
+        <Card className="border border-emerald-400/30 bg-emerald-400/30 text-white overflow-hidden">
           <CardHeader className="p-3 sm:p-4 md:p-6">
             {gameState !== "intro" && (
               <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4">
