@@ -65,7 +65,8 @@ const TabulationBarChart: React.FC = () => {
         setIsLoading(true);
         const { data: scores, error: scoresError } = await supabase
           .from("eventScores")
-          .select("*");
+          .select("*")
+          .order('created_at', { ascending: false });  // Add ordering to get latest scores
 
         if (scoresError) {
           throw scoresError;
@@ -102,7 +103,23 @@ const TabulationBarChart: React.FC = () => {
       }
     };
 
+    // Set up real-time subscription for live updates
+    const subscription = supabase
+      .channel('public:eventScores')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'eventScores' },
+        () => {
+          fetchScores();
+        }
+      )
+      .subscribe();
+
     fetchScores();
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
