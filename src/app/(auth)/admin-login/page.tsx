@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";  // Add this import
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -26,6 +27,7 @@ export default function Login() {
         // Store auth state in localStorage
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("adminUser", JSON.stringify(data));
+        toast.success("Successfully logged in!");  // Add this line
         router.push("/dashboard/tabulation");
       } else {
         setError("Invalid credentials");

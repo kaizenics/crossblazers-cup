@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; 
 import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink, SidebarDropdown } from "./ui/sidebar";
+import { toast } from "sonner"; 
 
 interface LinkItem {
     label: string;
@@ -63,6 +64,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
     const handleSignOut = () => {
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("adminUser");
+        toast.success("Successfully logged out!"); 
         router.push("/admin-login");
     };
 
