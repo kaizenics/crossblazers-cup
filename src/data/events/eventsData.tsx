@@ -23,9 +23,9 @@ export const events = [
         details: [],
       },
       {
-        titles: ["SILENT DRILL", "Opening Program", "Cheerdance"],
+        titles: ["SILENT DRILL"],
         time: "4:30 PM - 8:00 PM",
-        details: [],
+        details: ["Opening Program", "Cheerdance"],
       },
       {
         titles: ["Awarding"],
@@ -146,8 +146,9 @@ export const events = [
         details: [],
       },
       {
-        titles: [
-          "NIGHT OF THE CHAMPIONS",
+        titles: ["NIGHT OF THE CHAMPIONS"],
+        time: "5:00 PM - 9:00 PM",
+        details: [
           "Songwriting Composition",
           "Arise and Sing Solo",
           "Arise and Sing Duet",
@@ -157,8 +158,6 @@ export const events = [
           "Cheerdance",
           "Battle of the Bands",
         ],
-        time: "5:00 PM - 9:00 PM",
-        details: [],
       },
       {
         titles: ["Awarding"],

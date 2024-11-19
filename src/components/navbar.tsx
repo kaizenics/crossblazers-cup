@@ -76,7 +76,7 @@ export const Navbar = () => {
   const navItems = [
     { id: null, href: '/', label: 'Home' },
     { id: 'about', href: '#about', label: 'About' },
-    { id: 'departments', href: '#departments', label: 'Departments' },
+    { id: 'null', href: '/tabulation', label: 'Tabulation' },
     { id: null, href: '/events', label: 'Schedules' },
     { id: 'faq', href: '#faq', label: 'FAQ' },
   ]
