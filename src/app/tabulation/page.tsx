@@ -183,8 +183,8 @@ const TabulationBarChart: React.FC = () => {
 
   return (
     <div className="p-4 md:p-8 bg-card rounded-lg shadow-md">
-      <h2 className="text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
-        Intramural 2023 Tabulation
+      <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
+        CBC 2024 Tabulation
       </h2>
       
       <style>
@@ -209,7 +209,7 @@ const TabulationBarChart: React.FC = () => {
         `}
       </style>
 
-      <div className="text-center text-base md:text-lg text-foreground mb-6">
+      <div className="font-montserrat text-center text-base md:text-lg text-foreground mb-6">
         {currentDateTime}
       </div>
 
@@ -229,11 +229,11 @@ const TabulationBarChart: React.FC = () => {
                 />
               </div>
 
-              <div className="font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-center">
+              <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-center">
                 {college.name}
               </div>
 
-              <div className="font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
+              <div className="font-montserrat font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
                 {college.score}
               </div>
 
@@ -264,9 +264,9 @@ const TabulationBarChart: React.FC = () => {
           <table className="w-full border-collapse table-auto min-w-[640px]">
             <thead>
               <tr>
-                <th className="p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">College</th>
+                <th className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">College</th>
                 {eventNames.map((event, index) => (
-                  <th key={index} className="p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
+                  <th key={index} className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
                     {event}
                   </th>
                 ))}
@@ -276,8 +276,8 @@ const TabulationBarChart: React.FC = () => {
               {Object.entries(scoresData).map(([collegeName, scores], index) => (
                 <tr key={index} className="border-b border-muted-foreground/20">
                   <td className="p-2 md:p-3">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-8 h-8 md:w-12 md:h-12 relative">
+                    <div className="flex items-center space-x-3 px-2">
+                      <div className="w-6 h-6 md:w-12 md:h-12 relative flex-shrink-0">
                         <Image
                           src={collegeLogos[collegeName]}
                           alt={`${collegeName} logo`}
@@ -286,13 +286,13 @@ const TabulationBarChart: React.FC = () => {
                           priority={index < 3}
                         />
                       </div>
-                      <span className="font-medium text-sm md:text-base">
+                      <span className="font-raceSport font-medium text-sm md:text-base whitespace-nowrap">
                         {collegeName}
                       </span>
                     </div>
                   </td>
                   {eventNames.map((event, i) => (
-                    <td key={i} className="p-2 md:p-3 text-center text-sm md:text-base">
+                    <td key={i} className="font-montserrat p-2 md:p-3 text-center text-sm md:text-base">
                       {scores[event] || 0}
                     </td>
                   ))}
