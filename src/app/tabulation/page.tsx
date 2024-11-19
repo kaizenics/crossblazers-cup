@@ -182,14 +182,25 @@ const TabulationBarChart: React.FC = () => {
   const maxScore = Math.max(...sortedData.map((college) => college.score));
 
   return (
-    <div className="p-8 bg-card rounded-lg shadow-md">
-      <h2 className="text-4xl font-semibold text-foreground mb-3 text-center">
+    <div className="p-4 md:p-8 bg-card rounded-lg shadow-md">
+      <h2 className="text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
         Intramural 2023 Tabulation
       </h2>
       
       <style>
         {`
           @keyframes grow {
+            0% {
+              width: 0%;
+              height: 100%;
+            }
+            100% {
+              width: var(--target-width);
+              height: 100%;
+            }
+          }
+          
+          @keyframes growVertical {
             0% {
               height: 0%;
             }
@@ -200,33 +211,17 @@ const TabulationBarChart: React.FC = () => {
         `}
       </style>
 
-      <div className="text-center text-lg text-foreground mb-6">
+      <div className="text-center text-base md:text-lg text-foreground mb-6">
         {currentDateTime}
       </div>
 
-      <div className="flex justify-evenly mb-8">
+      <div className="flex flex-col md:flex-wrap md:flex-row justify-center md:justify-evenly gap-4 mb-8">
         {sortedData.map((college, index) => {
           const targetHeight = (college.score / maxScore) * 100;
 
           return (
-            <div key={index} className="flex flex-col items-center space-y-2">
-              <div className="font-semibold text-foreground">{college.score}</div>
-              <div
-                className="relative w-16 bg-muted rounded-md overflow-hidden h-64"
-                style={{
-                  ['--target-height' as string]: `${targetHeight}%`,
-                }}
-              >
-                <div
-                  className={`${college.color} absolute bottom-0 w-full rounded-md`}
-                  style={{
-                    animation: `grow 1.5s ease-in-out ${index * 0.2}s forwards`,
-                    height: "0%",
-                  }}
-                ></div>
-              </div>
-
-              <div className="w-16 h-16 relative">
+            <div key={index} className="flex md:flex-col items-center gap-4 md:gap-2">
+              <div className="w-12 h-12 md:w-16 md:h-16 relative order-1 md:order-3">
                 <Image
                   src={college.logo}
                   alt={`${college.name} logo`}
@@ -236,19 +231,43 @@ const TabulationBarChart: React.FC = () => {
                 />
               </div>
 
-              <div className="font-semibold text-foreground">{college.name}</div>
+              <div className="font-semibold text-foreground text-sm md:text-base order-2 md:order-4 min-w-[80px] text-center">
+                {college.name}
+              </div>
+
+              <div className="font-semibold text-foreground order-4 md:order-1 min-w-[40px] text-center">
+                {college.score}
+              </div>
+
+              <div
+                className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-2 flex-1 md:w-16 md:flex-none"
+                style={{
+                  ['--target-width' as string]: `${targetHeight}%`,
+                  ['--target-height' as string]: `${targetHeight}%`,
+                }}
+              >
+                <div
+                  className={`${college.color} absolute md:bottom-0 h-full md:h-auto md:w-full rounded-md`}
+                  style={{
+                    animation: `grow 1.5s ease-in-out ${index * 0.2}s forwards`,
+                    width: "0%",
+                    height: "100%",
+                  }}
+                ></div>
+              </div>
             </div>
           );
         })}
       </div>
         <br /><br /><br />
-        <div className="overflow-x-auto bg-muted p-6 rounded-lg">
-          <table className="w-full border-collapse table-auto">
+        <div className="mt-8 -mx-4 md:mx-0">
+        <div className="overflow-x-auto bg-muted p-3 md:p-6 rounded-lg">
+          <table className="w-full border-collapse table-auto min-w-[640px]">
             <thead>
               <tr>
-                <th className="p-3 bg-accent text-background font-semibold">College</th>
+                <th className="p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">College</th>
                 {eventNames.map((event, index) => (
-                  <th key={index} className="p-3 bg-accent text-background font-semibold">
+                  <th key={index} className="p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
                     {event}
                   </th>
                 ))}
@@ -257,9 +276,9 @@ const TabulationBarChart: React.FC = () => {
             <tbody>
               {Object.entries(scoresData).map(([collegeName, scores], index) => (
                 <tr key={index} className="border-b border-muted-foreground/20">
-                  <td className="p-3">
+                  <td className="p-2 md:p-3">
                     <div className="flex items-center justify-center space-x-2">
-                      <div className="w-12 h-12 relative">
+                      <div className="w-8 h-8 md:w-12 md:h-12 relative">
                         <Image
                           src={collegeLogos[collegeName]}
                           alt={`${collegeName} logo`}
@@ -268,11 +287,13 @@ const TabulationBarChart: React.FC = () => {
                           priority={index < 3}
                         />
                       </div>
-                      <span className="font-medium">{collegeName}</span>
+                      <span className="font-medium text-sm md:text-base">
+                        {collegeName}
+                      </span>
                     </div>
                   </td>
                   {eventNames.map((event, i) => (
-                    <td key={i} className="p-3 text-center">
+                    <td key={i} className="p-2 md:p-3 text-center text-sm md:text-base">
                       {scores[event] || 0}
                     </td>
                   ))}
@@ -281,6 +302,7 @@ const TabulationBarChart: React.FC = () => {
             </tbody>
           </table>
         </div>
+      </div>
 
     </div>
   );
