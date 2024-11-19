@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 interface EventScore {
   id?: number;
@@ -15,6 +16,7 @@ interface CollegeScores {
 }
 
 const CollegesAndEventsList: React.FC = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [collegeScores] = useState<CollegeScores>({
     SBME: 0,
@@ -30,6 +32,14 @@ const CollegesAndEventsList: React.FC = () => {
   const [scores, setScores] = useState<Record<string, Record<string, number>>>(
     {}
   );
+
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [router]);
 
   // Fetch events and scores
   useEffect(() => {
@@ -136,7 +146,6 @@ const CollegesAndEventsList: React.FC = () => {
     }
   
     try {
-      // First, delete from eventScores table
       const { error: scoresError } = await supabase
         .from("eventScores")
         .delete()
@@ -147,7 +156,6 @@ const CollegesAndEventsList: React.FC = () => {
         throw new Error(`Failed to delete scores: ${scoresError.message}`);
       }
   
-      // Then, delete from tabulationEvents table
       const { error: eventError } = await supabase
         .from("tabulationEvents")
         .delete()
@@ -166,7 +174,7 @@ const CollegesAndEventsList: React.FC = () => {
         return newScores;
       });
   
-      console.log(`Successfully deleted event: ${eventName}`); // Add logging
+      console.log(`Successfully deleted event: ${eventName}`);
   
     } catch (error) {
       console.error("Error in deletion process:", error);
@@ -180,74 +188,90 @@ const CollegesAndEventsList: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-6">
-      <div>
-        <div className="flex flex-row justify-between mb-4">
-          <h2 className="text-2xl font-bold">Events Tabulation</h2>
-          <div className=" flex items-center gap-2">
-            <input
-              type="text"
-              value={newEventName}
-              onChange={(e) => setNewEventName(e.target.value)}
-              className="border rounded px-3 py-2"
-              placeholder="Enter event name"
-            />
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
-              onClick={handleEventAdd}
-            >
-              Add Event
-            </button>
+    <div className="p-4 md:p-6">
+      <div className="max-w-full overflow-hidden">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between mb-4 gap-4">
+          <h2 className="font-raceSport text-xl md:text-2xl font-bold">Events Tabulation</h2>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+            <div className="flex w-full sm:w-auto items-center gap-2">
+              <input
+                type="text"
+                value={newEventName}
+                onChange={(e) => setNewEventName(e.target.value)}
+                className="font-montserrat flex-1 sm:flex-none border rounded px-3 py-2 min-w-[200px]"
+                placeholder="Enter event name"
+              />
+              <button
+                className="bg-emerald-600 hover:bg-gray-700 font-montserrat text-white px-4 py-2 rounded whitespace-nowrap"
+                onClick={handleEventAdd}
+              >
+                Add Event
+              </button>
+            </div>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-transparent">
-                <th className="border p-2 text-left">Event</th>
-                {Object.keys(collegeScores).map((college) => (
-                  <th key={college} className="border p-2 text-center">
-                    {college}
+
+        {/* Table Section */}
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="overflow-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs uppercase bg-zinc-700 text-gray-200">
+                <tr>
+                  <th scope="col" className="font-montserrat px-6 py-3 whitespace-nowrap sticky left-0 bg-zinc-700 z-10">
+                    Event
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event) => (
-                <tr key={event} className="border-b hover:bg-zinc-800">
-                  <td className="border p-2">
-                    <div className="flex justify-between items-center">
-                      <span>{event}</span>
-                      <button
-                        onClick={() => handleEventDelete(event)}
-                        className="text-red-500 hover:text-red-700 px-2 py-1 rounded"
-                        title="Delete event"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  </td>
                   {Object.keys(collegeScores).map((college) => (
-                    <td key={`${event}-${college}`} className="border p-2">
-                      <input
-                        type="number"
-                        className="w-full p-1 border rounded"
-                        value={scores[event]?.[college] || 0}
-                        onChange={(e) =>
-                          handleScoreUpdate(
-                            event,
-                            college,
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                    </td>
+                    <th key={college} scope="col" className="font-montserrat px-6 py-3 text-center whitespace-nowrap">
+                      {college}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {events.map((event, index) => (
+                  <tr key={event} className={`border-b ${index % 2 === 0 ? 'bg-zinc-900' : 'bg-zinc-800'} border-zinc-700`}>
+                    <td className="font-montserrat px-6 py-3 sticky left-0 z-10 whitespace-nowrap font-medium text-white bg-inherit">
+                      <div className="flex justify-between items-center gap-2">
+                        <span>{event}</span>
+                        <button
+                          onClick={() => handleEventDelete(event)}
+                          className="text-red-500 hover:text-red-700 px-2 py-1 rounded"
+                          title="Delete event"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </td>
+                    {Object.keys(collegeScores).map((college) => (
+                      <td key={`${event}-${college}`} className="px-6 py-3">
+                        <input
+                          type="number"
+                          className="w-full p-1 bg-transparent border border-zinc-700 rounded text-center"
+                          value={scores[event]?.[college] || 0}
+                          onChange={(e) =>
+                            handleScoreUpdate(
+                              event,
+                              college,
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center p-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-200"></div>
+          </div>
+        )}
       </div>
     </div>
   );

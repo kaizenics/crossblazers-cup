@@ -1,9 +1,21 @@
-import React from 'react';
+"use client";
 
-export default function Panel(){
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function Panel() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [router]);
+
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
     </div>
   );
 }
