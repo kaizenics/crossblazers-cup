@@ -5,6 +5,7 @@ import Image, { StaticImageData } from "next/image";
 import { Navbar } from "@/components/navbar";
 import { supabase } from "@/lib/supabase";
 import { Container } from "@/components/ui/container";
+import { Footer } from "@/components/footer";
 
 import ccje from "@/assets/logo/ccje.png";
 import cet from "@/assets/logo/cet.png";
@@ -345,6 +346,7 @@ const TabulationBarChart: React.FC = () => {
           </div>
         </div>
       </Container>
+      <Footer />
     </>
   );
 };
