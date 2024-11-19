@@ -1,15 +1,14 @@
 "use client";
 import {
     IconBrandTabler,
-    IconChartBar,
     IconSettings,
     IconTable,
-    IconLogout, // Add this import
+    IconLogout, 
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Add this import
-import React, { useState, useEffect } from "react"; // Add useEffect import
+import { useRouter } from "next/navigation"; 
+import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink, SidebarDropdown } from "./ui/sidebar";
 
 interface LinkItem {
@@ -20,11 +19,10 @@ interface LinkItem {
 }
 
 export function AppSidebar({ children }: { children: React.ReactNode }) {
-    const router = useRouter(); // Add this
+    const router = useRouter(); 
     const [open, setOpen] = useState(false);
     const [adminUsername, setAdminUsername] = useState<string>("");
 
-    // Add this useEffect to get admin username
     useEffect(() => {
         const adminData = localStorage.getItem("adminUser");
         if (adminData) {
@@ -39,11 +37,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             href: "#",
             icon: <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
             children: [
-                {
-                    label: "Overview",
-                    href: "/dashboard",
-                    icon: <IconChartBar className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
-                },
+               
                 {
                     label: "Tabulation",
                     href: "/dashboard/tabulation",
