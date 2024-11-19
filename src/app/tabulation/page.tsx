@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image, { StaticImageData } from 'next/image';
+import { Navbar } from '@/components/navbar';
 import { supabase } from "@/lib/supabase";
 
 import ccje from "@/assets/logo/ccje.png";
@@ -29,11 +30,8 @@ const collegeLogos: { [key: string]: StaticImageData } = {
   COME: come,
 };
 
-// Define table-specific data
-
-
 interface EventScore {
-  id: number;  // Add id field
+  id: number;  
   event_name: string;
   college_name: string;
   score: number;
@@ -66,7 +64,7 @@ const TabulationBarChart: React.FC = () => {
         const { data: scores, error: scoresError } = await supabase
           .from("eventScores")
           .select("*")
-          .order('created_at', { ascending: false });  // Add ordering to get latest scores
+          .order('created_at', { ascending: false }); 
 
         if (scoresError) {
           throw scoresError;
@@ -77,7 +75,6 @@ const TabulationBarChart: React.FC = () => {
           return;
         }
 
-        // Type assert scores as EventScore[]
         const typedScores = scores as EventScore[];
 
         const collegeTotals = collegeConfig.map((college) => {
@@ -199,7 +196,9 @@ const TabulationBarChart: React.FC = () => {
   const maxScore = Math.max(...sortedData.map((college) => college.score));
 
   return (
-    <div className="p-4 md:p-8 bg-card rounded-lg shadow-md">
+    <>
+    <Navbar />
+    <div className="p-4 md:p-8 bg-card rounded-lg shadow-md mt-10">
       <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
         CBC 2024 Tabulation
       </h2>
@@ -246,7 +245,7 @@ const TabulationBarChart: React.FC = () => {
                 />
               </div>
 
-              <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-center">
+              <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-left md:text-center">
                 {college.name}
               </div>
 
@@ -257,8 +256,6 @@ const TabulationBarChart: React.FC = () => {
               <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
                 <div
                   className={`${college.color} absolute md:bottom-0 rounded-md ${
-                    // Mobile: grow horizontally from left
-                    // Desktop: grow vertically from bottom
                     "md:w-full md:left-0 h-full md:h-0"
                   }`}
                   style={{
@@ -275,7 +272,7 @@ const TabulationBarChart: React.FC = () => {
           );
         })}
       </div>
-        <br /><br /><br />
+        <br />
         <div className="mt-8 -mx-4 md:mx-0">
         <div className="overflow-x-auto bg-muted p-3 md:p-6 rounded-lg">
           <table className="w-full border-collapse table-auto min-w-[640px]">
@@ -321,6 +318,7 @@ const TabulationBarChart: React.FC = () => {
       </div>
 
     </div>
+    </>
   );
 };
 
