@@ -189,14 +189,12 @@ const TabulationBarChart: React.FC = () => {
       
       <style>
         {`
-          @keyframes grow {
+          @keyframes growHorizontal {
             0% {
               width: 0%;
-              height: 100%;
             }
             100% {
               width: var(--target-width);
-              height: 100%;
             }
           }
           
@@ -215,13 +213,13 @@ const TabulationBarChart: React.FC = () => {
         {currentDateTime}
       </div>
 
-      <div className="flex flex-col md:flex-wrap md:flex-row justify-center md:justify-evenly gap-4 mb-8">
+      <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center items-stretch h-[500px] md:h-[400px]">
         {sortedData.map((college, index) => {
-          const targetHeight = (college.score / maxScore) * 100;
+          const targetPercent = (college.score / maxScore) * 100;
 
           return (
-            <div key={index} className="flex md:flex-col items-center gap-4 md:gap-2">
-              <div className="w-12 h-12 md:w-16 md:h-16 relative order-1 md:order-3">
+            <div key={index} className="flex md:flex-col items-center gap-2 md:justify-end">
+              <div className="w-12 h-12 md:w-16 md:h-16 relative order-1">
                 <Image
                   src={college.logo}
                   alt={`${college.name} logo`}
@@ -231,27 +229,28 @@ const TabulationBarChart: React.FC = () => {
                 />
               </div>
 
-              <div className="font-semibold text-foreground text-sm md:text-base order-2 md:order-4 min-w-[80px] text-center">
+              <div className="font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-center">
                 {college.name}
               </div>
 
-              <div className="font-semibold text-foreground order-4 md:order-1 min-w-[40px] text-center">
+              <div className="font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
                 {college.score}
               </div>
 
-              <div
-                className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-2 flex-1 md:w-16 md:flex-none"
-                style={{
-                  ['--target-width' as string]: `${targetHeight}%`,
-                  ['--target-height' as string]: `${targetHeight}%`,
-                }}
-              >
+              <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
                 <div
-                  className={`${college.color} absolute md:bottom-0 h-full md:h-auto md:w-full rounded-md`}
+                  className={`${college.color} absolute md:bottom-0 rounded-md ${
+                    // Mobile: grow horizontally from left
+                    // Desktop: grow vertically from bottom
+                    "md:w-full md:left-0 h-full md:h-0"
+                  }`}
                   style={{
-                    animation: `grow 1.5s ease-in-out ${index * 0.2}s forwards`,
-                    width: "0%",
-                    height: "100%",
+                    ['--target-width' as string]: `${targetPercent}%`,
+                    ['--target-height' as string]: `${targetPercent}%`,
+                    animation: `
+                      ${window.innerWidth < 768 ? 'growHorizontal' : 'growVertical'} 
+                      1.5s ease-out ${index * 0.2}s forwards
+                    `,
                   }}
                 ></div>
               </div>
