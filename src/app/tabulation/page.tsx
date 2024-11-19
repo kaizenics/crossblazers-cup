@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Image, { StaticImageData } from 'next/image';
-import { Navbar } from '@/components/navbar';
+import React, { useState, useEffect } from "react";
+import Image, { StaticImageData } from "next/image";
+import { Navbar } from "@/components/navbar";
 import { supabase } from "@/lib/supabase";
+import { Container } from "@/components/ui/container";
 
 import ccje from "@/assets/logo/ccje.png";
 import cet from "@/assets/logo/cet.png";
@@ -31,14 +32,14 @@ const collegeLogos: { [key: string]: StaticImageData } = {
 };
 
 interface EventScore {
-  id: number;  
+  id: number;
   event_name: string;
   college_name: string;
   score: number;
   created_at?: string;
 }
 
-const collegeConfig: Omit<CollegeData, 'score'>[] = [
+const collegeConfig: Omit<CollegeData, "score">[] = [
   { name: "SBME", color: "bg-yellow-400", logo: sbme },
   { name: "STE", color: "bg-blue-500", logo: ste },
   { name: "CET", color: "bg-orange-500", logo: cet },
@@ -48,13 +49,14 @@ const collegeConfig: Omit<CollegeData, 'score'>[] = [
   { name: "COME", color: "bg-blue-300", logo: come },
 ];
 
-
 const TabulationBarChart: React.FC = () => {
   const [data, setData] = useState<CollegeData[]>([]);
   const [eventNames, setEventNames] = useState<string[]>([]);
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
-  const [scoresData, setScoresData] = useState<Record<string, Record<string, number>>>({});
+  const [scoresData, setScoresData] = useState<
+    Record<string, Record<string, number>>
+  >({});
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ const TabulationBarChart: React.FC = () => {
         const { data: scores, error: scoresError } = await supabase
           .from("eventScores")
           .select("*")
-          .order('created_at', { ascending: false }); 
+          .order("created_at", { ascending: false });
 
         if (scoresError) {
           throw scoresError;
@@ -102,9 +104,10 @@ const TabulationBarChart: React.FC = () => {
 
     // Set up real-time subscription for live updates
     const subscription = supabase
-      .channel('public:eventScores')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'eventScores' },
+      .channel("public:eventScores")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "eventScores" },
         () => {
           fetchScores();
         }
@@ -123,9 +126,9 @@ const TabulationBarChart: React.FC = () => {
     const fetchEventScores = async () => {
       try {
         const { data: eventScores, error: eventError } = await supabase
-          .from('eventScores')
-          .select('*')
-          .order('event_name', { ascending: true });
+          .from("eventScores")
+          .select("*")
+          .order("event_name", { ascending: true });
 
         if (eventError) throw eventError;
 
@@ -147,7 +150,9 @@ const TabulationBarChart: React.FC = () => {
         setScoresData(tempData);
         setEventNames(Array.from(uniqueEventNames).sort());
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch event scores");
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch event scores"
+        );
       }
     };
 
@@ -197,14 +202,15 @@ const TabulationBarChart: React.FC = () => {
 
   return (
     <>
-    <Navbar />
-    <div className="p-4 md:p-8 bg-card rounded-lg shadow-md mt-10">
-      <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
-        CBC 2024 Tabulation
-      </h2>
-      
-      <style>
-        {`
+      <Navbar />
+      <Container variant={"fullMobileBreakpointPadded"}>
+        <div className="p-4 md:p-8 bg-card rounded-lg shadow-md mt-5 md:mt-10">
+          <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
+            CBC 2024 Tabulation
+          </h2>
+
+          <style>
+            {`
           @keyframes growHorizontal {
             0% {
               width: 0%;
@@ -223,101 +229,122 @@ const TabulationBarChart: React.FC = () => {
             }
           }
         `}
-      </style>
+          </style>
 
-      <div className="font-montserrat text-center text-base md:text-lg text-foreground mb-6">
-        {currentDateTime}
-      </div>
+          <div className="font-montserrat text-center text-base md:text-lg text-foreground mb-6">
+            {currentDateTime}
+          </div>
 
-      <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center items-stretch h-[500px] md:h-[400px]">
-        {sortedData.map((college, index) => {
-          const targetPercent = (college.score / maxScore) * 100;
+          <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center items-stretch h-[500px] md:h-[400px]">
+            {sortedData.map((college, index) => {
+              const targetPercent = (college.score / maxScore) * 100;
 
-          return (
-            <div key={index} className="flex md:flex-col items-center gap-2 md:justify-end">
-              <div className="w-12 h-12 md:w-16 md:h-16 relative order-1">
-                <Image
-                  src={college.logo}
-                  alt={`${college.name} logo`}
-                  fill
-                  className="object-contain"
-                  priority={index < 3}
-                />
-              </div>
-
-              <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-left md:text-center">
-                {college.name}
-              </div>
-
-              <div className="font-montserrat font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
-                {college.score}
-              </div>
-
-              <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
+              return (
                 <div
-                  className={`${college.color} absolute md:bottom-0 rounded-md ${
-                    "md:w-full md:left-0 h-full md:h-0"
-                  }`}
-                  style={{
-                    ['--target-width' as string]: `${targetPercent}%`,
-                    ['--target-height' as string]: `${targetPercent}%`,
-                    animation: `
-                      ${window.innerWidth < 768 ? 'growHorizontal' : 'growVertical'} 
+                  key={index}
+                  className="flex md:flex-col items-center gap-2 md:justify-end"
+                >
+                  <div className="w-12 h-12 md:w-16 md:h-16 relative order-1">
+                    <Image
+                      src={college.logo}
+                      alt={`${college.name} logo`}
+                      fill
+                      className="object-contain"
+                      priority={index < 3}
+                    />
+                  </div>
+
+                  <div className="font-raceSport font-semibold text-foreground text-sm md:text-base order-2 min-w-[80px] text-left md:text-center">
+                    {college.name}
+                  </div>
+
+                  <div className="font-montserrat font-semibold text-foreground order-4 md:order-3 min-w-[40px] text-center">
+                    {college.score}
+                  </div>
+
+                  <div className="relative h-12 md:h-64 bg-muted rounded-md overflow-hidden order-3 md:order-4 flex-1 md:w-16 md:flex-none">
+                    <div
+                      className={`${
+                        college.color
+                      } absolute md:bottom-0 rounded-md ${"md:w-full md:left-0 h-full md:h-0"}`}
+                      style={{
+                        ["--target-width" as string]: `${targetPercent}%`,
+                        ["--target-height" as string]: `${targetPercent}%`,
+                        animation: `
+                      ${
+                        window.innerWidth < 768
+                          ? "growHorizontal"
+                          : "growVertical"
+                      } 
                       1.5s ease-out ${index * 0.2}s forwards
                     `,
-                  }}
-                ></div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-        <br />
-        <div className="mt-8 -mx-4 md:mx-0">
-        <div className="overflow-x-auto bg-muted p-3 md:p-6 rounded-lg">
-          <table className="w-full border-collapse table-auto min-w-[640px]">
-            <thead>
-              <tr>
-                <th className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">College</th>
-                {eventNames.map((event, index) => (
-                  <th key={index} className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
-                    {event}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(scoresData).map(([collegeName, scores], index) => (
-                <tr key={index} className="border-b border-muted-foreground/20">
-                  <td className="p-2 md:p-3">
-                    <div className="flex items-center space-x-3 px-2">
-                      <div className="w-6 h-6 md:w-12 md:h-12 relative flex-shrink-0">
-                        <Image
-                          src={collegeLogos[collegeName]}
-                          alt={`${collegeName} logo`}
-                          fill
-                          className="object-contain"
-                          priority={index < 3}
-                        />
-                      </div>
-                      <span className="font-raceSport font-medium text-sm md:text-base whitespace-nowrap">
-                        {collegeName}
-                      </span>
-                    </div>
-                  </td>
-                  {eventNames.map((event, i) => (
-                    <td key={i} className="font-montserrat p-2 md:p-3 text-center text-sm md:text-base">
-                      {scores[event] || 0}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <br />
 
-    </div>
+          <div className="mt-3 md:mt-8 -mx-4 md:mx-0">
+            <div className="overflow-x-auto bg-muted p-3 md:p-6 rounded-lg">
+              <table className="w-full border-collapse table-auto min-w-[640px]">
+                <thead>
+                  <tr>
+                    <th className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base">
+                      College
+                    </th>
+                    {eventNames.map((event, index) => (
+                      <th
+                        key={index}
+                        className="font-montserrat p-2 md:p-3 bg-accent text-background font-semibold text-sm md:text-base"
+                      >
+                        {event}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(scoresData).map(
+                    ([collegeName, scores], index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-muted-foreground/20"
+                      >
+                        <td className="p-2 md:p-3">
+                          <div className="flex items-center space-x-3 px-2">
+                            <div className="w-6 h-6 md:w-12 md:h-12 relative flex-shrink-0">
+                              <Image
+                                src={collegeLogos[collegeName]}
+                                alt={`${collegeName} logo`}
+                                fill
+                                className="object-contain"
+                                priority={index < 3}
+                              />
+                            </div>
+                            <span className="font-raceSport font-medium text-sm md:text-base whitespace-nowrap">
+                              {collegeName}
+                            </span>
+                          </div>
+                        </td>
+                        {eventNames.map((event, i) => (
+                          <td
+                            key={i}
+                            className="font-montserrat p-2 md:p-3 text-center text-sm md:text-base"
+                          >
+                            {scores[event] || 0}
+                          </td>
+                        ))}
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </Container>
     </>
   );
 };
