@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 
 interface EventScore {
   id?: number;
@@ -16,7 +15,6 @@ interface CollegeScores {
 }
 
 const CollegesAndEventsList: React.FC = () => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [collegeScores] = useState<CollegeScores>({
     SBME: 0,
@@ -33,38 +31,17 @@ const CollegesAndEventsList: React.FC = () => {
     {}
   );
 
-  // Add authentication check
-  useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        router.push("/login");
-        return;
-      }
-    };
-    checkAuth();
-  }, [router]);
-
   // Fetch events and scores
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session) return;
-
-        // Fetch events
         const { data: eventsData, error: eventsError } = await supabase
           .from("tabulationEvents")
           .select("event_name");
 
         if (eventsError) throw eventsError;
 
-        // Fetch scores
         const { data: scoresData, error: scoresError } = await supabase
           .from("eventScores")
           .select("*");
@@ -135,14 +112,6 @@ const CollegesAndEventsList: React.FC = () => {
     }
 
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        alert("Please login to add events");
-        return;
-      }
-
       const { error } = await supabase
         .from("tabulationEvents")
         .insert([{ event_name: newEventName }]);
