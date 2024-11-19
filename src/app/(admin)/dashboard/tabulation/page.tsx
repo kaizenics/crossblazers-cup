@@ -203,7 +203,7 @@ const CollegesAndEventsList: React.FC = () => {
                 placeholder="Enter event name"
               />
               <button
-                className="bg-emerald-600 hover:bg-gray-700 font-montserrat text-white px-4 py-2 rounded whitespace-nowrap"
+                className="bg-emerald-600 hover:bg-emerald-700 font-montserrat text-white px-4 py-2 rounded whitespace-nowrap"
                 onClick={handleEventAdd}
               >
                 Add Event
