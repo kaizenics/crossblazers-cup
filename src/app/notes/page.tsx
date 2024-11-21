@@ -104,8 +104,6 @@ export default function Notes() {
       setUser(user);
       return user;
     } catch (error) {
-      console.error("Error fetching user:", error);
-      toast.error("Failed to fetch user data");
       return null;
     }
   };
