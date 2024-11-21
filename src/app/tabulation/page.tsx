@@ -307,8 +307,14 @@ const TabulationBarChart: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(scoresData).map(
-                    ([collegeName, scores], index) => (
+                  {Object.entries(scoresData)
+                    .map(([collegeName, scores]) => ({
+                      collegeName,
+                      scores,
+                      total: Object.values(scores).reduce((sum, score) => sum + (score || 0), 0)
+                    }))
+                    .sort((a, b) => b.total - a.total)
+                    .map(({ collegeName, scores }, index) => (
                       <tr
                         key={index}
                         className="border-b border-muted-foreground/20"
@@ -338,8 +344,7 @@ const TabulationBarChart: React.FC = () => {
                           </td>
                         ))}
                       </tr>
-                    )
-                  )}
+                    ))}
                 </tbody>
               </table>
             </div>
