@@ -42,11 +42,9 @@ const containsProfanity = (text: string): boolean => {
 
 const containsHarmfulContent = (text: string): boolean => {
   const normalizedText = normalizeText(text);
-  // Add additional checks for harmful content patterns
   const harmfulPatterns = [
     /\b(hate|kill|death|stupid|idiot|fuck|shit)\b/i,
     /\b(racist|sexist|discrimination)\b/i,
-    // Add more patterns as needed
   ];
 
   return harmfulPatterns.some(pattern => pattern.test(normalizedText));

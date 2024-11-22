@@ -59,6 +59,7 @@ const TabulationBarChart: React.FC = () => {
     Record<string, Record<string, number>>
   >({});
   const [error, setError] = useState<string | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -180,6 +181,20 @@ const TabulationBarChart: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+
+  // Expiration Timer
+  useEffect(() => {
+    const checkExpiration = () => {
+      const expirationDate = new Date('2024-11-23T05:00:00+08:00'); // Singapore time (UTC+8)
+      const now = new Date();
+      setIsExpired(now >= expirationDate);
+    };
+
+    checkExpiration();
+    const interval = setInterval(checkExpiration, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -195,6 +210,24 @@ const TabulationBarChart: React.FC = () => {
           Error: {error}
         </div>
       </div>
+    );
+  }
+
+  // Expiration Screen
+  if (isExpired) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+          <h2 className="font-raceSport text-2xl md:text-4xl font-semibold text-foreground mb-3 text-center">
+            CBC 2024 Tabulation
+          </h2>
+          <p className="font-montserrat text-center text-lg">
+            The overall results will be announced during the closing ceremony.
+          </p>
+        </div>
+        <Footer />
+      </>
     );
   }
 
