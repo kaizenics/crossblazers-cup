@@ -52,6 +52,11 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             icon: <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
             children: [
                 {
+                    label: "Configuration",
+                    href: "/settings/configuration",
+                    icon: <IconTable className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,
+                },
+                {
                     label: "Change Password",
                     href: "/dashboard/tabulation",
                     icon: <IconTable className="text-neutral-700 dark:text-neutral-200 h-4 w-4 flex-shrink-0" />,

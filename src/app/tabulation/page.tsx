@@ -185,7 +185,7 @@ const TabulationBarChart: React.FC = () => {
   // Expiration Timer
   useEffect(() => {
     const checkExpiration = () => {
-      const expirationDate = new Date('2024-11-23T15:00:00+08:00'); 
+      const expirationDate = new Date('2024-11-23T10:00:00+08:00'); 
       const now = new Date();
       setIsExpired(now >= expirationDate);
     };
